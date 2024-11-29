@@ -1,6 +1,8 @@
 import { createSignal } from 'solid-js'
 import solidLogo from './assets/solid.svg'
 import viteLogo from '/vite.svg'
+import { greet } from 'vp-rust/vp_rust'
+
 import './App.css'
 
 function App() {
@@ -18,7 +20,8 @@ function App() {
       </div>
       <h1>Vite + Solid</h1>
       <div class="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        {/* <button onClick={() => setCount((count) => count + 1)}> */}
+        <button onClick={() => greet()}>
           count is {count()}
         </button>
         <p>
