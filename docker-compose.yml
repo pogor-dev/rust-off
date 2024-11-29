@@ -1,0 +1,14 @@
+version: '3'
+services:
+  pdfc-lexer:
+    image: mcr.microsoft.com/devcontainers/rust:1-1-bullseye
+    volumes:
+      - .:/workspace:cached
+    command: sleep infinity
+    links:
+      - pdfc-web
+  pdfc-web:
+    image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
+    volumes:
+      - .:/workspace:cached
+    command: sleep infinity
