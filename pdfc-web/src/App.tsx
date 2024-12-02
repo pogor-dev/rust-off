@@ -1,13 +1,10 @@
-import { createSignal } from 'solid-js'
+import './App.css'
+import { greet } from 'vp-rust/vp_rust'
 import solidLogo from './assets/solid.svg'
 import viteLogo from '/vite.svg'
-import { greet } from 'vp-rust/vp_rust'
 
-import './App.css'
-
-function App() {
-  const [count, setCount] = createSignal(0)
-
+// eslint-disable-next-line sonarjs/function-return-type
+export const App = () => {
   return (
     <>
       <div>
@@ -20,9 +17,8 @@ function App() {
       </div>
       <h1>Vite + Solid</h1>
       <div class="card">
-        {/* <button onClick={() => setCount((count) => count + 1)}> */}
-        <button onClick={() => greet()}>
-          count is {count()}
+        <button onClick={() => { greet() }}>
+          count is 1
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR

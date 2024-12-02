@@ -5,5 +5,12 @@
     "dockerComposeFile": ["../../docker-compose.yml"],
     "service": "pdfc-web",
     "shutdownAction": "none",
-    "workspaceFolder": "/workspace"
+    "workspaceFolder": "/workspace",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vitest.explorer"
+            ]
+        }
+    }
 }
