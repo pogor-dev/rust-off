@@ -29,4 +29,5 @@
             "source.fixAll": "explicit"
         }
     },
+    "rust-analyzer.testExplorer": true,
 }
