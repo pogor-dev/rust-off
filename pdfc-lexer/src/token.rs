@@ -22,6 +22,9 @@ pub enum TokenKind {
     /// Unknown token, not expected by the lexer.
     Unknown,
 
+    /// End of line marker.
+    Eol,
+
     /// Any whitespace character sequence.
     Whitespace,
 
@@ -67,4 +70,7 @@ pub enum LiteralKind {
 
     /// `3.14`, `+3.14`, `-3.14`, '3.', '.3'.
     Real,
+
+    /// `/Name1`, `/ASomewhatLongerName`.
+    Name,
 }
