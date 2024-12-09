@@ -1,12 +1,15 @@
 [package]
 name = "lsp-sever"
 version = "0.1.0"
+description = "Generic LSP server scaffold."
+license = "MIT OR Apache-2.0"
 edition = "2021"
 
 [dependencies]
 log = "0.4.22"
 serde = "1.0.215"
 serde_json = "1.0.133"
+crossbeam-channel = "0.5.13"
 
 [dev-dependencies]
 ctrlc = "3.4.5"

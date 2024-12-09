@@ -16,6 +16,7 @@ impl Cursor<'_> {
 
         let token_kind = match first_byte {
             // End of line marker. Sometimes it is required by the PDF spec (e.g. in PDF object keywords).
+            // See ISO `32000-1:2008`, Section 7.2.3 Character Set.
             b if is_eol(b) => {
                 self.eat_eol(b);
                 TokenKind::Eol
