@@ -16,9 +16,6 @@ impl Token {
 /// Enum representing common lexeme types.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TokenKind {
-    /// A kewyword token, e.g. `obj`, `endobj`, `stream`, `endstream`.
-    Keyword,
-
     /// Unknown token, not expected by the lexer.
     Unknown,
 
@@ -27,6 +24,9 @@ pub enum TokenKind {
 
     /// Any whitespace character sequence.
     Whitespace,
+
+    /// A kewyword token, e.g. `obj`, `endobj`, `stream`, `endstream`.
+    Keyword,
 
     /// A literal token, e.g. `123`, `3.14`.
     ///
