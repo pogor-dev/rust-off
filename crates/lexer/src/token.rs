@@ -8,7 +8,7 @@ pub struct Token {
 }
 
 impl Token {
-    pub(crate) fn new(kind: TokenKind, len: u32) -> Token {
+    pub fn new(kind: TokenKind, len: u32) -> Token {
         Token { kind, len }
     }
 }
@@ -25,6 +25,9 @@ pub enum TokenKind {
     /// Any whitespace character sequence.
     Whitespace,
 
+    /// A comment token, e.g. `% This is a comment`.
+    Comment,
+
     /// A kewyword token, e.g. `obj`, `endobj`, `stream`, `endstream`.
     Keyword,
 
@@ -33,26 +36,14 @@ pub enum TokenKind {
     /// The [LiteralKind] enum contains information about the type of the literal.
     Literal { kind: LiteralKind },
 
-    /// `(`
-    OpenParen,
-    /// `)`
-    CloseParen,
-    /// `<`
-    LessThan,
-    /// `>`
-    GreaterThan,
-    /// `{`
-    OpenCurly,
-    /// `}`
-    CloseCurly,
     /// `[`
     OpenSquare,
     /// `]`
     CloseSquare,
     /// `<<`
-    DoubleLessThan,
+    LessThan2,
     /// `>>`
-    DoubleGreaterThan,
+    GreaterThan2,
     /// `-`
     Minus,
     /// `+`
@@ -72,5 +63,11 @@ pub enum LiteralKind {
     Real,
 
     /// `/Name1`, `/ASomewhatLongerName`.
-    Name,
+    Name, // TODO: add terminated flag
+
+    /// Literal String `(This is a string)`, `(This is a string with \(escaped\) characters)`.
+    LiteralString, // TODO: add terminated flag
+
+    /// Hexadecimal String `<0123456789ABCDEF>`, `<0123456789abcdef>`.
+    HexString, // TODO: add terminated flag
 }

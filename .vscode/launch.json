@@ -7,16 +7,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in library 'vp_rust'",
+            "name": "Debug unit tests in library 'pdfc-lexer'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
                     "--lib",
-                    "--package=vp-rust"
+                    "--package=pdfc-lexer"
                 ],
                 "filter": {
-                    "name": "vp_rust",
+                    "name": "pdfc-lexer",
                     "kind": "lib"
                 }
             },
@@ -32,7 +32,7 @@
                     "test",
                     "--no-run",
                     "--test=web",
-                    "--package=vp-rust"
+                    "--packagepdfc-lexer"
                 ],
                 "filter": {
                     "name": "web",

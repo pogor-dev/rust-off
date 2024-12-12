@@ -6,3 +6,4 @@ terms.
 Longer version:
 
 - TODO: add rust (lexer/parser) and rust-analyzer (LSP) reference
+- TODO: add PDFA safe doc (compact syntax test file)

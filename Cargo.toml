@@ -1,0 +1,26 @@
+[workspace]
+members = ["xtask/", "crates/*"]
+resolver = "2"
+
+[workspace.package]
+rust-version = "1.81"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+authors = ["Victor Pogor"]
+repository = "https://github.com/victor-pogor/rust-off"
+
+[profile.dev]
+debug = 1
+
+[profile.dev.package]
+# These speed up local tests.
+serde.opt-level = 3
+
+[profile.release]
+incremental = true
+# Set this to 1 or 2 to get more useful backtraces in debugger.
+debug = 0
+
+# non-local crates
+
+[workspace.lints.clippy]

@@ -9,10 +9,7 @@ pub struct Cursor<'a> {
 
 impl<'a> Cursor<'a> {
     pub fn new(input: &'a [u8]) -> Cursor<'a> {
-        Cursor {
-            len_remaining: input.len(),
-            iter: input.iter(),
-        }
+        Cursor { len_remaining: input.len(), iter: input.iter() }
     }
 
     pub(crate) fn next(&mut self) -> Option<u8> {
@@ -23,12 +20,14 @@ impl<'a> Cursor<'a> {
         self.iter.clone().next().copied().unwrap_or(EOF_BYTE)
     }
 
+    #[allow(dead_code)]
     pub(crate) fn peek_second(&self) -> u8 {
         let mut iter = self.iter.clone();
         iter.next();
         iter.next().copied().unwrap_or(EOF_BYTE)
     }
 
+    #[allow(dead_code)]
     pub(crate) fn peek_third(&self) -> u8 {
         let mut iter = self.iter.clone();
         iter.next();

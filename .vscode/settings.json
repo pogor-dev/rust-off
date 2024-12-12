@@ -30,4 +30,5 @@
         }
     },
     "rust-analyzer.testExplorer": true,
+    "debug.allowBreakpointsEverywhere": true,
 }
