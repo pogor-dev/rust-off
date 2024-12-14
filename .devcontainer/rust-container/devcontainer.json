@@ -2,7 +2,7 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/rust
 {
     "name": "rust-off",
-    "dockerComposeFile": ["../../docker-compose.yml"],
+    "dockerComposeFile": ["../docker-compose.yml"],
     "service": "pdfc-lexer",
     "shutdownAction": "none",
     "workspaceFolder": "/workspace",

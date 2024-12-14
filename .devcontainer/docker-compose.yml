@@ -1,9 +1,12 @@
 version: '3'
 services:
   pdfc-lexer:
-    image: mcr.microsoft.com/devcontainers/rust:1-1-bullseye
+    # use the docker image from the Dockerfile
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.rust
     volumes:
-      - .:/workspace:cached
+      - ..:/workspace:cached
     command: sleep infinity
     links:
       - pdfc-web

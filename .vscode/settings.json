@@ -31,4 +31,7 @@
     },
     "rust-analyzer.testExplorer": true,
     "debug.allowBreakpointsEverywhere": true,
+    "lldb.launch.breakpointMode": "path",
+    "lldb.verboseLogging": false,
+    "lldb.consoleMode": "evaluate",
 }

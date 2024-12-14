@@ -41,13 +41,9 @@ pub enum TokenKind {
     /// `]`
     CloseSquare,
     /// `<<`
-    LessThan2,
+    OpenDict,
     /// `>>`
-    GreaterThan2,
-    /// `-`
-    Minus,
-    /// `+`
-    Plus,
+    CloseDict,
 
     /// End of input.
     Eof,

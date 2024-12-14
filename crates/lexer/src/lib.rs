@@ -26,18 +26,11 @@ impl Cursor<'_> {
                 TokenKind::Whitespace
             }
 
-            // Numeric literal.
+            // Numeric literal that starts with a digit and/or plus/minus sign.
             // See ISO `32000-1:2008`, Section 7.3.3 Numeric Objects.
-            b if b.is_ascii_digit() => {
-                let literal_kind = self.number();
+            b if matches!(b, b'+' | b'-' | b'.') || b.is_ascii_digit() => {
+                let literal_kind = self.number(b);
                 TokenKind::Literal { kind: literal_kind }
-            }
-
-            // Real number starting with a dot.
-            // See ISO `32000-1:2008`, Section 7.3.3 Numeric Objects.
-            _b @ b'.' if matches!(self.peek_first(), b'0'..=b'9') => {
-                self.number();
-                TokenKind::Literal { kind: LiteralKind::Real }
             }
 
             // PDF keyword.
@@ -49,16 +42,9 @@ impl Cursor<'_> {
             // PDF Name.
             // See ISO `32000-1:2008`, Section 7.3.5 Name Objects.
             b'/' => {
-                let next_byte = self.peek_first();
-                if is_whitespace(next_byte) || is_delimiter(next_byte) {
-                    // PDF name that starts with a delimiter or whitespace is invalid.
-                    self.eat_while(|b| is_whitespace(b) || is_delimiter(b));
-                    TokenKind::Unknown
-                } else {
-                    // Consume the name until a delimiter or whitespace is encountered.
-                    self.eat_while(|b| !is_whitespace(b) && !is_delimiter(b));
-                    TokenKind::Literal { kind: LiteralKind::Name }
-                }
+                // Consume the name until a delimiter or whitespace is encountered.
+                self.eat_while(|b| !is_whitespace(b) && !is_delimiter(b));
+                TokenKind::Literal { kind: LiteralKind::Name }
             }
 
             // PDF literal string.
@@ -92,19 +78,17 @@ impl Cursor<'_> {
             }
 
             // One-symbol tokens.
-            b'-' => TokenKind::Minus,       // TODO: check if it is a part of a number
-            b'+' => TokenKind::Plus,        // TODO: check if it is a part of a number
             b'[' => TokenKind::OpenSquare,  // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
             b']' => TokenKind::CloseSquare, // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
             b'<' => {
                 // We ensured before that this is not a hex string.
                 // See ISO `32000-1:2008`, Section 7.3.7 Dictionary Objects.
                 self.next();
-                TokenKind::LessThan2
+                TokenKind::OpenDict
             }
             b'>' if self.peek_first() == b'>' => {
                 self.next();
-                TokenKind::GreaterThan2 // See ISO `32000-1:2008`, Section 7.3.7 Dictionary Objects.
+                TokenKind::CloseDict // See ISO `32000-1:2008`, Section 7.3.7 Dictionary Objects.
             }
 
             _ => TokenKind::Unknown,
@@ -115,14 +99,24 @@ impl Cursor<'_> {
         res
     }
 
-    fn number(&mut self) -> LiteralKind {
-        self.eat_decimal_digits(); // integer part
+    fn number(&mut self, first_byte: u8) -> LiteralKind {
+        let next_byte = self.peek_first();
+
+        // If a plus or minus sign is not followed by a digit, it is not a valid number.
+        if matches!(first_byte, b'+' | b'-') && !(next_byte.is_ascii_digit() || next_byte == b'.') {
+            return LiteralKind::Int;
+        }
+
+        self.eat_decimal_digits(); // integer part with optional sign
+
+        if first_byte == b'.' {
+            return LiteralKind::Real; // If the first byte is a dot (.345), it is a real number.
+        }
 
         match self.peek_first() {
-            // Decimal part.
             b'.' => {
                 self.next();
-                self.eat_decimal_digits();
+                self.eat_decimal_digits(); // Reading the fractional part of the real number.
                 LiteralKind::Real
             }
             _ => LiteralKind::Int,
@@ -133,8 +127,11 @@ impl Cursor<'_> {
         let mut has_digits = false;
         loop {
             match self.peek_first() {
-                b'0'..=b'9' => {
+                b if b.is_ascii_digit() => {
                     has_digits = true;
+                    self.next();
+                }
+                b'+' | b'-' => {
                     self.next();
                 }
                 _ => break,
@@ -240,16 +237,26 @@ mod tests {
     fn test_numbers() {
         assert_eq!(test_input(b"123"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 3)]);
         assert_eq!(test_input(b"43445"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 5)]);
-        assert_eq!(test_input(b"+17"), vec![Token::new(TokenKind::Plus, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 2)]);
-        assert_eq!(test_input(b"-98"), vec![Token::new(TokenKind::Minus, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 2)]);
+        assert_eq!(test_input(b"+17"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 3)]);
+        assert_eq!(test_input(b"-98"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 3)]);
         assert_eq!(test_input(b"0"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
         assert_eq!(test_input(b"00987"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 5)]);
         assert_eq!(test_input(b"34.5"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 4)]);
-        assert_eq!(test_input(b"-3.62"), [Token { kind: TokenKind::Minus, len: 1 }, Token { kind: TokenKind::Literal { kind: LiteralKind::Real }, len: 4 }]);
-        assert_eq!(test_input(b"+123.6"), vec![Token::new(TokenKind::Plus, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 5)]);
+        assert_eq!(test_input(b"-3.62"), [Token { kind: TokenKind::Literal { kind: LiteralKind::Real }, len: 5 }]);
+        assert_eq!(test_input(b"+123.6"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 6)]);
         assert_eq!(test_input(b"4."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 2)]);
-        assert_eq!(test_input(b"-.002"), vec![Token { kind: TokenKind::Minus, len: 1 }, Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 4)]);
+        assert_eq!(test_input(b"-.002"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 5)]);
         assert_eq!(test_input(b"009.87"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 6)]);
+        assert_eq!(test_input(b".0"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 2)]);
+
+        // invalid numbers
+        assert_eq!(test_input(b"."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1)]);
+        assert_eq!(test_input(b"+"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
+        assert_eq!(test_input(b"-"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
+        assert_eq!(test_input(b"+-"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
+        assert_eq!(test_input(b"-+"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
+        assert_eq!(test_input(b"-."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 2)]);
+        assert_eq!(test_input(b".."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1)]);
     }
 
     /// ISO `32000-1:2008`, Section 7.3.5 Name Objects.
@@ -267,16 +274,16 @@ mod tests {
         assert_eq!(test_input(b"/The_Key_of_F#23_Minor"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 22)]);
 
         // invalid names
-        assert_eq!(test_input(b"/"), vec![Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"/("), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/)"), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/<"), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/>"), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/["), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/]"), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/{"), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/}"), vec![Token::new(TokenKind::Unknown, 2)]);
-        assert_eq!(test_input(b"/%"), vec![Token::new(TokenKind::Unknown, 2)]);
+        assert_eq!(test_input(b"/"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1)]);
+        assert_eq!(test_input(b"/("), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
+        assert_eq!(test_input(b"/)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
+        assert_eq!(test_input(b"/<"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
+        assert_eq!(test_input(b"/>"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
+        assert_eq!(test_input(b"/["), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::OpenSquare, 1)]);
+        assert_eq!(test_input(b"/]"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::CloseSquare, 1)]);
+        assert_eq!(test_input(b"/{"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
+        assert_eq!(test_input(b"/}"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
+        assert_eq!(test_input(b"/%"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Comment, 1)]);
         assert_eq!(test_input(b"/Name1("), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 6), Token::new(TokenKind::Unknown, 1)]);
     }
 
@@ -305,15 +312,12 @@ mod tests {
         );
 
         assert_eq!(test_input(b"(The following is an empty string .)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 36)]);
-
         assert_eq!(test_input(b"()"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 2)]);
-
         assert_eq!(test_input(b"(It has zero (0) length.)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 25)]);
 
         // invalid literal strings
         assert_eq!(test_input(b"("), vec![Token::new(TokenKind::Unknown, 1)]);
         assert_eq!(test_input(b")"), vec![Token::new(TokenKind::Unknown, 1)]);
-
         assert_eq!(test_input(b"(This string has ( unbalanced parentheses.)"), vec![Token::new(TokenKind::Unknown, 43)]);
     }
 
@@ -355,14 +359,14 @@ mod tests {
         assert_eq!(
             test_input(b"<< /Type /Catalog /Pages 3 0 R >>"),
             vec![
-                Token::new(TokenKind::LessThan2, 2),
+                Token::new(TokenKind::OpenDict, 2),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 5),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 8),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 6),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
                 Token::new(TokenKind::Keyword, 1),
-                Token::new(TokenKind::GreaterThan2, 2),
+                Token::new(TokenKind::CloseDict, 2),
             ]
         );
     }

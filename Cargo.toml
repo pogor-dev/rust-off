@@ -10,7 +10,9 @@ authors = ["Victor Pogor"]
 repository = "https://github.com/victor-pogor/rust-off"
 
 [profile.dev]
-debug = 1
+debug = "full" # This is the default.
+# opt-level = 0 # 0 is faster, 3 is slower but more optimized.
+# overflow-checks = false # Disable integer overflow checks.
 
 [profile.dev.package]
 # These speed up local tests.

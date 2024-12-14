@@ -7,7 +7,44 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug unit tests in library 'pdfc-lexer'",
+            "name": "Debug executable 'xtask'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=xtask",
+                    "--package=xtask"
+                ],
+                "filter": {
+                    "name": "xtask",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'xtask'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=xtask",
+                    "--package=xtask"
+                ],
+                "filter": {
+                    "name": "xtask",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'pdfc_lexer'",
             "cargo": {
                 "args": [
                     "test",
@@ -16,7 +53,7 @@
                     "--package=pdfc-lexer"
                 ],
                 "filter": {
-                    "name": "pdfc-lexer",
+                    "name": "pdfc_lexer",
                     "kind": "lib"
                 }
             },
@@ -26,16 +63,16 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug integration test 'web'",
+            "name": "Debug integration test 'safedocs_pdf_syntax_tests'",
             "cargo": {
                 "args": [
                     "test",
                     "--no-run",
-                    "--test=web",
-                    "--packagepdfc-lexer"
+                    "--test=safedocs_pdf_syntax_tests",
+                    "--package=pdfc-lexer"
                 ],
                 "filter": {
-                    "name": "web",
+                    "name": "safedocs_pdf_syntax_tests",
                     "kind": "test"
                 }
             },

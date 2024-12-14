@@ -1,0 +1,6 @@
+FROM mcr.microsoft.com/devcontainers/rust:1-1-bullseye
+
+# Install LLVM
+# RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add - && \
+#     sudo apt-get update && \
+#     sudo apt-get install -y clang-16 lldb-16 lld-16 python3-lldb-16

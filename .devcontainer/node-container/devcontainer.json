@@ -2,7 +2,7 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
     "name": "rust-off web",
-    "dockerComposeFile": ["../../docker-compose.yml"],
+    "dockerComposeFile": ["../docker-compose.yml"],
     "service": "pdfc-web",
     "shutdownAction": "none",
     "workspaceFolder": "/workspace",
