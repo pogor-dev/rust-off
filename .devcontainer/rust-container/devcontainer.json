@@ -1,9 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/rust
 {
-    "name": "rust-off",
+    "name": "rusted-pdf rust",
     "dockerComposeFile": ["../docker-compose.yml"],
-    "service": "pdfc-lexer",
+    "service": "rusted-pdf",
     "shutdownAction": "none",
     "workspaceFolder": "/workspace",
     "postCreateCommand": "cargo install cargo-generate wasm-pack"

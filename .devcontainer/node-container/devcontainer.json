@@ -1,9 +1,9 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
-    "name": "rust-off web",
+    "name": "rusted-pdf web",
     "dockerComposeFile": ["../docker-compose.yml"],
-    "service": "pdfc-web",
+    "service": "rusted-pdf-web",
     "shutdownAction": "none",
     "workspaceFolder": "/workspace",
     "customizations": {

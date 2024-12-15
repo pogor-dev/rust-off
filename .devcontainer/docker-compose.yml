@@ -1,7 +1,6 @@
 version: '3'
 services:
-  pdfc-lexer:
-    # use the docker image from the Dockerfile
+  rusted-pdf:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile.rust
@@ -9,9 +8,9 @@ services:
       - ..:/workspace:cached
     command: sleep infinity
     links:
-      - pdfc-web
-  pdfc-web:
+      - rusted-pdf-web
+  rusted-pdf-web:
     image: mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm
     volumes:
-      - .:/workspace:cached
+      - ..:/workspace:cached
     command: sleep infinity

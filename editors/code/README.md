@@ -1,0 +1,1 @@
+# PDF language support for Visual Studio Code
