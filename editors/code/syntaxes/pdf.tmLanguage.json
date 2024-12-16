@@ -1,0 +1,118 @@
+{
+    "uuid": "e84e5061-3c27-4d2e-b0b6-9b9f1f12a687",
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "scopeName": "source.pdf",
+    "name": "PDF",
+    "patterns": [
+        {
+            "include": "#comment"
+        },
+        {
+            "include": "#literal-string"
+        },
+        {
+            "include": "#hex-string"
+        },
+        {
+            "include": "#name"
+        },
+        {
+            "include": "#number"
+        },
+        {
+            "include": "#keyword"
+        },
+        {
+            "include": "#array"
+        },
+        {
+            "include": "#dictionary"
+        }
+    ],
+    "repository": {
+        "comment": {
+            "name": "comment.line.percentage",
+            "begin": "%",
+            "end": "(?=\\r?\\n)"
+        },
+        "number": {
+            "name": "constant.numeric",
+            "match": "[+-]?\\d*\\.?\\d+"
+        },
+        "name": {
+            "name": "string.unquoted",
+            "begin": "\/",
+            "end": "\\s|\\(|\\)|\\[|\\]|\\{|\\}|<|>|%|\/"
+        },
+        "literal-string": {
+            "name": "string.quoted.single",
+            "begin": "\\(",
+            "end": "\\)"
+        },
+        "hex-string": {
+            "name": "string.quoted.double",
+            "begin": "\\<[^\\<]",
+            "end": "\\>"
+        },
+        "keyword": {
+            "name": "constant.language",
+            "begin": "[a-zA-Z]",
+            "end": "\\s|\\(|\\)|\\[|\\]|\\{|\\}|<|>|%|\/"
+        },
+        "array": {
+            "name": "meta.array",
+            "begin": "\\[",
+            "end": "\\]",
+            "patterns": [
+                {
+                    "include": "#value"
+                }
+            ]
+        },
+        "dictionary": {
+            "name": "meta.dictionary",
+            "begin": "\\<\\<",
+            "end": "\\>\\>",
+            "patterns": [
+                {
+                    "include": "#key-value"
+                }
+            ]
+        },
+        "value": {
+            "patterns": [
+                {
+                    "include": "#comment"
+                },
+                {
+                    "include": "#number"
+                },
+                {
+                    "include": "#name"
+                },
+                {
+                    "include": "#literal-string"
+                },
+                {
+                    "include": "#hex-string"
+                },
+                {
+                    "include": "#dictionary"
+                },
+                {
+                    "include": "#array"
+                }
+            ]
+        },
+        "key-value": {
+            "patterns": [
+                {
+                    "include": "#name"
+                },
+                {
+                    "include": "#value"
+                }
+            ]
+        }
+    }
+}

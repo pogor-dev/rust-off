@@ -1,48 +1,74 @@
 {
-  "name": "rusted-pdf-analyzer",
-  "description": "PDF language support for Visual Studio Code",
-  "version": "0.0.1-dev",
-  "publisher": "victor-pogor",
-  "releaseTag": null,
-  "private": true,
-  "icon": "icon.png",
-  "main": "./out/main",
-  "scripts": {
-    "test": "./out/tests/runTests.js"
-  },
-  "activationEvents": [],
-  "devDependencies": {
-    "@eslint/js": "^9.17.0",
-    "@stylistic/eslint-plugin": "^2.12.1",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "^22.10.2",
-    "@types/vscode": "^1.96.0",
-    "@vscode/test-electron": "^2.4.1",
-    "eslint": "^9.17.0",
-    "mocha": "^11.0.1",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.18.0",
-    "vscode-languageclient": "^9.0.1"
-  },
-  "engines": {
-    "vscode": "^1.96.0"
-  },
-  "keywords": [
-    "pdf"
-  ],
-  "categories": [
-    "Formatters",
-    "Linters",
-    "Programming Languages"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/victor-pogor/rust-off.git"
-  },
-  "author": "Victor Pogor",
-  "license": "MIT OR Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/victor-pogor/rust-off/issues"
-  },
-  "homepage": "https://github.com/victor-pogor/rust-off#readme"
+    "name": "rusted-pdf-analyzer",
+    "displayName": "rusted-pdf-analyzer",
+    "description": "PDF language support for Visual Studio Code",
+    "version": "0.0.1-dev",
+    "publisher": "victor-pogor",
+    "releaseTag": null,
+    "private": true,
+    "icon": "icon.png",
+    "main": "./out/main",
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -b",
+        "watch": "tsc -b -w",
+        "lint": "eslint",
+        "test": "sh ./scripts/e2e.sh"
+    },
+    "contributes": {
+        "languages": [
+            {
+                "id": "pdf",
+                "aliases": [
+                    "PDF",
+                    "pdf"
+                ],
+                "extensions": [
+                    ".pdf"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "pdf",
+                "scopeName": "source.pdf",
+                "path": "./syntaxes/pdf.tmLanguage.json"
+            }
+        ]
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.17.0",
+        "@stylistic/eslint-plugin": "^2.12.1",
+        "@types/mocha": "^10.0.10",
+        "@types/node": "^22.10.2",
+        "@types/vscode": "^1.96.0",
+        "@vscode/test-electron": "^2.4.1",
+        "eslint": "^9.17.0",
+        "mocha": "^11.0.1",
+        "typescript": "^5.7.2",
+        "typescript-eslint": "^8.18.0",
+        "vscode-languageclient": "^9.0.1"
+    },
+    "engines": {
+        "vscode": "^1.96.0"
+    },
+    "keywords": [
+        "pdf"
+    ],
+    "categories": [
+        "Formatters",
+        "Linters",
+        "Programming Languages"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/victor-pogor/rust-off.git"
+    },
+    "author": "Victor Pogor",
+    "license": "MIT OR Apache-2.0",
+    "bugs": {
+        "url": "https://github.com/victor-pogor/rust-off/issues"
+    },
+    "homepage": "https://github.com/victor-pogor/rust-off#readme"
 }

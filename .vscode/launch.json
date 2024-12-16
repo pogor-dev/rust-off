@@ -5,79 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb",
+            "type": "extensionHost",
             "request": "launch",
-            "name": "Debug executable 'xtask'",
-            "cargo": {
-                "args": [
-                    "build",
-                    "--bin=xtask",
-                    "--package=xtask"
-                ],
-                "filter": {
-                    "name": "xtask",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug unit tests in executable 'xtask'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--bin=xtask",
-                    "--package=xtask"
-                ],
-                "filter": {
-                    "name": "xtask",
-                    "kind": "bin"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug unit tests in library 'pdfc_lexer'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--lib",
-                    "--package=pdfc-lexer"
-                ],
-                "filter": {
-                    "name": "pdfc_lexer",
-                    "kind": "lib"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
-            "name": "Debug integration test 'safedocs_pdf_syntax_tests'",
-            "cargo": {
-                "args": [
-                    "test",
-                    "--no-run",
-                    "--test=safedocs_pdf_syntax_tests",
-                    "--package=pdfc-lexer"
-                ],
-                "filter": {
-                    "name": "safedocs_pdf_syntax_tests",
-                    "kind": "test"
-                }
-            },
-            "args": [],
-            "cwd": "${workspaceFolder}"
+            "name": "Launch Client",
+            "runtimeExecutable": "${execPath}",
+            "args": [
+                "--disable-extensions",
+                "--extensionDevelopmentPath=${workspaceFolder}/editors/code",
+                "${workspaceFolder}/crates/lexer/tests/safedocs_pdf_syntax_tests.pdf" // Default file to open
+            ],
+            "outFiles": [
+                "${workspaceRoot}/editors/code/out/**/*.js"
+            ],
+            "autoAttachChildProcesses": true,
+            "preLaunchTask": "Build Extension in Background",
+            "skipFiles": [
+                "<node_internals>/**/*.js"
+            ]
         }
     ]
 }
