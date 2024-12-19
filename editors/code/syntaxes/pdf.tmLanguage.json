@@ -1,14 +1,14 @@
 {
     "uuid": "e84e5061-3c27-4d2e-b0b6-9b9f1f12a687",
-    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.pdf",
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "scopeName": "source.pdf",
     "name": "PDF",
     "patterns": [
         {
-            "include": "#value"
+            "include": "#stream"
         },
         {
-            "include": "#stream"
+            "include": "#value"
         }
     ],
     "repository": {
@@ -146,6 +146,27 @@
                 },
                 {
                     "include": "#value"
+                }
+            ]
+        },
+        "stream": {
+            "name": "meta.stream.pdf",
+            "begin": "\\b(stream)\\b",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.control.stream.begin.pdf"
+                }
+            },
+            "end": "\\b(endstream)\\b",
+            "endCaptures": {
+                "1": {
+                    "name": "keyword.control.stream.end.pdf"
+                }
+            },
+            "patterns": [
+                {
+                    "match": "[^\\r\\n]+",
+                    "name": "string.unprocessed.stream-content.pdf"
                 }
             ]
         }
