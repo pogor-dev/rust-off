@@ -6,6 +6,8 @@
         "vitest.explorer",
         "rust-lang.rust-analyzer",
         "vadimcn.vscode-lldb",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "amodio.tsl-problem-matcher",
+        "ms-vscode.extension-test-runner"
     ]
 }

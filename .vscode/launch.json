@@ -7,7 +7,7 @@
         {
             "type": "extensionHost",
             "request": "launch",
-            "name": "Launch Client",
+            "name": "VS Code Extension",
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--disable-extensions",
@@ -15,10 +15,10 @@
                 "${workspaceFolder}/crates/lexer/tests/safedocs_pdf_syntax_tests.pdf" // Default file to open
             ],
             "outFiles": [
-                "${workspaceRoot}/editors/code/out/**/*.js"
+                "${workspaceRoot}/editors/code/**/*.js"
             ],
             "autoAttachChildProcesses": true,
-            "preLaunchTask": "Build Extension in Background",
+            "preLaunchTask": "tasks: vs-code-watch",
             "skipFiles": [
                 "<node_internals>/**/*.js"
             ]

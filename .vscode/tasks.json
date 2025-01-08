@@ -2,44 +2,38 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build Extension",
-            "type": "npm",
-            "script": "compile",
-            "group": "build",
-            "presentation": {
-                "panel": "dedicated",
-                "reveal": "never"
-            },
-            "path": "editors/code/",
-            "problemMatcher": {
-                "base": "$tsc",
-                "fileLocation": [
-                    "relative",
-                    "${workspaceFolder}/editors/code/"
-                ]
-            }
-        },
-        {
-            "label": "Build Extension in Background",
+            "label": "tasks: vs-code-watch",
             "type": "npm",
             "script": "watch",
+            "path": "editors/code/",
+            "problemMatcher": "$ts-webpack-watch",
             "isBackground": true,
+            "presentation": {
+                "reveal": "never",
+                "group": "watchers"
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "presentation": {
-                "panel": "dedicated",
-                "reveal": "never"
-            },
+            }
+        },
+        {
+            "label": "tasks: vs-code-test-watch",
+            "type": "npm",
+            "script": "watch-tests",
             "path": "editors/code/",
-            "problemMatcher": {
-                "base": "$tsc-watch",
-                "fileLocation": [
-                    "relative",
-                    "${workspaceFolder}/editors/code/"
-                ]
+            "problemMatcher": "$tsc-watch",
+            "isBackground": true,
+            "presentation": {
+                "reveal": "never",
+                "group": "watchers"
             },
+            "group": "build"
+        },
+        {
+            "label": "tasks: watch-tests",
+            "dependsOn": ["npm: watch", "npm: watch-tests"],
+            "problemMatcher": []
         }
     ]
 }

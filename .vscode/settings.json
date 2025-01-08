@@ -4,6 +4,7 @@
         "**/lib/rustlib/src/rust/library/**/*.rs": true,
         "**/node_modules/**": true,
     },
+    "typescript.tsc.autoDetect": "off", // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
     "[typescript]": {
         "editor.formatOnSave": true,
         "editor.codeActionsOnSave": {

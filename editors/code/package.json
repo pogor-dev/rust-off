@@ -1,74 +1,67 @@
 {
-    "name": "rusted-pdf-analyzer",
-    "displayName": "rusted-pdf-analyzer",
-    "description": "PDF language support for Visual Studio Code",
-    "version": "0.0.1-dev",
-    "publisher": "victor-pogor",
-    "releaseTag": null,
-    "private": true,
-    "icon": "icon.png",
-    "main": "./out/main",
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -b",
-        "watch": "tsc -b -w",
-        "lint": "eslint",
-        "test": "sh ./scripts/e2e.sh"
-    },
-    "contributes": {
-        "languages": [
-            {
-                "id": "pdf",
-                "aliases": [
-                    "PDF",
-                    "pdf"
-                ],
-                "extensions": [
-                    ".pdf"
-                ],
-                "configuration": "./language-configuration.json"
-            }
+  "name": "pdf-vscode",
+  "displayName": "PDF",
+  "description": "Language support for PDF",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pdf-vscode.helloWorld",
+        "title": "Hello World"
+      }
+    ],
+    "languages": [
+      {
+        "id": "pdf",
+        "aliases": [
+          "PDF",
+          "pdf"
         ],
-        "grammars": [
-            {
-                "language": "pdf",
-                "scopeName": "source.pdf",
-                "path": "./syntaxes/pdf.tmLanguage.json"
-            }
-        ]
-    },
-    "devDependencies": {
-        "@eslint/js": "^9.17.0",
-        "@stylistic/eslint-plugin": "^2.12.1",
-        "@types/mocha": "^10.0.10",
-        "@types/node": "^22.10.2",
-        "@types/vscode": "^1.96.0",
-        "@vscode/test-electron": "^2.4.1",
-        "eslint": "^9.17.0",
-        "mocha": "^11.0.1",
-        "typescript": "^5.7.2",
-        "typescript-eslint": "^8.18.0",
-        "vscode-languageclient": "^9.0.1"
-    },
-    "engines": {
-        "vscode": "^1.96.0"
-    },
-    "keywords": [
-        "pdf"
+        "extensions": [
+          ".pdf"
+        ],
+        "configuration": "./language-configuration.json"
+      }
     ],
-    "categories": [
-        "Formatters",
-        "Linters",
-        "Programming Languages"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/victor-pogor/rust-off.git"
-    },
-    "author": "Victor Pogor",
-    "license": "MIT OR Apache-2.0",
-    "bugs": {
-        "url": "https://github.com/victor-pogor/rust-off/issues"
-    },
-    "homepage": "https://github.com/victor-pogor/rust-off#readme"
+    "grammars": [
+      {
+        "language": "pdf",
+        "scopeName": "source.pdf",
+        "path": "./syntaxes/pdf.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.96.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
+    "eslint": "^9.16.0",
+    "typescript": "^5.7.2",
+    "ts-loader": "^9.5.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  }
 }
