@@ -3,11 +3,26 @@
   "displayName": "PDF",
   "description": "Language support for PDF",
   "version": "0.0.1",
+  "author": "Victor Pogor",
+  "license": "MIT OR Apache-2.0",
   "engines": {
     "vscode": "^1.96.0"
   },
+  "keywords": [
+    "pdf"
+  ],
+  "homepage": "https://github.com/victor-pogor/rust-off#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/victor-pogor/rust-off.git"
+  },
+  "bugs": {
+    "url": "https://github.com/victor-pogor/rust-off/issues"
+  },
   "categories": [
-    "Other"
+    "Formatters",
+    "Linters",
+    "Programming Languages"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",

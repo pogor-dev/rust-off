@@ -1,174 +1,174 @@
 {
-    "uuid": "e84e5061-3c27-4d2e-b0b6-9b9f1f12a687",
-    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "scopeName": "source.pdf",
-    "name": "PDF",
-    "patterns": [
-        {
-            "include": "#stream"
-        },
-        {
-            "include": "#value"
-        }
-    ],
-    "repository": {
-        "value": {
-            "comment": "PDF syntax",
-            "patterns": [
-                {
-                    "include": "#comment"
-                },
-                {
-                    "include": "#keyword"
-                },
-                {
-                    "include": "#number"
-                },
-                {
-                    "include": "#name"
-                },
-                {
-                    "include": "#literal-string"
-                },
-                {
-                    "include": "#hex-string"
-                },
-                {
-                    "include": "#array"
-                },
-                {
-                    "include": "#dictionary"
-                }
-            ]
-        },
-        "comment": {
-            "name": "comment.line.percentage.pdf",
-            "match": "(%)(.*)(?:\\r?\\n)",
-            "captures": {
-                "1": {
-                    "name": "punctuation.definition.comment.pdf"
-                },
-                "2": {
-                    "name": "comment.line.percentage.pdf"
-                }
-            }
-        },
-        "number": {
-            "name": "constant.numeric.pdf",
-            "match": "[+-]?\\d*\\.?\\d+"
-        },
-        "name": {
-            "name": "string.regexp.pdf",
-            "match": "(\\/)[^\\s\\(\\)\\[\\]\\{\\}<>%\\/]*",
-            "captures": {
-                "1": {
-                    "name": "punctuation.definition.name.begin.pdf"
-                },
-                "2": {
-                    "name": "entity.name.pdf"
-                }
-            }
-        },
-        "literal-string": {
-            "name": "string.quoted.double.pdf",
-            "begin": "\\(",
-            "beginCaptures": {
-                "0": {
-                    "name": "punctuation.definition.string.begin.pdf"
-                }
-            },
-            "end": "\\)",
-            "endCaptures": {
-                "0": {
-                    "name": "punctuation.definition.string.end.pdf"
-                }
-            }
-        },
-        "hex-string": {
-            "name": "string.quoted.single.pdf",
-            "begin": "<(?=[0-9A-Fa-f\\s]*>)",
-            "beginCaptures": {
-                "0": {
-                    "name": "punctuation.definition.string.begin.pdf"
-                }
-            },
-            "end": ">",
-            "endCaptures": {
-                "0": {
-                    "name": "punctuation.definition.string.end.pdf"
-                }
-            },
-            "patterns": [
-                {
-                    "match": "[0-9A-Fa-f]{2}",
-                    "name": "constant.numeric.hex.pdf"
-                }
-            ]
-        },
-        "keyword": {
-            "name": "constant.language.pdf",
-            "match": "\\b(?:[a-zA-Z]+)\\b"
-        },
-        "array": {
-            "name": "meta.structure.array.pdf",
-            "begin": "\\[",
-            "beginCaptures": {
-                "0": {
-                    "name": "punctuation.definition.array.begin.pdf"
-                }
-            },
-            "end": "\\]",
-            "endCaptures": {
-                "0": {
-                    "name": "punctuation.definition.array.end.pdf"
-                }
-            },
-            "patterns": [
-                {
-                    "include": "#value"
-                }
-            ]
-        },
-        "dictionary": {
-            "name": "meta.dictionary",
-            "begin": "<<",
-            "end": ">>",
-            "patterns": [
-                {
-                    "include": "#key-value"
-                }
-            ]
-        },
-        "key-value": {
-            "patterns": [
-                {
-                    "include": "#name"
-                },
-                {
-                    "include": "#value"
-                }
-            ]
-        },
-        "stream": {
-            "name": "meta.stream.pdf",
-            "begin": "\\b(stream)\\b",
-            "beginCaptures": {
-                "1": {
-                    "name": "keyword.control.stream.begin.pdf"
-                }
-            },
-            "end": "\\b(endstream)\\b",
-            "endCaptures": {
-                "1": {
-                    "name": "keyword.control.stream.end.pdf"
-                }
-            },
-            "patterns": [
-                {
-                    "match": "[^\\r\\n]+",
-                    "name": "string.unprocessed.stream-content.pdf"
-                }
-            ]
-        }
+  "uuid": "e84e5061-3c27-4d2e-b0b6-9b9f1f12a687",
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "scopeName": "source.pdf",
+  "name": "PDF",
+  "patterns": [
+    {
+      "include": "#stream"
+    },
+    {
+      "include": "#value"
     }
+  ],
+  "repository": {
+    "value": {
+      "comment": "PDF syntax",
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#name"
+        },
+        {
+          "include": "#literal-string"
+        },
+        {
+          "include": "#hex-string"
+        },
+        {
+          "include": "#array"
+        },
+        {
+          "include": "#dictionary"
+        }
+      ]
+    },
+    "comment": {
+      "name": "comment.line.percentage.pdf",
+      "match": "(%)(.*)(?:\\r?\\n)",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.comment.pdf"
+        },
+        "2": {
+          "name": "comment.line.percentage.pdf"
+        }
+      }
+    },
+    "number": {
+      "name": "constant.numeric.pdf",
+      "match": "[+-]?\\d*\\.?\\d+"
+    },
+    "name": {
+      "name": "string.regexp.pdf",
+      "match": "(\\/)[^\\s\\(\\)\\[\\]\\{\\}<>%\\/]*",
+      "captures": {
+        "1": {
+          "name": "punctuation.definition.name.begin.pdf"
+        },
+        "2": {
+          "name": "entity.name.pdf"
+        }
+      }
+    },
+    "literal-string": {
+      "name": "string.quoted.double.pdf",
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.pdf"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.pdf"
+        }
+      }
+    },
+    "hex-string": {
+      "name": "string.quoted.single.pdf",
+      "begin": "<(?=[0-9A-Fa-f\\s]*>)",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.pdf"
+        }
+      },
+      "end": ">",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.pdf"
+        }
+      },
+      "patterns": [
+        {
+          "match": "[0-9A-Fa-f]{2}",
+          "name": "constant.numeric.hex.pdf"
+        }
+      ]
+    },
+    "keyword": {
+      "name": "constant.language.pdf",
+      "match": "\\b(?:[a-zA-Z]+)\\b"
+    },
+    "array": {
+      "name": "meta.structure.array.pdf",
+      "begin": "\\[",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.array.begin.pdf"
+        }
+      },
+      "end": "\\]",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.array.end.pdf"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#value"
+        }
+      ]
+    },
+    "dictionary": {
+      "name": "meta.dictionary",
+      "begin": "<<",
+      "end": ">>",
+      "patterns": [
+        {
+          "include": "#key-value"
+        }
+      ]
+    },
+    "key-value": {
+      "patterns": [
+        {
+          "include": "#name"
+        },
+        {
+          "include": "#value"
+        }
+      ]
+    },
+    "stream": {
+      "name": "meta.stream.pdf",
+      "begin": "\\b(stream)\\b",
+      "beginCaptures": {
+        "1": {
+          "name": "keyword.control.stream.begin.pdf"
+        }
+      },
+      "end": "\\b(endstream)\\b",
+      "endCaptures": {
+        "1": {
+          "name": "keyword.control.stream.end.pdf"
+        }
+      },
+      "patterns": [
+        {
+          "match": "[^\\r\\n]+",
+          "name": "string.unprocessed.stream-content.pdf"
+        }
+      ]
+    }
+  }
 }
