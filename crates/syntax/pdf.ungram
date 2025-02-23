@@ -18,8 +18,130 @@
 //   (A)         -- same as A
 //   label:A     -- suggested name for field of AST node
 
-//****************************//
-// Statements and Expressions //
-//****************************//
+//*************************//
+//     PDF Document        //
+//*************************//
 
-Literal = value:('@int_number' | '@real_number' | '@literal_string' | '@hex_string' | 'true' | 'false' | 'null')
+PdfDocument =
+  Header Body Trailer
+
+Header =
+  '#pdf_marker' version:PdfVersion
+
+PdfVersion =
+  '@int_number' '.' '@int_number'
+
+Body =
+  Object*
+
+Trailer =
+  'trailer' Dictionary
+  'startxref' '@int_number'
+  '#eof_marker'
+
+//*************************//
+//        Objects          //
+//*************************//
+
+Object =
+  ObjectID ObjectData 'endobj'
+
+ObjectID =
+  '@int_number' '@int_number' 'obj'
+
+IndirectReference =
+  '@int_number' '@int_number' 'R'
+
+DirectObject =
+  LiteralString
+  | HexString
+  | Name
+  | Integer
+  | Real
+  | Boolean
+  | Null
+  | Dictionary
+  | Array
+
+ObjectData =
+  LiteralString
+  | HexString
+  | Name
+  | Integer
+  | Real
+  | Boolean
+  | Null
+  | Dictionary
+  | Array
+  | Stream
+
+//*************************//
+//     Data Structures     //
+//*************************//
+
+LiteralString =
+  '(' '@literal_string' ')'
+
+HexString =
+  '<' '@hex_string' '>'
+
+Name =
+  '/' '@ident'
+
+Integer =
+  '@int_number'
+
+Real =
+  '@real_number'
+
+Boolean =
+  'true' | 'false'
+
+Null =
+  'null'
+
+Dictionary =
+  '<<' DictEntry* '>>'
+
+DictEntry =
+  Key Value
+
+Key =
+  Name
+
+Value =
+  DirectObject
+
+Array =
+  '[' (DirectObject (DirectObject)*)? ']'
+
+Stream =
+  Dictionary 'stream' '@raw_bytes' 'endstream'
+
+//*************************//
+//     Content Streams     //
+//*************************//
+
+//ContentStream =
+//  Operator*
+//
+//Operator =
+//  Name Operand*
+//
+//Operand =
+//  DirectObject
+
+//*************************//
+//       Cross-Ref         //
+//*************************//
+
+CrossRefTable =
+  'xref'
+  CrossRefSection*
+  'trailer' Dictionary
+
+CrossRefSection =
+  '@int_number' '@int_number' CrossRefEntry*
+
+CrossRefEntry =
+  '@int_number' '@int_number' ('n' | 'f')
