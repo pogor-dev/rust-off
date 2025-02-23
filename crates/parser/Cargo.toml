@@ -1,7 +1,6 @@
 [package]
-name = "pdfc-lexer"
+name = "pdfc-parser"
 version = "0.1.0"
-description = "PDF content lexer."
 
 authors.workspace = true
 edition.workspace = true
@@ -10,10 +9,7 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-
-[lints]
-workspace = true
+# Add any dependencies required for your project here
 
 [dev-dependencies]
-csv = "1.3.1"
-serde = { version = "1.0.217", features = ["derive"] }
+# Add any development dependencies here

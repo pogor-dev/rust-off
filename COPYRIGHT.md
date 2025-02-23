@@ -8,3 +8,4 @@ Longer version:
 - TODO: add rust (lexer/parser) and rust-analyzer (LSP) reference
 - TODO: add PDFA safe doc (compact syntax test file)
 - TODO: add vscode-extension-samples
+- TODO: add rust-analyzer copyright reference

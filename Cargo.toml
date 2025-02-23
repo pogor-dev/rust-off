@@ -22,7 +22,18 @@ serde.opt-level = 3
 incremental = true
 # Set this to 1 or 2 to get more useful backtraces in debugger.
 debug = 0
+opt-level = 3
 
 # non-local crates
 
 [workspace.lints.clippy]
+
+[workspace.dependencies]
+# local crates
+stdx = { path = "./crates/stdx", version = "0.0.0" }
+
+# non-local crates
+anyhow = "1.0.96"
+xshell = "0.2.7"
+itertools = "0.14.0"
+either = "1.13.0"

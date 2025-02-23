@@ -6,5 +6,18 @@ authors.workspace = true
 edition.workspace = true
 license.workspace = true
 rust-version.workspace = true
+repository.workspace = true
 
 [dependencies]
+anyhow.workspace = true
+xshell.workspace = true
+xflags = "0.3.2"
+ungrammar = "1.16.1"
+quote = "1.0.38"
+itertools.workspace = true
+proc-macro2 = "1.0.93"
+either.workspace = true
+stdx.workspace = true
+
+[dev-dependencies]
+# Add any development dependencies here
