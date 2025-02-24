@@ -29,14 +29,14 @@ Header =
   '#pdf_marker' version:PdfVersion
 
 PdfVersion =
-  '@int_number' '.' '@int_number'
+  Real
 
 Body =
   Object*
 
 Trailer =
   'trailer' Dictionary
-  'startxref' '@int_number'
+  'startxref' Integer
   '#eof_marker'
 
 //*************************//
@@ -44,13 +44,15 @@ Trailer =
 //*************************//
 
 Object =
-  ObjectID ObjectData 'endobj'
+  ObjectID
+  ObjectData
+  'endobj'
 
 ObjectID =
-  '@int_number' '@int_number' 'obj'
+  object_number:Integer generation_number:Integer 'obj'
 
 IndirectReference =
-  '@int_number' '@int_number' 'R'
+  object_number:Integer generation_number:Integer 'R'
 
 DirectObject =
   LiteralString
@@ -80,10 +82,10 @@ ObjectData =
 //*************************//
 
 LiteralString =
-  '(' '@literal_string' ')'
+  '@literal_string'
 
 HexString =
-  '<' '@hex_string' '>'
+  '@hex_string'
 
 Name =
   '/' '@ident'
@@ -136,12 +138,17 @@ Stream =
 //*************************//
 
 CrossRefTable =
-  'xref'
   CrossRefSection*
-  'trailer' Dictionary
 
 CrossRefSection =
-  '@int_number' '@int_number' CrossRefEntry*
+  'xref'
+  CrossRefSubSection*
+
+CrossRefSubSection =
+  object_start:Integer
+  object_count:Integer
+  CrossRefEntry*
 
 CrossRefEntry =
-  '@int_number' '@int_number' ('n' | 'f')
+  offset:Integer
+  generation_number:Integer ('n' | 'f')

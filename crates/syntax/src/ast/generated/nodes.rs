@@ -48,9 +48,11 @@ pub struct CrossRefEntry {
 }
 impl CrossRefEntry {
     #[inline]
-    pub fn f_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![f]) }
+    pub fn generation_number(&self) -> Option<Integer> { support::child(&self.syntax) }
     #[inline]
-    pub fn int_number_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![int_number]) }
+    pub fn offset(&self) -> Option<Integer> { support::child(&self.syntax) }
+    #[inline]
+    pub fn f_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![f]) }
     #[inline]
     pub fn n_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![n]) }
 }
@@ -61,9 +63,22 @@ pub struct CrossRefSection {
 }
 impl CrossRefSection {
     #[inline]
+    pub fn cross_ref_sub_sections(&self) -> AstChildren<CrossRefSubSection> { support::children(&self.syntax) }
+    #[inline]
+    pub fn xref_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![xref]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct CrossRefSubSection {
+    pub(crate) syntax: SyntaxNode,
+}
+impl CrossRefSubSection {
+    #[inline]
     pub fn cross_ref_entrys(&self) -> AstChildren<CrossRefEntry> { support::children(&self.syntax) }
     #[inline]
-    pub fn int_number_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![int_number]) }
+    pub fn object_count(&self) -> Option<Integer> { support::child(&self.syntax) }
+    #[inline]
+    pub fn object_start(&self) -> Option<Integer> { support::child(&self.syntax) }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -73,12 +88,6 @@ pub struct CrossRefTable {
 impl CrossRefTable {
     #[inline]
     pub fn cross_ref_sections(&self) -> AstChildren<CrossRefSection> { support::children(&self.syntax) }
-    #[inline]
-    pub fn dictionary(&self) -> Option<Dictionary> { support::child(&self.syntax) }
-    #[inline]
-    pub fn trailer_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![trailer]) }
-    #[inline]
-    pub fn xref_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![xref]) }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -122,10 +131,6 @@ pub struct HexString {
 }
 impl HexString {
     #[inline]
-    pub fn l_angle_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![<]) }
-    #[inline]
-    pub fn r_angle_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![>]) }
-    #[inline]
     pub fn hex_string_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![hex_string]) }
 }
 
@@ -135,9 +140,11 @@ pub struct IndirectReference {
 }
 impl IndirectReference {
     #[inline]
-    pub fn R_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![R]) }
+    pub fn generation_number(&self) -> Option<Integer> { support::child(&self.syntax) }
     #[inline]
-    pub fn int_number_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![int_number]) }
+    pub fn object_number(&self) -> Option<Integer> { support::child(&self.syntax) }
+    #[inline]
+    pub fn R_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![R]) }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -163,10 +170,6 @@ pub struct LiteralString {
     pub(crate) syntax: SyntaxNode,
 }
 impl LiteralString {
-    #[inline]
-    pub fn l_paren_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T!['(']) }
-    #[inline]
-    pub fn r_paren_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![')']) }
     #[inline]
     pub fn literal_string_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![literal_string]) }
 }
@@ -210,7 +213,9 @@ pub struct ObjectID {
 }
 impl ObjectID {
     #[inline]
-    pub fn int_number_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![int_number]) }
+    pub fn generation_number(&self) -> Option<Integer> { support::child(&self.syntax) }
+    #[inline]
+    pub fn object_number(&self) -> Option<Integer> { support::child(&self.syntax) }
     #[inline]
     pub fn obj_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![obj]) }
 }
@@ -234,9 +239,7 @@ pub struct PdfVersion {
 }
 impl PdfVersion {
     #[inline]
-    pub fn dot_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![.]) }
-    #[inline]
-    pub fn int_number_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![int_number]) }
+    pub fn real(&self) -> Option<Real> { support::child(&self.syntax) }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -271,9 +274,9 @@ impl Trailer {
     #[inline]
     pub fn dictionary(&self) -> Option<Dictionary> { support::child(&self.syntax) }
     #[inline]
-    pub fn eof_marker_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![eof_marker]) }
+    pub fn integer(&self) -> Option<Integer> { support::child(&self.syntax) }
     #[inline]
-    pub fn int_number_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![int_number]) }
+    pub fn eof_marker_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![eof_marker]) }
     #[inline]
     pub fn startxref_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![startxref]) }
     #[inline]
@@ -409,6 +412,27 @@ impl AstNode for CrossRefSection {
     }
     #[inline]
     fn can_cast(kind: SyntaxKind) -> bool { kind == CROSS_REF_SECTION }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for CrossRefSubSection {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        CROSS_REF_SUB_SECTION
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == CROSS_REF_SUB_SECTION }
     #[inline]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -989,6 +1013,9 @@ impl std::fmt::Display for CrossRefEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for CrossRefSection {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for CrossRefSubSection {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for CrossRefTable {

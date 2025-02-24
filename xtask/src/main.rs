@@ -11,6 +11,7 @@ fn main() -> anyhow::Result<()> {
     let sh = &Shell::new()?;
     sh.change_dir(project_root());
 
+    // TODO: remove this once we have a proper build system
     if cfg!(debug_assertions) {
         let cmd = flags::Codegen {
             check: false,

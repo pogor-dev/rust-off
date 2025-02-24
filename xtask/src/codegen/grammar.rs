@@ -648,15 +648,10 @@ impl Field {
             Field::Token(name) => {
                 let name = match name.as_str() {
                     "/" => "slash",
-                    "'('" => "l_paren",
-                    "')'" => "r_paren",
                     "'['" => "l_brack",
                     "']'" => "r_brack",
-                    "<" => "l_angle",
-                    ">" => "r_angle",
                     "<<" => "l_dict",
                     ">>" => "r_dict",
-                    "." => "dot",
                     _ => name,
                 };
 
