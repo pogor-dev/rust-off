@@ -10,6 +10,13 @@ repository.workspace = true
 
 [dependencies]
 # Add any dependencies required for your project here
+pdfc-lexer.workspace = true
+tracing.workspace = true
+pdfc-parser.workspace = true
+rowan = "0.16.1"
 
 [dev-dependencies]
 # Add any development dependencies here
+
+[features]
+in-rust-tree = []

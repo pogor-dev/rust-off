@@ -1,6 +1,5 @@
 [package]
 name = "pdfc-lexer"
-version = "0.1.0"
 description = "PDF content lexer."
 
 authors.workspace = true
