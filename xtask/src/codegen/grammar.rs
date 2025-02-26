@@ -383,6 +383,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
             quote! { #(#cs)* }
         }
     });
+
     let punctuation = grammar.punct.iter().map(|(_token, name)| format_ident!("{}", name)).collect::<Vec<_>>();
     let punctuation_texts = grammar.punct.iter().map(|&(text, _name)| text);
 
@@ -390,6 +391,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
         "Self" => format_ident!("SELF_TYPE_KW"),
         name => format_ident!("{}_KW", to_upper_snake_case(name)),
     };
+
     let strict_keywords = grammar.keywords;
     let strict_keywords_variants = strict_keywords.iter().map(fmt_kw_as_variant).collect::<Vec<_>>();
     let strict_keywords_tokens = strict_keywords.iter().map(|it| format_ident!("{it}"));
@@ -402,6 +404,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
             quote! { #kw if #ed <= edition }
         })
         .collect::<Vec<_>>();
+
     let edition_dependent_keywords_str_match_arm = grammar
         .edition_dependent_keywords
         .iter()
@@ -409,14 +412,15 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
             quote! { #kw if #ed <= edition }
         })
         .collect::<Vec<_>>();
+
     let edition_dependent_keywords = grammar.edition_dependent_keywords.iter().map(|&(it, _)| it);
     let edition_dependent_keywords_variants = grammar
         .edition_dependent_keywords
         .iter()
         .map(|(kw, _)| fmt_kw_as_variant(kw))
         .collect::<Vec<_>>();
-    let edition_dependent_keywords_tokens = grammar.edition_dependent_keywords.iter().map(|(it, _)| format_ident!("{it}"));
 
+    let edition_dependent_keywords_tokens = grammar.edition_dependent_keywords.iter().map(|(it, _)| format_ident!("{it}"));
     let contextual_keywords = grammar.contextual_keywords;
     let contextual_keywords_variants = contextual_keywords.iter().map(fmt_kw_as_variant).collect::<Vec<_>>();
     let contextual_keywords_tokens = contextual_keywords.iter().map(|it| format_ident!("{it}"));
@@ -428,6 +432,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
                 Some((_, ed)) => quote! { #kw if edition < #ed },
                 None => quote! { #kw },
             });
+
     let contextual_keywords_variants_match_arm = grammar
         .contextual_keywords
         .iter()
@@ -685,7 +690,7 @@ fn clean_token_name(name: &str) -> String {
 
 fn lower(grammar: &Grammar) -> AstSrc {
     let mut res = AstSrc {
-        tokens: "Whitespace Comment LiteralString HexString IntNumber RealNumber Ident"
+        tokens: "Whitespace Comment LiteralString HexString Name IntNumber RealNumber"
             .split_ascii_whitespace()
             .map(|it| it.to_owned())
             .collect::<Vec<_>>(),

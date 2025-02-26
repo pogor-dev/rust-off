@@ -28,7 +28,12 @@
         "editor.codeActionsOnSave": {
             "source.organizeImports": "explicit",
             "source.fixAll": "explicit"
-        }
+        },
+        "editor.formatOnSaveMode": "modifications",
+        "editor.formatOnSaveExclude": [
+            "**/*generated*/**/*.rs",
+            "**/*generated.rs"
+        ]
     },
     "rust-analyzer.testExplorer": true,
     "debug.allowBreakpointsEverywhere": true,

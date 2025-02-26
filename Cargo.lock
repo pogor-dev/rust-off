@@ -97,6 +97,7 @@ dependencies = [
 name = "pdfc-syntax"
 version = "0.1.0"
 dependencies = [
+ "either",
  "pdfc-lexer",
  "pdfc-parser",
  "rowan",

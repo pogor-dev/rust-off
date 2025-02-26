@@ -6,9 +6,11 @@
 //! The *real* implementation is in the (language-agnostic) `rowan` crate, this
 //! module just wraps its API.
 
-use rowan::Language;
+use rowan::{GreenNodeBuilder, Language};
 
-use crate::SyntaxKind;
+use crate::{Parse, SyntaxError, SyntaxKind, TextSize};
+
+pub(crate) use rowan::{GreenNode, GreenToken, NodeOrToken};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum PdfLanguage {}
@@ -26,3 +28,5 @@ impl Language for PdfLanguage {
 }
 
 pub type SyntaxNode = rowan::SyntaxNode<PdfLanguage>;
+pub type SyntaxToken = rowan::SyntaxToken<PdfLanguage>;
+pub type SyntaxNodeChildren = rowan::SyntaxNodeChildren<PdfLanguage>;

@@ -13,6 +13,7 @@ repository.workspace = true
 pdfc-lexer.workspace = true
 tracing.workspace = true
 pdfc-parser.workspace = true
+either.workspace = true
 rowan = "0.16.1"
 
 [dev-dependencies]
