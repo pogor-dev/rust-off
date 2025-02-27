@@ -10,7 +10,7 @@ use rowan::{GreenNodeBuilder, Language};
 
 use crate::{Parse, SyntaxError, SyntaxKind, TextSize};
 
-pub(crate) use rowan::{GreenNode, GreenToken, NodeOrToken};
+pub(crate) use rowan::GreenNode;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum PdfLanguage {}
@@ -30,3 +30,39 @@ impl Language for PdfLanguage {
 pub type SyntaxNode = rowan::SyntaxNode<PdfLanguage>;
 pub type SyntaxToken = rowan::SyntaxToken<PdfLanguage>;
 pub type SyntaxNodeChildren = rowan::SyntaxNodeChildren<PdfLanguage>;
+
+#[derive(Default)]
+pub struct SyntaxTreeBuilder {
+    errors: Vec<SyntaxError>,
+    inner: GreenNodeBuilder<'static>,
+}
+
+impl SyntaxTreeBuilder {
+    pub(crate) fn finish_raw(self) -> (GreenNode, Vec<SyntaxError>) {
+        let green = self.inner.finish();
+        (green, self.errors)
+    }
+
+    pub fn finish(self) -> Parse<SyntaxNode> {
+        let (green, errors) = self.finish_raw();
+        Parse::new(green, errors)
+    }
+
+    pub fn token(&mut self, kind: SyntaxKind, text: &str) {
+        let kind = PdfLanguage::kind_to_raw(kind);
+        self.inner.token(kind, text);
+    }
+
+    pub fn start_node(&mut self, kind: SyntaxKind) {
+        let kind = PdfLanguage::kind_to_raw(kind);
+        self.inner.start_node(kind);
+    }
+
+    pub fn finish_node(&mut self) {
+        self.inner.finish_node();
+    }
+
+    pub fn error(&mut self, error: String, text_pos: TextSize) {
+        self.errors.push(SyntaxError::new_at_offset(error, text_pos));
+    }
+}

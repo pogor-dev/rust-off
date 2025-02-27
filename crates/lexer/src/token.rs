@@ -37,9 +37,9 @@ pub enum TokenKind {
     Literal { kind: LiteralKind },
 
     /// `[`
-    OpenSquare,
+    OpenBracket,
     /// `]`
-    CloseSquare,
+    CloseBracket,
     /// `<<`
     OpenDict,
     /// `>>`

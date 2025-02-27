@@ -91,6 +91,8 @@ name = "pdfc-parser"
 version = "0.0.0"
 dependencies = [
  "edition",
+ "pdfc-lexer",
+ "tracing",
 ]
 
 [[package]]

@@ -12,8 +12,13 @@ pub enum SyntaxKind {
     EOF,
     L_BRACK,
     R_BRACK,
+    L_DICT,
+    R_DICT,
+    R_KW,
+    ENDOBJ_KW,
     FALSE_KW,
     NULL_KW,
+    OBJ_KW,
     TRUE_KW,
     HEX_STRING,
     INT_NUMBER,
@@ -25,8 +30,15 @@ pub enum SyntaxKind {
     NEWLINE,
     WHITESPACE,
     ARRAY_EXPR,
+    DICTIONARY_EXPR,
+    DICTIONARY_ITEM_EXPR,
+    DICTIONARY_ITEM_KEY_EXPR,
+    DICTIONARY_ITEM_VALUE_EXPR,
     EXPR,
+    INDIRECT_REFERENCE_EXPR,
     LITERAL,
+    OBJECT_EXPR,
+    OBJECT_ID,
     #[doc(hidden)]
     __LAST,
 }
@@ -35,19 +47,44 @@ impl SyntaxKind {
     #[allow(unreachable_patterns)]
     pub const fn text(self) -> &'static str {
         match self {
-            TOMBSTONE | EOF | __LAST | HEX_STRING | INT_NUMBER | LITERAL_STRING | NAME | REAL_NUMBER | ARRAY_EXPR | EXPR | LITERAL | COMMENT | ERROR
-            | NEWLINE | WHITESPACE => panic!("no text for these `SyntaxKind`s"),
+            TOMBSTONE
+            | EOF
+            | __LAST
+            | HEX_STRING
+            | INT_NUMBER
+            | LITERAL_STRING
+            | NAME
+            | REAL_NUMBER
+            | ARRAY_EXPR
+            | DICTIONARY_EXPR
+            | DICTIONARY_ITEM_EXPR
+            | DICTIONARY_ITEM_KEY_EXPR
+            | DICTIONARY_ITEM_VALUE_EXPR
+            | EXPR
+            | INDIRECT_REFERENCE_EXPR
+            | LITERAL
+            | OBJECT_EXPR
+            | OBJECT_ID
+            | COMMENT
+            | ERROR
+            | NEWLINE
+            | WHITESPACE => panic!("no text for these `SyntaxKind`s"),
             L_BRACK => "[",
             R_BRACK => "]",
+            L_DICT => "<<",
+            R_DICT => ">>",
+            R_KW => "R",
+            ENDOBJ_KW => "endobj",
             FALSE_KW => "false",
             NULL_KW => "null",
+            OBJ_KW => "obj",
             TRUE_KW => "true",
         }
     }
     #[doc = r" Checks whether this syntax kind is a strict keyword for the given edition."]
     #[doc = r" Strict keywords are identifiers that are always considered keywords."]
     pub fn is_strict_keyword(self, edition: Edition) -> bool {
-        matches!(self, FALSE_KW | NULL_KW | TRUE_KW)
+        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | TRUE_KW)
             || match self {
                 _ => false,
             }
@@ -61,17 +98,20 @@ impl SyntaxKind {
     }
     #[doc = r" Checks whether this syntax kind is a strict or weak keyword for the given edition."]
     pub fn is_keyword(self, edition: Edition) -> bool {
-        matches!(self, FALSE_KW | NULL_KW | TRUE_KW)
+        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | TRUE_KW)
             || match self {
                 _ => false,
             }
     }
-    pub fn is_punct(self) -> bool { matches!(self, L_BRACK | R_BRACK) }
+    pub fn is_punct(self) -> bool { matches!(self, L_BRACK | R_BRACK | L_DICT | R_DICT) }
     pub fn is_literal(self) -> bool { matches!(self, HEX_STRING | INT_NUMBER | LITERAL_STRING | NAME | REAL_NUMBER) }
     pub fn from_keyword(ident: &str, edition: Edition) -> Option<SyntaxKind> {
         let kw = match ident {
+            "R" => R_KW,
+            "endobj" => ENDOBJ_KW,
             "false" => FALSE_KW,
             "null" => NULL_KW,
+            "obj" => OBJ_KW,
             "true" => TRUE_KW,
             _ => return None,
         };
@@ -93,4 +133,4 @@ impl SyntaxKind {
     }
 }
 #[macro_export]
-macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [lifetime_ident] => { $ crate :: SyntaxKind :: LIFETIME_IDENT } ; [int_number] => { $ crate :: SyntaxKind :: INT_NUMBER } ; [ident] => { $ crate :: SyntaxKind :: IDENT } ; [string] => { $ crate :: SyntaxKind :: STRING } ; [shebang] => { $ crate :: SyntaxKind :: SHEBANG } ; }
+macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [lifetime_ident] => { $ crate :: SyntaxKind :: LIFETIME_IDENT } ; [int_number] => { $ crate :: SyntaxKind :: INT_NUMBER } ; [ident] => { $ crate :: SyntaxKind :: IDENT } ; [string] => { $ crate :: SyntaxKind :: STRING } ; [shebang] => { $ crate :: SyntaxKind :: SHEBANG } ; }

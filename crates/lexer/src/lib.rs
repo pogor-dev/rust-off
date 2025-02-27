@@ -51,7 +51,9 @@ impl Cursor<'_> {
             // See ISO `32000-1:2008`, Section 7.3.4.2 Literal Strings.
             b'(' => {
                 if self.eat_literal_string() && self.pos_within_token() > 1 {
-                    TokenKind::Literal { kind: LiteralKind::LiteralString }
+                    TokenKind::Literal {
+                        kind: LiteralKind::LiteralString,
+                    }
                 } else {
                     TokenKind::Unknown // If there is no byte following the opening parenthesis, it is an invalid token.
                 }
@@ -78,8 +80,8 @@ impl Cursor<'_> {
             }
 
             // One-symbol tokens.
-            b'[' => TokenKind::OpenSquare,  // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
-            b']' => TokenKind::CloseSquare, // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
+            b'[' => TokenKind::OpenBracket,  // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
+            b']' => TokenKind::CloseBracket, // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
             b'<' => {
                 // We ensured before that this is not a hex string.
                 // See ISO `32000-1:2008`, Section 7.3.7 Dictionary Objects.
@@ -226,10 +228,16 @@ mod tests {
         assert_eq!(test_input(b""), vec![]);
 
         // end of line marker
-        assert_eq!(tokenize(b"\n\r\n\r").collect::<Vec<Token>>(), vec![Token::new(TokenKind::Eol, 1), Token::new(TokenKind::Eol, 2), Token::new(TokenKind::Eol, 1)]);
+        assert_eq!(
+            tokenize(b"\n\r\n\r").collect::<Vec<Token>>(),
+            vec![Token::new(TokenKind::Eol, 1), Token::new(TokenKind::Eol, 2), Token::new(TokenKind::Eol, 1)]
+        );
 
         // whitespaces
-        assert_eq!(tokenize(b" \t\x0C\0\r\n").collect::<Vec<Token>>(), vec![Token::new(TokenKind::Whitespace, 4), Token::new(TokenKind::Eol, 2)]);
+        assert_eq!(
+            tokenize(b" \t\x0C\0\r\n").collect::<Vec<Token>>(),
+            vec![Token::new(TokenKind::Whitespace, 4), Token::new(TokenKind::Eol, 2)]
+        );
     }
 
     /// ISO `32000-1:2008`, Section 7.3.3 Numeric Objects.
@@ -242,7 +250,13 @@ mod tests {
         assert_eq!(test_input(b"0"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
         assert_eq!(test_input(b"00987"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 5)]);
         assert_eq!(test_input(b"34.5"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 4)]);
-        assert_eq!(test_input(b"-3.62"), [Token { kind: TokenKind::Literal { kind: LiteralKind::Real }, len: 5 }]);
+        assert_eq!(
+            test_input(b"-3.62"),
+            [Token {
+                kind: TokenKind::Literal { kind: LiteralKind::Real },
+                len: 5
+            }]
+        );
         assert_eq!(test_input(b"+123.6"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 6)]);
         assert_eq!(test_input(b"4."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 2)]);
         assert_eq!(test_input(b"-.002"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 5)]);
@@ -253,38 +267,107 @@ mod tests {
         assert_eq!(test_input(b"."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1)]);
         assert_eq!(test_input(b"+"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
         assert_eq!(test_input(b"-"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
-        assert_eq!(test_input(b"+-"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
-        assert_eq!(test_input(b"-+"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)]);
+        assert_eq!(
+            test_input(b"+-"),
+            vec![
+                Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
+                Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)
+            ]
+        );
+        assert_eq!(
+            test_input(b"-+"),
+            vec![
+                Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
+                Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1)
+            ]
+        );
         assert_eq!(test_input(b"-."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 2)]);
-        assert_eq!(test_input(b".."), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1)]);
+        assert_eq!(
+            test_input(b".."),
+            vec![
+                Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1),
+                Token::new(TokenKind::Literal { kind: LiteralKind::Real }, 1)
+            ]
+        );
     }
 
     /// ISO `32000-1:2008`, Section 7.3.5 Name Objects.
     #[test]
     fn test_names() {
         assert_eq!(test_input(b"/Name1"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 6)]);
-        assert_eq!(test_input(b"/ASomewhatLongerName"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 20)]);
-        assert_eq!(test_input(b"/A;Name_With-Various***Characters?"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 34)]);
+        assert_eq!(
+            test_input(b"/ASomewhatLongerName"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 20)]
+        );
+        assert_eq!(
+            test_input(b"/A;Name_With-Various***Characters?"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 34)]
+        );
         assert_eq!(test_input(b"/1.2"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 4)]);
         assert_eq!(test_input(b"/$$"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 3)]);
         assert_eq!(test_input(b"/@pattern"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 9)]);
         assert_eq!(test_input(b"/.notdef"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 8)]);
-        assert_eq!(test_input(b"/Lime#20Green"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 13)]);
-        assert_eq!(test_input(b"/paired#28#29parentheses"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 24)]);
-        assert_eq!(test_input(b"/The_Key_of_F#23_Minor"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 22)]);
+        assert_eq!(
+            test_input(b"/Lime#20Green"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 13)]
+        );
+        assert_eq!(
+            test_input(b"/paired#28#29parentheses"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 24)]
+        );
+        assert_eq!(
+            test_input(b"/The_Key_of_F#23_Minor"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 22)]
+        );
 
         // invalid names
         assert_eq!(test_input(b"/"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1)]);
-        assert_eq!(test_input(b"/("), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"/)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"/<"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"/>"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"/["), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::OpenSquare, 1)]);
-        assert_eq!(test_input(b"/]"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::CloseSquare, 1)]);
-        assert_eq!(test_input(b"/{"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"/}"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"/%"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Comment, 1)]);
-        assert_eq!(test_input(b"/Name1("), vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 6), Token::new(TokenKind::Unknown, 1)]);
+        assert_eq!(
+            test_input(b"/("),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]
+        );
+        assert_eq!(
+            test_input(b"/)"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]
+        );
+        assert_eq!(
+            test_input(b"/<"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]
+        );
+        assert_eq!(
+            test_input(b"/>"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]
+        );
+        assert_eq!(
+            test_input(b"/["),
+            vec![
+                Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1),
+                Token::new(TokenKind::OpenBracket, 1)
+            ]
+        );
+        assert_eq!(
+            test_input(b"/]"),
+            vec![
+                Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1),
+                Token::new(TokenKind::CloseBracket, 1)
+            ]
+        );
+        assert_eq!(
+            test_input(b"/{"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]
+        );
+        assert_eq!(
+            test_input(b"/}"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Unknown, 1)]
+        );
+        assert_eq!(
+            test_input(b"/%"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 1), Token::new(TokenKind::Comment, 1)]
+        );
+        assert_eq!(
+            test_input(b"/Name1("),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 6), Token::new(TokenKind::Unknown, 1)]
+        );
     }
 
     /// ISO `32000-1:2008`, Section 7.3.2 Boolean Objects.
@@ -303,33 +386,90 @@ mod tests {
     /// ISO `32000-1:2008`, Section 7.3.4.2 Literal Strings.
     #[test]
     fn test_literal_string() {
-        assert_eq!(test_input(b"(This is a string)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 18)]);
-        assert_eq!(test_input(b"(Strings can contain newlines \nand such.)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 41)]);
+        assert_eq!(
+            test_input(b"(This is a string)"),
+            vec![Token::new(
+                TokenKind::Literal {
+                    kind: LiteralKind::LiteralString
+                },
+                18
+            )]
+        );
+        assert_eq!(
+            test_input(b"(Strings can contain newlines \nand such.)"),
+            vec![Token::new(
+                TokenKind::Literal {
+                    kind: LiteralKind::LiteralString
+                },
+                41
+            )]
+        );
 
         assert_eq!(
             test_input(b"(Strings can contain balanced parentheses () \nand special characters ( * ! & } ^ %and so on) .)"),
-            vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 95)]
+            vec![Token::new(
+                TokenKind::Literal {
+                    kind: LiteralKind::LiteralString
+                },
+                95
+            )]
         );
 
-        assert_eq!(test_input(b"(The following is an empty string .)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 36)]);
-        assert_eq!(test_input(b"()"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 2)]);
-        assert_eq!(test_input(b"(It has zero (0) length.)"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 25)]);
+        assert_eq!(
+            test_input(b"(The following is an empty string .)"),
+            vec![Token::new(
+                TokenKind::Literal {
+                    kind: LiteralKind::LiteralString
+                },
+                36
+            )]
+        );
+        assert_eq!(
+            test_input(b"()"),
+            vec![Token::new(
+                TokenKind::Literal {
+                    kind: LiteralKind::LiteralString
+                },
+                2
+            )]
+        );
+        assert_eq!(
+            test_input(b"(It has zero (0) length.)"),
+            vec![Token::new(
+                TokenKind::Literal {
+                    kind: LiteralKind::LiteralString
+                },
+                25
+            )]
+        );
 
         // invalid literal strings
         assert_eq!(test_input(b"("), vec![Token::new(TokenKind::Unknown, 1)]);
         assert_eq!(test_input(b")"), vec![Token::new(TokenKind::Unknown, 1)]);
-        assert_eq!(test_input(b"(This string has ( unbalanced parentheses.)"), vec![Token::new(TokenKind::Unknown, 43)]);
+        assert_eq!(
+            test_input(b"(This string has ( unbalanced parentheses.)"),
+            vec![Token::new(TokenKind::Unknown, 43)]
+        );
     }
 
     // ISO `32000-1:2008`, Section 7.3.4.3 Hexadecimal Strings.
     #[test]
     fn test_hex_string() {
-        assert_eq!(test_input(b"<4E6F762073686D6F7A206B6120706F702E>"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::HexString }, 36)]);
+        assert_eq!(
+            test_input(b"<4E6F762073686D6F7A206B6120706F702E>"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::HexString }, 36)]
+        );
 
-        assert_eq!(test_input(b"<901FA3>"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::HexString }, 8)]);
+        assert_eq!(
+            test_input(b"<901FA3>"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::HexString }, 8)]
+        );
         assert_eq!(test_input(b"<901FA>"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::HexString }, 7)]);
 
-        assert_eq!(test_input(b"<90\0 1F\r\n A3\t\x0C>"), vec![Token::new(TokenKind::Literal { kind: LiteralKind::HexString }, 15)]);
+        assert_eq!(
+            test_input(b"<90\0 1F\r\n A3\t\x0C>"),
+            vec![Token::new(TokenKind::Literal { kind: LiteralKind::HexString }, 15)]
+        );
 
         // invalid hex strings
         assert_eq!(test_input(b"<"), vec![Token::new(TokenKind::Unknown, 1)]);
@@ -344,11 +484,16 @@ mod tests {
         assert_eq!(
             test_input(b"[ 1 (2) 3 ]"),
             vec![
-                Token::new(TokenKind::OpenSquare, 1),
+                Token::new(TokenKind::OpenBracket, 1),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
-                Token::new(TokenKind::Literal { kind: LiteralKind::LiteralString }, 3),
+                Token::new(
+                    TokenKind::Literal {
+                        kind: LiteralKind::LiteralString
+                    },
+                    3
+                ),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
-                Token::new(TokenKind::CloseSquare, 1),
+                Token::new(TokenKind::CloseBracket, 1),
             ]
         );
     }
@@ -375,11 +520,22 @@ mod tests {
     #[test]
     fn test_comments() {
         assert_eq!(test_input(b"% This is a comment"), vec![Token::new(TokenKind::Comment, 19)]);
-        assert_eq!(test_input(b"% This is a comment\n"), vec![Token::new(TokenKind::Comment, 19), Token::new(TokenKind::Eol, 1)]);
-        assert_eq!(test_input(b"% This is a comment\r\n"), vec![Token::new(TokenKind::Comment, 19), Token::new(TokenKind::Eol, 2)]);
+        assert_eq!(
+            test_input(b"% This is a comment\n"),
+            vec![Token::new(TokenKind::Comment, 19), Token::new(TokenKind::Eol, 1)]
+        );
+        assert_eq!(
+            test_input(b"% This is a comment\r\n"),
+            vec![Token::new(TokenKind::Comment, 19), Token::new(TokenKind::Eol, 2)]
+        );
         assert_eq!(
             test_input(b"abc%comment (/%) blah blah blah \n123"),
-            vec![Token::new(TokenKind::Keyword, 3), Token::new(TokenKind::Comment, 29), Token::new(TokenKind::Eol, 1), Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 3)]
+            vec![
+                Token::new(TokenKind::Keyword, 3),
+                Token::new(TokenKind::Comment, 29),
+                Token::new(TokenKind::Eol, 1),
+                Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 3)
+            ]
         );
     }
 

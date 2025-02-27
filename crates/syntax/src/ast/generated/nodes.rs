@@ -21,15 +21,99 @@ impl ArrayExpr {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct DictionaryExpr {
+    pub(crate) syntax: SyntaxNode,
+}
+impl DictionaryExpr {
+    #[inline]
+    pub fn dictionary_item_exprs(&self) -> AstChildren<DictionaryItemExpr> { support::children(&self.syntax) }
+    #[inline]
+    pub fn l_dict_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![<<]) }
+    #[inline]
+    pub fn r_dict_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![>>]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct DictionaryItemExpr {
+    pub(crate) syntax: SyntaxNode,
+}
+impl DictionaryItemExpr {
+    #[inline]
+    pub fn dictionary_item_key_expr(&self) -> Option<DictionaryItemKeyExpr> { support::child(&self.syntax) }
+    #[inline]
+    pub fn dictionary_item_value_expr(&self) -> Option<DictionaryItemValueExpr> { support::child(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct DictionaryItemKeyExpr {
+    pub(crate) syntax: SyntaxNode,
+}
+impl DictionaryItemKeyExpr {
+    #[inline]
+    pub fn literal(&self) -> Option<Literal> { support::child(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct DictionaryItemValueExpr {
+    pub(crate) syntax: SyntaxNode,
+}
+impl DictionaryItemValueExpr {
+    #[inline]
+    pub fn expr(&self) -> Option<Expr> { support::child(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct IndirectReferenceExpr {
+    pub(crate) syntax: SyntaxNode,
+}
+impl IndirectReferenceExpr {
+    #[inline]
+    pub fn generation_number(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn object_number(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn R_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![R]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Literal {
     pub(crate) syntax: SyntaxNode,
 }
 impl Literal {}
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ObjectExpr {
+    pub(crate) syntax: SyntaxNode,
+}
+impl ObjectExpr {
+    #[inline]
+    pub fn data(&self) -> Option<Expr> { support::child(&self.syntax) }
+    #[inline]
+    pub fn object_id(&self) -> Option<ObjectId> { support::child(&self.syntax) }
+    #[inline]
+    pub fn endobj_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![endobj]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ObjectId {
+    pub(crate) syntax: SyntaxNode,
+}
+impl ObjectId {
+    #[inline]
+    pub fn generation_number(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn object_number(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn obj_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![obj]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Expr {
     ArrayExpr(ArrayExpr),
+    DictionaryExpr(DictionaryExpr),
+    IndirectReferenceExpr(IndirectReferenceExpr),
     Literal(Literal),
+    ObjectExpr(ObjectExpr),
 }
 impl AstNode for ArrayExpr {
     #[inline]
@@ -41,6 +125,111 @@ impl AstNode for ArrayExpr {
     }
     #[inline]
     fn can_cast(kind: SyntaxKind) -> bool { kind == ARRAY_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for DictionaryExpr {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        DICTIONARY_EXPR
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == DICTIONARY_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for DictionaryItemExpr {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        DICTIONARY_ITEM_EXPR
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == DICTIONARY_ITEM_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for DictionaryItemKeyExpr {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        DICTIONARY_ITEM_KEY_EXPR
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == DICTIONARY_ITEM_KEY_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for DictionaryItemValueExpr {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        DICTIONARY_ITEM_VALUE_EXPR
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == DICTIONARY_ITEM_VALUE_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for IndirectReferenceExpr {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        INDIRECT_REFERENCE_EXPR
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == INDIRECT_REFERENCE_EXPR }
     #[inline]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -73,22 +262,79 @@ impl AstNode for Literal {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl AstNode for ObjectExpr {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        OBJECT_EXPR
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == OBJECT_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for ObjectId {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        OBJECT_ID
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == OBJECT_ID }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
 impl From<ArrayExpr> for Expr {
     #[inline]
     fn from(node: ArrayExpr) -> Expr { Expr::ArrayExpr(node) }
+}
+impl From<DictionaryExpr> for Expr {
+    #[inline]
+    fn from(node: DictionaryExpr) -> Expr { Expr::DictionaryExpr(node) }
+}
+impl From<IndirectReferenceExpr> for Expr {
+    #[inline]
+    fn from(node: IndirectReferenceExpr) -> Expr { Expr::IndirectReferenceExpr(node) }
 }
 impl From<Literal> for Expr {
     #[inline]
     fn from(node: Literal) -> Expr { Expr::Literal(node) }
 }
+impl From<ObjectExpr> for Expr {
+    #[inline]
+    fn from(node: ObjectExpr) -> Expr { Expr::ObjectExpr(node) }
+}
 impl AstNode for Expr {
     #[inline]
-    fn can_cast(kind: SyntaxKind) -> bool { matches!(kind, ARRAY_EXPR | LITERAL) }
+    fn can_cast(kind: SyntaxKind) -> bool { matches!(kind, ARRAY_EXPR | DICTIONARY_EXPR | INDIRECT_REFERENCE_EXPR | LITERAL | OBJECT_EXPR) }
     #[inline]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         let res = match syntax.kind() {
             ARRAY_EXPR => Expr::ArrayExpr(ArrayExpr { syntax }),
+            DICTIONARY_EXPR => Expr::DictionaryExpr(DictionaryExpr { syntax }),
+            INDIRECT_REFERENCE_EXPR => Expr::IndirectReferenceExpr(IndirectReferenceExpr { syntax }),
             LITERAL => Expr::Literal(Literal { syntax }),
+            OBJECT_EXPR => Expr::ObjectExpr(ObjectExpr { syntax }),
             _ => return None,
         };
         Some(res)
@@ -97,7 +343,10 @@ impl AstNode for Expr {
     fn syntax(&self) -> &SyntaxNode {
         match self {
             Expr::ArrayExpr(it) => &it.syntax,
+            Expr::DictionaryExpr(it) => &it.syntax,
+            Expr::IndirectReferenceExpr(it) => &it.syntax,
             Expr::Literal(it) => &it.syntax,
+            Expr::ObjectExpr(it) => &it.syntax,
         }
     }
 }
@@ -107,6 +356,27 @@ impl std::fmt::Display for Expr {
 impl std::fmt::Display for ArrayExpr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
+impl std::fmt::Display for DictionaryExpr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for DictionaryItemExpr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for DictionaryItemKeyExpr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for DictionaryItemValueExpr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for IndirectReferenceExpr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
 impl std::fmt::Display for Literal {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for ObjectExpr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }

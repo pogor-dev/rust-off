@@ -11,6 +11,12 @@ repository.workspace = true
 [dependencies]
 # Add any dependencies required for your project here
 edition.workspace = true
+pdfc-lexer.workspace = true
+tracing = { workspace = true, optional = true }
 
 [dev-dependencies]
 # Add any development dependencies here
+
+[features]
+default = ["tracing"]
+in-rust-tree = []

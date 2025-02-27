@@ -27,6 +27,7 @@ extern crate pdfc_lexer;
 #[cfg(feature = "in-rust-tree")]
 extern crate pdfc_lexer;
 
+mod parsing;
 mod syntax_error;
 mod syntax_node;
 mod validation;
@@ -36,7 +37,7 @@ pub mod ast;
 pub use crate::{
     ast::{AstNode, AstToken},
     syntax_error::SyntaxError,
-    syntax_node::{SyntaxNode, SyntaxNodeChildren, SyntaxToken},
+    syntax_node::{SyntaxNode, SyntaxNodeChildren, SyntaxToken, SyntaxTreeBuilder},
 };
 
 pub use pdfc_parser::{Edition, SyntaxKind, T};

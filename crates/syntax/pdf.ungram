@@ -20,11 +20,29 @@
 
 Expr = Literal
   | ArrayExpr
+  | DictionaryExpr
+  | ObjectExpr
+  | IndirectReferenceExpr
 
 ArrayExpr =
   '[' 
   Expr*
   ']'
+
+DictionaryItemExpr =
+  DictionaryItemKeyExpr
+  DictionaryItemValueExpr
+
+DictionaryItemKeyExpr =
+  Literal
+
+DictionaryItemValueExpr =
+  Expr
+
+DictionaryExpr =
+  '<<'
+  DictionaryItemExpr*
+  '>>'
 
 Literal =
   value:(
@@ -33,6 +51,21 @@ Literal =
   | '@name' | 'null'
   | 'true' | 'false'
   )
+
+//*************************//
+//        Objects          //
+//*************************//
+
+ObjectExpr =
+  ObjectId
+  data:Expr
+  'endobj'
+
+ObjectId =
+ object_number:Literal generation_number:Literal 'obj'
+
+IndirectReferenceExpr =
+  object_number:Literal generation_number:Literal 'R'
 
 // //*************************//
 // //     PDF Document        //

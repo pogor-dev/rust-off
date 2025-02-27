@@ -10,14 +10,20 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build-lexer:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        crate:
+          - lexer
+          - parser
     defaults:
       run:
-        working-directory: ./crates/lexer
-    runs-on: ubuntu-latest
+        working-directory: ./crates/${{ matrix.crate }}
+    name: Build and Test the ${{ matrix.crate }} crate
     steps:
     - uses: actions/checkout@v4
-    - name: Build
+    - name: Build ${{ matrix.crate }}
       run: cargo build --verbose
-    - name: Run tests
+    - name: Run tests ${{ matrix.crate }}
       run: cargo test --verbose
