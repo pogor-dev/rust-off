@@ -1,0 +1,8 @@
+(This is a string) 
+(Strings can contain newlines 
+and such.) 
+(Strings can contain balanced parentheses () 
+and special characters ( * ! & } ^ %and so on) .) 
+(The following is an empty string .) 
+() 
+(It has zero (0) length.) 

@@ -67,6 +67,21 @@ ObjectId =
 IndirectReferenceExpr =
   object_number:Literal generation_number:Literal 'R'
 
+//*************************//
+//          Items          //
+//*************************//
+
+SourceFile =
+  Body
+  Trailer
+
+Body =
+  ObjectExpr*
+
+Trailer =
+  'trailer' DictionaryExpr
+  'startxref' Literal
+
 // //*************************//
 // //     PDF Document        //
 // //*************************//

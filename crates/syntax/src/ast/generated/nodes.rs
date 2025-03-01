@@ -21,6 +21,15 @@ impl ArrayExpr {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Body {
+    pub(crate) syntax: SyntaxNode,
+}
+impl Body {
+    #[inline]
+    pub fn object_exprs(&self) -> AstChildren<ObjectExpr> { support::children(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DictionaryExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -108,6 +117,32 @@ impl ObjectId {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct SourceFile {
+    pub(crate) syntax: SyntaxNode,
+}
+impl SourceFile {
+    #[inline]
+    pub fn body(&self) -> Option<Body> { support::child(&self.syntax) }
+    #[inline]
+    pub fn trailer(&self) -> Option<Trailer> { support::child(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Trailer {
+    pub(crate) syntax: SyntaxNode,
+}
+impl Trailer {
+    #[inline]
+    pub fn dictionary_expr(&self) -> Option<DictionaryExpr> { support::child(&self.syntax) }
+    #[inline]
+    pub fn literal(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn startxref_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![startxref]) }
+    #[inline]
+    pub fn trailer_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![trailer]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Expr {
     ArrayExpr(ArrayExpr),
     DictionaryExpr(DictionaryExpr),
@@ -125,6 +160,27 @@ impl AstNode for ArrayExpr {
     }
     #[inline]
     fn can_cast(kind: SyntaxKind) -> bool { kind == ARRAY_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for Body {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        BODY
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == BODY }
     #[inline]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -304,6 +360,48 @@ impl AstNode for ObjectId {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl AstNode for SourceFile {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        SOURCE_FILE
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == SOURCE_FILE }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for Trailer {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        TRAILER
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == TRAILER }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
 impl From<ArrayExpr> for Expr {
     #[inline]
     fn from(node: ArrayExpr) -> Expr { Expr::ArrayExpr(node) }
@@ -356,6 +454,9 @@ impl std::fmt::Display for Expr {
 impl std::fmt::Display for ArrayExpr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
+impl std::fmt::Display for Body {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
 impl std::fmt::Display for DictionaryExpr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
@@ -378,5 +479,11 @@ impl std::fmt::Display for ObjectExpr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for ObjectId {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for SourceFile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for Trailer {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }

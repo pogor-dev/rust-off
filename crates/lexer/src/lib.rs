@@ -36,7 +36,7 @@ impl Cursor<'_> {
             // PDF keyword.
             b if b.is_ascii_alphabetic() => {
                 self.eat_while(|b| b.is_ascii_alphanumeric());
-                TokenKind::Keyword
+                TokenKind::Ident
             }
 
             // PDF Name.
@@ -373,14 +373,14 @@ mod tests {
     /// ISO `32000-1:2008`, Section 7.3.2 Boolean Objects.
     #[test]
     fn test_boolean() {
-        assert_eq!(test_input(b"true"), vec![Token::new(TokenKind::Keyword, 4)]);
-        assert_eq!(test_input(b"false"), vec![Token::new(TokenKind::Keyword, 5)]);
+        assert_eq!(test_input(b"true"), vec![Token::new(TokenKind::Ident, 4)]);
+        assert_eq!(test_input(b"false"), vec![Token::new(TokenKind::Ident, 5)]);
     }
 
     /// ISO `32000-1:2008`, Section 7.3.9 Null Object.
     #[test]
     fn test_null() {
-        assert_eq!(test_input(b"null"), vec![Token::new(TokenKind::Keyword, 4)]);
+        assert_eq!(test_input(b"null"), vec![Token::new(TokenKind::Ident, 4)]);
     }
 
     /// ISO `32000-1:2008`, Section 7.3.4.2 Literal Strings.
@@ -510,7 +510,7 @@ mod tests {
                 Token::new(TokenKind::Literal { kind: LiteralKind::Name }, 6),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 1),
-                Token::new(TokenKind::Keyword, 1),
+                Token::new(TokenKind::Ident, 1),
                 Token::new(TokenKind::CloseDict, 2),
             ]
         );
@@ -531,7 +531,7 @@ mod tests {
         assert_eq!(
             test_input(b"abc%comment (/%) blah blah blah \n123"),
             vec![
-                Token::new(TokenKind::Keyword, 3),
+                Token::new(TokenKind::Ident, 3),
                 Token::new(TokenKind::Comment, 29),
                 Token::new(TokenKind::Eol, 1),
                 Token::new(TokenKind::Literal { kind: LiteralKind::Int }, 3)

@@ -28,8 +28,8 @@ pub enum TokenKind {
     /// A comment token, e.g. `% This is a comment`.
     Comment,
 
-    /// A kewyword token, e.g. `obj`, `endobj`, `stream`, `endstream`.
-    Keyword,
+    /// A identifier or kewyword token, e.g. `obj`, `endobj`, `stream`, `endstream`.
+    Ident,
 
     /// A literal token, e.g. `123`, `3.14`.
     ///

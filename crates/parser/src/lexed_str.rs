@@ -161,7 +161,7 @@ impl<'a> Converter<'a> {
         }
     }
 
-    fn extend_token(&mut self, kind: &pdfc_lexer::TokenKind, mut token_text: &str) {
+    fn extend_token(&mut self, kind: &pdfc_lexer::TokenKind, token_text: &str) {
         // A note on an intended tradeoff:
         // We drop some useful information here, namely the exact text of the token.
         // Storing that info in `SyntaxKind` is not possible due to its layout requirements of
@@ -176,7 +176,7 @@ impl<'a> Converter<'a> {
                 pdfc_lexer::TokenKind::Comment => COMMENT,
 
                 // Keywords that are not recognized by the parser are treated as errors.
-                pdfc_lexer::TokenKind::Keyword => SyntaxKind::from_keyword(token_text, self.edition).unwrap_or(ERROR),
+                pdfc_lexer::TokenKind::Ident => SyntaxKind::from_keyword(token_text, self.edition).unwrap_or(ERROR),
 
                 pdfc_lexer::TokenKind::Literal { kind, .. } => {
                     self.extend_literal(token_text.len(), kind);

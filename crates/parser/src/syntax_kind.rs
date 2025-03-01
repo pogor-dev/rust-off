@@ -20,3 +20,10 @@ impl From<SyntaxKind> for u16 {
         k as u16
     }
 }
+
+impl SyntaxKind {
+    #[inline]
+    pub fn is_trivia(self) -> bool {
+        matches!(self, SyntaxKind::WHITESPACE | SyntaxKind::COMMENT)
+    }
+}

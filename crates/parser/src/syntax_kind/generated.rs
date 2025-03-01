@@ -19,6 +19,8 @@ pub enum SyntaxKind {
     FALSE_KW,
     NULL_KW,
     OBJ_KW,
+    STARTXREF_KW,
+    TRAILER_KW,
     TRUE_KW,
     HEX_STRING,
     INT_NUMBER,
@@ -30,6 +32,7 @@ pub enum SyntaxKind {
     NEWLINE,
     WHITESPACE,
     ARRAY_EXPR,
+    BODY,
     DICTIONARY_EXPR,
     DICTIONARY_ITEM_EXPR,
     DICTIONARY_ITEM_KEY_EXPR,
@@ -39,6 +42,8 @@ pub enum SyntaxKind {
     LITERAL,
     OBJECT_EXPR,
     OBJECT_ID,
+    SOURCE_FILE,
+    TRAILER,
     #[doc(hidden)]
     __LAST,
 }
@@ -56,6 +61,7 @@ impl SyntaxKind {
             | NAME
             | REAL_NUMBER
             | ARRAY_EXPR
+            | BODY
             | DICTIONARY_EXPR
             | DICTIONARY_ITEM_EXPR
             | DICTIONARY_ITEM_KEY_EXPR
@@ -65,6 +71,8 @@ impl SyntaxKind {
             | LITERAL
             | OBJECT_EXPR
             | OBJECT_ID
+            | SOURCE_FILE
+            | TRAILER
             | COMMENT
             | ERROR
             | NEWLINE
@@ -78,13 +86,15 @@ impl SyntaxKind {
             FALSE_KW => "false",
             NULL_KW => "null",
             OBJ_KW => "obj",
+            STARTXREF_KW => "startxref",
+            TRAILER_KW => "trailer",
             TRUE_KW => "true",
         }
     }
     #[doc = r" Checks whether this syntax kind is a strict keyword for the given edition."]
     #[doc = r" Strict keywords are identifiers that are always considered keywords."]
     pub fn is_strict_keyword(self, edition: Edition) -> bool {
-        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | TRUE_KW)
+        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | TRAILER_KW | TRUE_KW)
             || match self {
                 _ => false,
             }
@@ -98,7 +108,7 @@ impl SyntaxKind {
     }
     #[doc = r" Checks whether this syntax kind is a strict or weak keyword for the given edition."]
     pub fn is_keyword(self, edition: Edition) -> bool {
-        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | TRUE_KW)
+        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | TRAILER_KW | TRUE_KW)
             || match self {
                 _ => false,
             }
@@ -112,6 +122,8 @@ impl SyntaxKind {
             "false" => FALSE_KW,
             "null" => NULL_KW,
             "obj" => OBJ_KW,
+            "startxref" => STARTXREF_KW,
+            "trailer" => TRAILER_KW,
             "true" => TRUE_KW,
             _ => return None,
         };
@@ -133,4 +145,4 @@ impl SyntaxKind {
     }
 }
 #[macro_export]
-macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [lifetime_ident] => { $ crate :: SyntaxKind :: LIFETIME_IDENT } ; [int_number] => { $ crate :: SyntaxKind :: INT_NUMBER } ; [ident] => { $ crate :: SyntaxKind :: IDENT } ; [string] => { $ crate :: SyntaxKind :: STRING } ; [shebang] => { $ crate :: SyntaxKind :: SHEBANG } ; }
+macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [startxref] => { $ crate :: SyntaxKind :: STARTXREF_KW } ; [trailer] => { $ crate :: SyntaxKind :: TRAILER_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [lifetime_ident] => { $ crate :: SyntaxKind :: LIFETIME_IDENT } ; [int_number] => { $ crate :: SyntaxKind :: INT_NUMBER } ; [ident] => { $ crate :: SyntaxKind :: IDENT } ; [string] => { $ crate :: SyntaxKind :: STRING } ; [shebang] => { $ crate :: SyntaxKind :: SHEBANG } ; }

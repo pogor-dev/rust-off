@@ -690,7 +690,7 @@ fn clean_token_name(name: &str) -> String {
 
 fn lower(grammar: &Grammar) -> AstSrc {
     let mut res = AstSrc {
-        tokens: "Whitespace Comment LiteralString HexString Name IntNumber RealNumber"
+        tokens: "Whitespace Comment LiteralString HexString Name IntNumber RealNumber Ident"
             .split_ascii_whitespace()
             .map(|it| it.to_owned())
             .collect::<Vec<_>>(),
