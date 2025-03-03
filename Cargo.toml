@@ -38,7 +38,7 @@ pdfc-parser = { path = "./crates/parser", version = "0.0.0" }
 limit = { path = "./crates/limit", version = "0.0.0" }
 
 # non-local crates
-anyhow = "1.0.96"
+anyhow = "1.0.97"
 xshell = "0.2.7"
 itertools = "0.14.0"
 either = "1.14.0"
