@@ -88,17 +88,10 @@ fn generate_nodes(kinds: KindsSrc, grammar: &AstSrc) -> String {
         .map(|node| {
             let name = format_ident!("{}", node.name);
             let kind = format_ident!("{}", to_upper_snake_case(&node.name));
-            let traits = node
-                .traits
-                .iter()
-                .filter(|trait_name| {
-                    // Loops have two expressions so this might collide, therefore manual impl it
-                    node.name != "ForExpr" && node.name != "WhileExpr" || trait_name.as_str() != "HasLoopBody"
-                })
-                .map(|trait_name| {
-                    let trait_name = format_ident!("{}", trait_name);
-                    quote!(impl ast::#trait_name for #name {})
-                });
+            let traits = node.traits.iter().map(|trait_name| {
+                let trait_name = format_ident!("{}", trait_name);
+                quote!(impl ast::#trait_name for #name {})
+            });
 
             let methods = node.fields.iter().map(|field| {
                 let method_name = format_ident!("{}", field.method_name());
@@ -570,11 +563,6 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
             #([#strict_keywords_tokens] => { $crate::SyntaxKind::#strict_keywords_variants };)*
             #([#contextual_keywords_tokens] => { $crate::SyntaxKind::#contextual_keywords_variants };)*
             #([#edition_dependent_keywords_tokens] => { $crate::SyntaxKind::#edition_dependent_keywords_variants };)*
-            [lifetime_ident] => { $crate::SyntaxKind::LIFETIME_IDENT };
-            [int_number] => { $crate::SyntaxKind::INT_NUMBER };
-            [ident] => { $crate::SyntaxKind::IDENT };
-            [string] => { $crate::SyntaxKind::STRING };
-            [shebang] => { $crate::SyntaxKind::SHEBANG };
         }
     };
 
@@ -690,7 +678,7 @@ fn clean_token_name(name: &str) -> String {
 
 fn lower(grammar: &Grammar) -> AstSrc {
     let mut res = AstSrc {
-        tokens: "Whitespace Comment LiteralString HexString Name IntNumber RealNumber Ident"
+        tokens: "Whitespace Comment LiteralString HexString Name IntNumber RealNumber"
             .split_ascii_whitespace()
             .map(|it| it.to_owned())
             .collect::<Vec<_>>(),

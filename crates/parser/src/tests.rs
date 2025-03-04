@@ -16,7 +16,8 @@ use crate::{Edition, LexedStr, TopEntryPoint};
 mod runner;
 
 fn infer_edition(file_path: &Path) -> Edition {
-    let file_content = std::fs::read_to_string(file_path).unwrap();
+    let bytes = fs::read(&file_path).unwrap();
+    let file_content = String::from_utf8_lossy(&bytes).to_string();
     if let Some(edition) = file_content.strip_prefix("//@ edition: ") {
         edition[..4].parse().expect("invalid edition directive")
     } else {
@@ -145,7 +146,8 @@ impl TestCase {
             if path.extension().unwrap_or_default() == "pdf" {
                 let pdf = path;
                 let rast = pdf.with_extension("rast");
-                let text = fs::read_to_string(&pdf).unwrap();
+                let bytes = fs::read(&pdf).unwrap();
+                let text = String::from_utf8_lossy(&bytes).to_string();
                 res.push(TestCase { pdf, rast, text });
             }
         }
