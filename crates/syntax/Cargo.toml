@@ -14,7 +14,7 @@ pdfc-lexer.workspace = true
 tracing.workspace = true
 pdfc-parser.workspace = true
 either.workspace = true
-rowan = "0.16.1"
+rowan.workspace = true
 
 [dev-dependencies]
 # Add any development dependencies here
