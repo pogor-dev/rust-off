@@ -26,6 +26,7 @@ enum SyntaxKind {
     ATOM, // `+`, `15`, wraps a WORD token
     ROOT, // top-level node: a list of s-expressions
 }
+
 use SyntaxKind::*;
 
 /// Some boilerplate is needed, as rowan settled on using its own
@@ -80,7 +81,7 @@ fn parse(text: &str) -> Parse {
     struct Parser {
         /// input tokens, including whitespace,
         /// in *reverse* order.
-        tokens: Vec<(SyntaxKind, String)>,
+        tokens: Vec<(SyntaxKind, Vec<u8>)>,
         /// the in-progress tree.
         builder: GreenNodeBuilder<'static>,
         /// the list of syntax errors we've accumulated
@@ -169,7 +170,7 @@ fn parse(text: &str) -> Parse {
         /// Advance one token, adding it to the current branch of the tree builder.
         fn bump(&mut self) {
             let (kind, text) = self.tokens.pop().unwrap();
-            self.builder.token(kind.into(), text.as_str());
+            self.builder.token(kind.into(), text.as_slice());
         }
         /// Peek at the first unprocessed token
         fn current(&self) -> Option<SyntaxKind> {
@@ -313,21 +314,23 @@ enum Op {
 
 impl Atom {
     fn eval(&self) -> Option<i64> {
-        self.text().parse().ok()
+        std::str::from_utf8(&self.text()).ok()?.parse().ok()
     }
+
     fn as_op(&self) -> Option<Op> {
-        let op = match self.text().as_str() {
-            "+" => Op::Add,
-            "-" => Op::Sub,
-            "*" => Op::Mul,
-            "/" => Op::Div,
+        let op = match self.text().as_slice() {
+            b"+" => Op::Add,
+            b"-" => Op::Sub,
+            b"*" => Op::Mul,
+            b"/" => Op::Div,
             _ => return None,
         };
         Some(op)
     }
-    fn text(&self) -> String {
+
+    fn text(&self) -> Vec<u8> {
         match self.0.green().children().next() {
-            Some(rowan::NodeOrToken::Token(token)) => token.text().to_string(),
+            Some(rowan::NodeOrToken::Token(token)) => token.text().to_vec(),
             _ => unreachable!(),
         }
     }
@@ -387,7 +390,7 @@ nan
 
 /// Split the input string into a flat list of tokens
 /// (such as L_PAREN, WORD, and WHITESPACE)
-fn lex(text: &str) -> Vec<(SyntaxKind, String)> {
+fn lex(text: &str) -> Vec<(SyntaxKind, Vec<u8>)> {
     fn tok(t: SyntaxKind) -> m_lexer::TokenKind {
         m_lexer::TokenKind(rowan::SyntaxKind::from(t).0)
     }
@@ -417,7 +420,7 @@ fn lex(text: &str) -> Vec<(SyntaxKind, String)> {
         .into_iter()
         .map(|t| (t.len, kind(t.kind)))
         .scan(0usize, |start_offset, (len, kind)| {
-            let s: String = text[*start_offset..*start_offset + len].into();
+            let s: Vec<u8> = text[*start_offset..*start_offset + len].into();
             *start_offset += len;
             Some((kind, s))
         })

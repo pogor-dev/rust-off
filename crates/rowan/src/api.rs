@@ -67,8 +67,8 @@ impl<L: Language> fmt::Debug for SyntaxToken<L> {
         }
         let text = self.text();
         for idx in 21..25 {
-            if text.is_char_boundary(idx) {
-                let text = format!("{} ...", &text[..idx]);
+            if std::str::from_utf8(text).unwrap().is_char_boundary(idx) {
+                let text = format!("{:?} ...", &text[..idx]);
                 return write!(f, " {:?}", text);
             }
         }
@@ -323,7 +323,7 @@ impl<L: Language> SyntaxToken<L> {
         self.raw.index()
     }
 
-    pub fn text(&self) -> &str {
+    pub fn text(&self) -> &[u8] {
         self.raw.text()
     }
 

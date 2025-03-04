@@ -61,7 +61,7 @@ pub trait AstToken {
 
     fn syntax(&self) -> &SyntaxToken;
 
-    fn text(&self) -> &str {
+    fn text(&self) -> &[u8] {
         self.syntax().text()
     }
 }

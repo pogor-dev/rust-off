@@ -89,7 +89,11 @@ impl<T> Parse<T> {
 impl<T: AstNode> Parse<T> {
     /// Converts this parse result into a parse result for an untyped syntax tree.
     pub fn to_syntax(self) -> Parse<SyntaxNode> {
-        Parse { green: self.green, errors: self.errors, _ty: PhantomData }
+        Parse {
+            green: self.green,
+            errors: self.errors,
+            _ty: PhantomData,
+        }
     }
 
     /// Gets the parsed syntax tree as a typed ast node.
@@ -114,7 +118,11 @@ impl<T: AstNode> Parse<T> {
 impl Parse<SyntaxNode> {
     pub fn cast<N: AstNode>(self) -> Option<Parse<N>> {
         if N::cast(self.syntax_node()).is_some() {
-            Some(Parse { green: self.green, errors: self.errors, _ty: PhantomData })
+            Some(Parse {
+                green: self.green,
+                errors: self.errors,
+                _ty: PhantomData,
+            })
         } else {
             None
         }

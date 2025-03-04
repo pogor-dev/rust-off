@@ -48,7 +48,7 @@ impl SyntaxTreeBuilder {
         Parse::new(green, errors)
     }
 
-    pub fn token(&mut self, kind: SyntaxKind, text: &str) {
+    pub fn token(&mut self, kind: SyntaxKind, text: &[u8]) {
         let kind = PdfLanguage::kind_to_raw(kind);
         self.inner.token(kind, text);
     }

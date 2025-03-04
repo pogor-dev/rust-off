@@ -130,7 +130,7 @@ impl NodeCache {
         (hash, node)
     }
 
-    pub(crate) fn token(&mut self, kind: SyntaxKind, text: &str) -> (u64, GreenToken) {
+    pub(crate) fn token(&mut self, kind: SyntaxKind, text: &[u8]) -> (u64, GreenToken) {
         let hash = {
             let mut h = FxHasher::default();
             kind.hash(&mut h);

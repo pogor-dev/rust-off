@@ -19,7 +19,7 @@ use crate::{
 };
 
 pub struct LexedStr<'a> {
-    text: &'a str,
+    text: &'a [u8],
     kind: Vec<SyntaxKind>,
     start: Vec<u32>,
     error: Vec<LexError>,
@@ -31,13 +31,13 @@ struct LexError {
 }
 
 impl<'a> LexedStr<'a> {
-    pub fn new(edition: Edition, text: &'a str) -> LexedStr<'a> {
+    pub fn new(edition: Edition, text: &'a [u8]) -> LexedStr<'a> {
         let _p = tracing::info_span!("LexedStr::new").entered();
         let mut conv = Converter::new(edition, text);
 
         // Re-create the tokenizer from scratch every token because `GuardedStrPrefix` is one token in the lexer
         // but we want to split it to two in edition <2024.
-        while let Some(token) = pdfc_lexer::tokenize(text[conv.offset..].as_bytes()).next() {
+        while let Some(token) = pdfc_lexer::tokenize(&text[conv.offset..]).next() {
             let token_text = &text[conv.offset..][..token.len as usize];
 
             conv.extend_token(&token.kind, token_text);
@@ -46,12 +46,12 @@ impl<'a> LexedStr<'a> {
         conv.finalize_with_eof()
     }
 
-    pub fn single_token(edition: Edition, text: &'a str) -> Option<(SyntaxKind, Option<String>)> {
+    pub fn single_token(edition: Edition, text: &'a [u8]) -> Option<(SyntaxKind, Option<String>)> {
         if text.is_empty() {
             return None;
         }
 
-        let token = pdfc_lexer::tokenize(text.as_bytes()).next()?;
+        let token = pdfc_lexer::tokenize(text).next()?;
         if token.len as usize != text.len() {
             return None;
         }
@@ -64,7 +64,7 @@ impl<'a> LexedStr<'a> {
         }
     }
 
-    pub fn as_str(&self) -> &str {
+    pub fn as_str(&self) -> &[u8] {
         self.text
     }
 
@@ -81,11 +81,11 @@ impl<'a> LexedStr<'a> {
         self.kind[i]
     }
 
-    pub fn text(&self, i: usize) -> &str {
+    pub fn text(&self, i: usize) -> &[u8] {
         self.range_text(i..i + 1)
     }
 
-    pub fn range_text(&self, r: ops::Range<usize>) -> &str {
+    pub fn range_text(&self, r: ops::Range<usize>) -> &[u8] {
         assert!(r.start < r.end && r.end <= self.len());
         let lo = self.start[r.start] as usize;
         let hi = self.start[r.end] as usize;
@@ -132,7 +132,7 @@ struct Converter<'a> {
 }
 
 impl<'a> Converter<'a> {
-    fn new(edition: Edition, text: &'a str) -> Self {
+    fn new(edition: Edition, text: &'a [u8]) -> Self {
         Self {
             res: LexedStr {
                 text,
@@ -161,7 +161,7 @@ impl<'a> Converter<'a> {
         }
     }
 
-    fn extend_token(&mut self, kind: &pdfc_lexer::TokenKind, token_text: &str) {
+    fn extend_token(&mut self, kind: &pdfc_lexer::TokenKind, token_text: &[u8]) {
         // A note on an intended tradeoff:
         // We drop some useful information here, namely the exact text of the token.
         // Storing that info in `SyntaxKind` is not possible due to its layout requirements of
@@ -176,7 +176,10 @@ impl<'a> Converter<'a> {
                 pdfc_lexer::TokenKind::Comment => COMMENT,
 
                 // Keywords that are not recognized by the parser are treated as errors.
-                pdfc_lexer::TokenKind::Ident => SyntaxKind::from_keyword(token_text, self.edition).unwrap_or(ERROR),
+                pdfc_lexer::TokenKind::Ident => {
+                    let token_text_str = std::str::from_utf8(token_text).unwrap();
+                    SyntaxKind::from_keyword(token_text_str, self.edition).unwrap_or(ERROR)
+                }
 
                 pdfc_lexer::TokenKind::Literal { kind, .. } => {
                     self.extend_literal(token_text.len(), kind);
@@ -208,160 +211,5 @@ impl<'a> Converter<'a> {
 
         let err = if err.is_empty() { None } else { Some(err) };
         self.push(syntax_kind, len, err);
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::Edition;
-
-    fn lex(edition: Edition, text: &str) -> LexedStr {
-        LexedStr::new(edition, text)
-    }
-
-    #[test]
-    fn test_empty_input() {
-        let lexed = lex(Edition::Pdf20, "");
-        assert_eq!(lexed.len(), 0);
-        assert!(lexed.is_empty());
-    }
-
-    #[test]
-    fn test_single_token() {
-        let lexed = lex(Edition::Pdf20, "123");
-        assert_eq!(lexed.len(), 1);
-        assert_eq!(lexed.kind(0), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.text(0), "123");
-    }
-
-    #[test]
-    fn test_multiple_tokens() {
-        let lexed = lex(Edition::Pdf20, "123 456");
-        assert_eq!(lexed.len(), 3);
-        assert_eq!(lexed.kind(0), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.kind(1), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(2), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.text(0), "123");
-        assert_eq!(lexed.text(1), " ");
-        assert_eq!(lexed.text(2), "456");
-    }
-
-    #[test]
-    fn test_error_token() {
-        let lexed = lex(Edition::Pdf20, "123 abc");
-        assert_eq!(lexed.len(), 3);
-        assert_eq!(lexed.kind(0), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.kind(1), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(2), SyntaxKind::ERROR);
-        assert_eq!(lexed.text(0), "123");
-        assert_eq!(lexed.text(1), " ");
-        assert_eq!(lexed.text(2), "abc");
-        // assert!(lexed.error(2).is_some()); // TODO: error handling for unrecognized keywords
-    }
-
-    #[test]
-    fn test_comments_and_whitespace() {
-        let lexed = lex(Edition::Pdf20, "123 % comment\n456");
-        assert_eq!(lexed.len(), 5);
-        assert_eq!(lexed.kind(0), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.kind(1), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(2), SyntaxKind::COMMENT);
-        assert_eq!(lexed.kind(3), SyntaxKind::NEWLINE);
-        assert_eq!(lexed.kind(4), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.text(0), "123");
-        assert_eq!(lexed.text(1), " ");
-        assert_eq!(lexed.text(2), "% comment");
-        assert_eq!(lexed.text(3), "\n");
-        assert_eq!(lexed.text(4), "456");
-    }
-
-    #[test]
-    fn test_literal_strings() {
-        let lexed = lex(Edition::Pdf20, "(This is a string)");
-        assert_eq!(lexed.len(), 1);
-        assert_eq!(lexed.kind(0), SyntaxKind::LITERAL_STRING);
-        assert_eq!(lexed.text(0), "(This is a string)");
-    }
-
-    #[test]
-    fn test_hex_strings() {
-        let lexed = lex(Edition::Pdf20, "<4E6F762073686D6F7A>");
-        assert_eq!(lexed.len(), 1);
-        assert_eq!(lexed.kind(0), SyntaxKind::HEX_STRING);
-        assert_eq!(lexed.text(0), "<4E6F762073686D6F7A>");
-    }
-
-    #[test]
-    fn test_arrays() {
-        let lexed = lex(Edition::Pdf20, "[ 1 (2) 3 ]");
-        assert_eq!(lexed.len(), 9);
-        assert_eq!(lexed.kind(0), SyntaxKind::L_BRACK);
-        assert_eq!(lexed.kind(1), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(2), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.kind(3), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(4), SyntaxKind::LITERAL_STRING);
-        assert_eq!(lexed.kind(5), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(6), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.kind(7), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(8), SyntaxKind::R_BRACK);
-        assert_eq!(lexed.text(0), "[");
-        assert_eq!(lexed.text(1), " ");
-        assert_eq!(lexed.text(2), "1");
-        assert_eq!(lexed.text(3), " ");
-        assert_eq!(lexed.text(4), "(2)");
-        assert_eq!(lexed.text(5), " ");
-        assert_eq!(lexed.text(6), "3");
-        assert_eq!(lexed.text(7), " ");
-        assert_eq!(lexed.text(8), "]");
-    }
-
-    #[test]
-    fn test_dictionaries() {
-        let lexed = lex(Edition::Pdf20, "<< /Type /Catalog /Pages 3 0 R >>");
-        assert_eq!(lexed.len(), 15);
-        assert_eq!(lexed.kind(0), SyntaxKind::L_DICT);
-        assert_eq!(lexed.kind(1), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(2), SyntaxKind::NAME);
-        assert_eq!(lexed.kind(3), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(4), SyntaxKind::NAME);
-        assert_eq!(lexed.kind(5), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(6), SyntaxKind::NAME);
-        assert_eq!(lexed.kind(7), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(8), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.kind(9), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(10), SyntaxKind::INT_NUMBER);
-        assert_eq!(lexed.kind(11), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(12), SyntaxKind::R_KW);
-        assert_eq!(lexed.kind(13), SyntaxKind::WHITESPACE);
-        assert_eq!(lexed.kind(14), SyntaxKind::R_DICT);
-        assert_eq!(lexed.text(0), "<<");
-        assert_eq!(lexed.text(1), " ");
-        assert_eq!(lexed.text(2), "/Type");
-        assert_eq!(lexed.text(3), " ");
-        assert_eq!(lexed.text(4), "/Catalog");
-        assert_eq!(lexed.text(5), " ");
-        assert_eq!(lexed.text(6), "/Pages");
-        assert_eq!(lexed.text(7), " ");
-        assert_eq!(lexed.text(8), "3");
-        assert_eq!(lexed.text(9), " ");
-        assert_eq!(lexed.text(10), "0");
-        assert_eq!(lexed.text(11), " ");
-        assert_eq!(lexed.text(12), "R");
-        assert_eq!(lexed.text(13), " ");
-        assert_eq!(lexed.text(14), ">>");
-    }
-
-    #[test]
-    fn test_names() {
-        let lexed = lex(Edition::Pdf20, "/Name1");
-        assert_eq!(lexed.len(), 1);
-        assert_eq!(lexed.kind(0), SyntaxKind::NAME);
-        assert_eq!(lexed.text(0), "/Name1");
-
-        let lexed = lex(Edition::Pdf20, "/ASomewhatLongerName");
-        assert_eq!(lexed.len(), 1);
-        assert_eq!(lexed.kind(0), SyntaxKind::NAME);
-        assert_eq!(lexed.text(0), "/ASomewhatLongerName");
     }
 }

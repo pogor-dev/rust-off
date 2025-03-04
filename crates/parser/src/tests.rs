@@ -16,10 +16,12 @@ use crate::{Edition, LexedStr, TopEntryPoint};
 mod runner;
 
 fn infer_edition(file_path: &Path) -> Edition {
-    let bytes = fs::read(&file_path).unwrap();
-    let file_content = String::from_utf8_lossy(&bytes).to_string();
-    if let Some(edition) = file_content.strip_prefix("//@ edition: ") {
-        edition[..4].parse().expect("invalid edition directive")
+    let file_content = fs::read(&file_path).unwrap().into_boxed_slice();
+    if let Some(edition) = file_content.strip_prefix(b"//@ edition: ") {
+        std::str::from_utf8(&edition[..4])
+            .expect("invalid UTF-8")
+            .parse()
+            .expect("invalid edition directive")
     } else {
         Edition::CURRENT
     }
@@ -43,7 +45,7 @@ fn lex_err() {
     }
 }
 
-fn lex(text: &str, edition: Edition) -> String {
+fn lex(text: &[u8], edition: Edition) -> String {
     let lexed = LexedStr::new(edition, text);
 
     let mut res = String::new();
@@ -52,8 +54,13 @@ fn lex(text: &str, edition: Edition) -> String {
         let text = lexed.text(i);
         let error = lexed.error(i);
 
+        let escaped_text: String = text
+            .iter()
+            .map(|&c| if c.is_ascii() { (c as char).to_string() } else { format!("\\x{:02x}", c) })
+            .collect();
+
         let error = error.map(|err| format!(" error: {err}")).unwrap_or_default();
-        writeln!(res, "{kind:?} {text:?}{error}").unwrap();
+        writeln!(res, "{kind:?} {escaped_text:?}{error}").unwrap();
     }
     res
 }
@@ -78,7 +85,7 @@ fn parse_err() {
     }
 }
 
-fn parse(entry: TopEntryPoint, text: &str, edition: Edition) -> (String, bool) {
+fn parse(entry: TopEntryPoint, text: &[u8], edition: Edition) -> (String, bool) {
     let lexed = LexedStr::new(edition, text);
     let input = lexed.to_input(edition);
     let output = entry.parse(&input, edition);
@@ -111,7 +118,7 @@ fn parse(entry: TopEntryPoint, text: &str, edition: Edition) -> (String, bool) {
             errors.push(format!("error {pos}: {msg}\n"))
         }
     });
-    assert_eq!(len, text.len(), "didn't parse all text.\nParsed:\n{}\n\nAll:\n{}\n", &text[..len], text);
+    assert_eq!(len, text.len(), "didn't parse all text.\nParsed:\n{:?}\n\nAll:\n{:?}\n", &text[..len], text);
 
     for (token, msg) in lexed.errors() {
         let pos = lexed.text_start(token);
@@ -129,7 +136,7 @@ fn parse(entry: TopEntryPoint, text: &str, edition: Edition) -> (String, bool) {
 struct TestCase {
     pdf: PathBuf,
     rast: PathBuf,
-    text: String,
+    text: Box<[u8]>,
 }
 
 impl TestCase {
@@ -146,8 +153,7 @@ impl TestCase {
             if path.extension().unwrap_or_default() == "pdf" {
                 let pdf = path;
                 let rast = pdf.with_extension("rast");
-                let bytes = fs::read(&pdf).unwrap();
-                let text = String::from_utf8_lossy(&bytes).to_string();
+                let text = fs::read(&pdf).unwrap().into_boxed_slice();
                 res.push(TestCase { pdf, rast, text });
             }
         }
@@ -169,7 +175,7 @@ fn run_and_expect_errors(path: &str) {
 #[track_caller]
 fn run_and_expect_no_errors_with_edition(path: &str, edition: Edition) {
     let path = PathBuf::from(path);
-    let text = std::fs::read_to_string(&path).unwrap();
+    let text = fs::read(&path).unwrap().into_boxed_slice();
     let (actual, errors) = parse(TopEntryPoint::SourceFile, &text, edition);
     assert!(!errors, "errors in an OK file {}:\n{actual}", path.display());
     let mut p = PathBuf::from("..");
@@ -181,7 +187,7 @@ fn run_and_expect_no_errors_with_edition(path: &str, edition: Edition) {
 #[track_caller]
 fn run_and_expect_errors_with_edition(path: &str, edition: Edition) {
     let path = PathBuf::from(path);
-    let text = std::fs::read_to_string(&path).unwrap();
+    let text = fs::read(&path).unwrap().into_boxed_slice();
     let (actual, errors) = parse(TopEntryPoint::SourceFile, &text, edition);
     assert!(errors, "no errors in an ERR file {}:\n{actual}", path.display());
     let mut p = PathBuf::from("..");

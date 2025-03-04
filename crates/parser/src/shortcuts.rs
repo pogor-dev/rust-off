@@ -18,7 +18,7 @@ use crate::{
 
 #[derive(Debug)]
 pub enum StrStep<'a> {
-    Token { kind: SyntaxKind, text: &'a str },
+    Token { kind: SyntaxKind, text: &'a [u8] },
     Enter { kind: SyntaxKind },
     Exit,
     Error { msg: &'a str, pos: usize },
@@ -44,7 +44,7 @@ impl LexedStr<'_> {
                 // we use this jointness to inform the parser about what token split
                 // event to emit when we encounter a float literal in a field access
                 if kind == SyntaxKind::REAL_NUMBER {
-                    if !self.text(i).ends_with('.') {
+                    if !self.text(i).ends_with(b".") {
                         res.was_joint();
                     } else {
                         was_joint = false;
@@ -183,8 +183,7 @@ impl Builder<'_, '_> {
 
     fn do_float_split(&mut self, has_pseudo_dot: bool) {
         let text = &self.lexed.range_text(self.pos..self.pos + 1);
-
-        match text.split_once('.') {
+        match split_once_u8(text, b'.') {
             Some((left, right)) => {
                 assert!(!left.is_empty());
                 (self.sink)(StrStep::Token {
@@ -198,10 +197,10 @@ impl Builder<'_, '_> {
                 (self.sink)(StrStep::Exit);
 
                 if has_pseudo_dot {
-                    assert!(right.is_empty(), "{left}.{right}");
+                    assert!(right.is_empty(), "{:?}.{:?}", left, right);
                     self.state = State::Normal;
                 } else {
-                    assert!(!right.is_empty(), "{left}.{right}");
+                    assert!(!right.is_empty(), "{:?}.{:?}", left, right);
                     (self.sink)(StrStep::Token {
                         kind: SyntaxKind::INT_NUMBER,
                         text: right,
@@ -238,8 +237,15 @@ impl Builder<'_, '_> {
     }
 }
 
-fn n_attached_trivias<'a>(kind: SyntaxKind, _trivias: impl Iterator<Item = (SyntaxKind, &'a str)>) -> usize {
+fn n_attached_trivias<'a>(kind: SyntaxKind, _trivias: impl Iterator<Item = (SyntaxKind, &'a [u8])>) -> usize {
     match kind {
         _ => 0,
     }
+}
+
+fn split_once_u8(slice: &[u8], delimiter: u8) -> Option<(&[u8], &[u8])> {
+    let mut split_iter = slice.splitn(2, |&byte| byte == delimiter);
+    let first = split_iter.next()?;
+    let second = split_iter.next()?;
+    Some((first, second))
 }

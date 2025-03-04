@@ -7,7 +7,7 @@ use rowan::TextRange;
 
 use crate::{syntax_node::GreenNode, SyntaxError, SyntaxTreeBuilder};
 
-pub(crate) fn parse_text(text: &str, edition: pdfc_parser::Edition) -> (GreenNode, Vec<SyntaxError>) {
+pub(crate) fn parse_text(text: &[u8], edition: pdfc_parser::Edition) -> (GreenNode, Vec<SyntaxError>) {
     let _p = tracing::info_span!("parse_text").entered();
     let lexed = pdfc_parser::LexedStr::new(edition, text);
     let parser_input = lexed.to_input(edition);
@@ -16,7 +16,7 @@ pub(crate) fn parse_text(text: &str, edition: pdfc_parser::Edition) -> (GreenNod
     (node, errors)
 }
 
-pub(crate) fn parse_text_at(text: &str, entry: pdfc_parser::TopEntryPoint, edition: pdfc_parser::Edition) -> (GreenNode, Vec<SyntaxError>) {
+pub(crate) fn parse_text_at(text: &[u8], entry: pdfc_parser::TopEntryPoint, edition: pdfc_parser::Edition) -> (GreenNode, Vec<SyntaxError>) {
     let _p = tracing::info_span!("parse_text_at").entered();
     let lexed = pdfc_parser::LexedStr::new(edition, text);
     let parser_input = lexed.to_input(edition);

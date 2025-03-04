@@ -46,7 +46,7 @@ impl GreenNodeBuilder<'_> {
 
     /// Adds new token to the current branch.
     #[inline]
-    pub fn token(&mut self, kind: SyntaxKind, text: &str) {
+    pub fn token(&mut self, kind: SyntaxKind, text: &[u8]) {
         let (hash, token) = self.cache.token(kind, text);
         self.children.push((hash, token.into()));
     }

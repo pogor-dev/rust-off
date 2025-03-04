@@ -82,7 +82,7 @@ impl fmt::Display for GreenToken {
 
 impl fmt::Display for GreenTokenData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.text())
+        write!(f, "{:?}", self.text())
     }
 }
 
@@ -95,23 +95,23 @@ impl GreenTokenData {
 
     /// Text of this Token.
     #[inline]
-    pub fn text(&self) -> &str {
-        unsafe { std::str::from_utf8_unchecked(self.data.slice()) }
+    pub fn text(&self) -> &[u8] {
+        self.data.slice()
     }
 
     /// Returns the length of the text covered by this token.
     #[inline]
     pub fn text_len(&self) -> TextSize {
-        TextSize::of(self.text())
+        TextSize::new(self.text().len() as u32)
     }
 }
 
 impl GreenToken {
     /// Creates new Token.
     #[inline]
-    pub fn new(kind: SyntaxKind, text: &str) -> GreenToken {
+    pub fn new(kind: SyntaxKind, text: &[u8]) -> GreenToken {
         let head = GreenTokenHead { kind, _c: Count::new() };
-        let ptr = ThinArc::from_header_and_iter(head, text.bytes());
+        let ptr = ThinArc::from_header_and_iter(head, text.iter().copied());
         GreenToken { ptr }
     }
     #[inline]

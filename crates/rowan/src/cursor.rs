@@ -1032,7 +1032,7 @@ impl SyntaxToken {
     }
 
     #[inline]
-    pub fn text(&self) -> &str {
+    pub fn text(&self) -> &[u8] {
         match self.data().green().as_token() {
             Some(it) => it.text(),
             None => {
@@ -1041,7 +1041,7 @@ impl SyntaxToken {
                     "corrupted tree: a node thinks it is a token: {:?}",
                     self.data().green().as_node().unwrap().to_string()
                 );
-                ""
+                b""
             }
         }
     }
@@ -1336,7 +1336,7 @@ impl Hash for SyntaxToken {
 
 impl fmt::Display for SyntaxToken {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Display::fmt(self.text(), f)
+        write!(f, "{:?}", self.text())
     }
 }
 

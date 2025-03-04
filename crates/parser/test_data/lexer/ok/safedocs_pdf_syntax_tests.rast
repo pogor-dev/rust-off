@@ -1,6 +1,6 @@
 COMMENT "%PDF-1.7"
 NEWLINE "\r\n"
-COMMENT "%����"
+COMMENT "%\\xe2\\xe3\\xcf\\xd3"
 NEWLINE "\r\n"
 COMMENT "%"
 NEWLINE "\r\n"

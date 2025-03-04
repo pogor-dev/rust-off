@@ -59,11 +59,11 @@ type SyntaxToken = rowan::SyntaxToken<Lang>;
 #[allow(unused)]
 type SyntaxElement = rowan::NodeOrToken<SyntaxNode, SyntaxToken>;
 
-struct Parser<I: Iterator<Item = (SyntaxKind, String)>> {
+struct Parser<I: Iterator<Item = (SyntaxKind, Vec<u8>)>> {
     builder: GreenNodeBuilder<'static>,
     iter: Peekable<I>,
 }
-impl<I: Iterator<Item = (SyntaxKind, String)>> Parser<I> {
+impl<I: Iterator<Item = (SyntaxKind, Vec<u8>)>> Parser<I> {
     fn peek(&mut self) -> Option<SyntaxKind> {
         while self.iter.peek().map(|&(t, _)| t == WHITESPACE).unwrap_or(false) {
             self.bump();
@@ -72,7 +72,7 @@ impl<I: Iterator<Item = (SyntaxKind, String)>> Parser<I> {
     }
     fn bump(&mut self) {
         if let Some((token, string)) = self.iter.next() {
-            self.builder.token(token.into(), string.as_str());
+            self.builder.token(token.into(), string.as_slice());
         }
     }
     fn parse_val(&mut self) {
