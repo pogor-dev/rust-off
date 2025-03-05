@@ -769,7 +769,7 @@ fn lower_rule(acc: &mut Vec<Field>, grammar: &Grammar, label: Option<&String>, r
             acc.push(field);
         }
         Rule::Token(token) => {
-            assert!(label.is_none());
+            assert!(label.is_none(), "expected empty token label: {:?}", label.unwrap());
             let mut name = clean_token_name(&grammar[*token].name);
             if "[]{}()".contains(&name) {
                 name = format!("'{name}'");

@@ -17,13 +17,16 @@ pub enum SyntaxKind {
     R_KW,
     ENDOBJ_KW,
     ENDSTREAM_KW,
+    F_KW,
     FALSE_KW,
+    N_KW,
     NULL_KW,
     OBJ_KW,
     STARTXREF_KW,
     STREAM_KW,
     TRAILER_KW,
     TRUE_KW,
+    XREF_KW,
     HEX_STRING,
     INT_NUMBER,
     LITERAL_STRING,
@@ -48,6 +51,11 @@ pub enum SyntaxKind {
     SOURCE_FILE,
     STREAM_EXPR,
     TRAILER,
+    X_REF_ENTRY,
+    X_REF_ENTRY_TYPE,
+    X_REF_SECTION,
+    X_REF_SUBSECTION,
+    X_REF_TABLE,
     #[doc(hidden)]
     __LAST,
 }
@@ -78,6 +86,11 @@ impl SyntaxKind {
             | SOURCE_FILE
             | STREAM_EXPR
             | TRAILER
+            | X_REF_ENTRY
+            | X_REF_ENTRY_TYPE
+            | X_REF_SECTION
+            | X_REF_SUBSECTION
+            | X_REF_TABLE
             | COMMENT
             | ERROR
             | NEWLINE
@@ -90,13 +103,16 @@ impl SyntaxKind {
             R_KW => "R",
             ENDOBJ_KW => "endobj",
             ENDSTREAM_KW => "endstream",
+            F_KW => "f",
             FALSE_KW => "false",
+            N_KW => "n",
             NULL_KW => "null",
             OBJ_KW => "obj",
             STARTXREF_KW => "startxref",
             STREAM_KW => "stream",
             TRAILER_KW => "trailer",
             TRUE_KW => "true",
+            XREF_KW => "xref",
         }
     }
     #[doc = r" Checks whether this syntax kind is a strict keyword for the given edition."]
@@ -104,7 +120,7 @@ impl SyntaxKind {
     pub fn is_strict_keyword(self, edition: Edition) -> bool {
         matches!(
             self,
-            R_KW | ENDOBJ_KW | ENDSTREAM_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | STREAM_KW | TRAILER_KW | TRUE_KW
+            R_KW | ENDOBJ_KW | ENDSTREAM_KW | F_KW | FALSE_KW | N_KW | NULL_KW | OBJ_KW | STARTXREF_KW | STREAM_KW | TRAILER_KW | TRUE_KW | XREF_KW
         ) || match self {
             _ => false,
         }
@@ -120,7 +136,7 @@ impl SyntaxKind {
     pub fn is_keyword(self, edition: Edition) -> bool {
         matches!(
             self,
-            R_KW | ENDOBJ_KW | ENDSTREAM_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | STREAM_KW | TRAILER_KW | TRUE_KW
+            R_KW | ENDOBJ_KW | ENDSTREAM_KW | F_KW | FALSE_KW | N_KW | NULL_KW | OBJ_KW | STARTXREF_KW | STREAM_KW | TRAILER_KW | TRUE_KW | XREF_KW
         ) || match self {
             _ => false,
         }
@@ -132,13 +148,16 @@ impl SyntaxKind {
             "R" => R_KW,
             "endobj" => ENDOBJ_KW,
             "endstream" => ENDSTREAM_KW,
+            "f" => F_KW,
             "false" => FALSE_KW,
+            "n" => N_KW,
             "null" => NULL_KW,
             "obj" => OBJ_KW,
             "startxref" => STARTXREF_KW,
             "stream" => STREAM_KW,
             "trailer" => TRAILER_KW,
             "true" => TRUE_KW,
+            "xref" => XREF_KW,
             _ => return None,
         };
         Some(kw)
@@ -159,4 +178,4 @@ impl SyntaxKind {
     }
 }
 #[macro_export]
-macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [endstream] => { $ crate :: SyntaxKind :: ENDSTREAM_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [startxref] => { $ crate :: SyntaxKind :: STARTXREF_KW } ; [stream] => { $ crate :: SyntaxKind :: STREAM_KW } ; [trailer] => { $ crate :: SyntaxKind :: TRAILER_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [stream_data] => { $ crate :: SyntaxKind :: STREAM_DATA } ; }
+macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [endstream] => { $ crate :: SyntaxKind :: ENDSTREAM_KW } ; [f] => { $ crate :: SyntaxKind :: F_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [n] => { $ crate :: SyntaxKind :: N_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [startxref] => { $ crate :: SyntaxKind :: STARTXREF_KW } ; [stream] => { $ crate :: SyntaxKind :: STREAM_KW } ; [trailer] => { $ crate :: SyntaxKind :: TRAILER_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [xref] => { $ crate :: SyntaxKind :: XREF_KW } ; [stream_data] => { $ crate :: SyntaxKind :: STREAM_DATA } ; }

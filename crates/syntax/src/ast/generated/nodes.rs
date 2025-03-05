@@ -158,6 +158,63 @@ impl Trailer {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct XRefEntry {
+    pub(crate) syntax: SyntaxNode,
+}
+impl XRefEntry {
+    #[inline]
+    pub fn free_or_used(&self) -> Option<XRefEntryType> { support::child(&self.syntax) }
+    #[inline]
+    pub fn generation_number(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn offset(&self) -> Option<Literal> { support::child(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct XRefEntryType {
+    pub(crate) syntax: SyntaxNode,
+}
+impl XRefEntryType {
+    #[inline]
+    pub fn f_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![f]) }
+    #[inline]
+    pub fn n_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![n]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct XRefSection {
+    pub(crate) syntax: SyntaxNode,
+}
+impl XRefSection {
+    #[inline]
+    pub fn x_ref_subsections(&self) -> AstChildren<XRefSubsection> { support::children(&self.syntax) }
+    #[inline]
+    pub fn xref_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![xref]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct XRefSubsection {
+    pub(crate) syntax: SyntaxNode,
+}
+impl XRefSubsection {
+    #[inline]
+    pub fn count(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn first_object(&self) -> Option<Literal> { support::child(&self.syntax) }
+    #[inline]
+    pub fn x_ref_entrys(&self) -> AstChildren<XRefEntry> { support::children(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct XRefTable {
+    pub(crate) syntax: SyntaxNode,
+}
+impl XRefTable {
+    #[inline]
+    pub fn x_ref_sections(&self) -> AstChildren<XRefSection> { support::children(&self.syntax) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum Expr {
     ArrayExpr(ArrayExpr),
     DictionaryExpr(DictionaryExpr),
@@ -438,6 +495,111 @@ impl AstNode for Trailer {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl AstNode for XRefEntry {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        X_REF_ENTRY
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == X_REF_ENTRY }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for XRefEntryType {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        X_REF_ENTRY_TYPE
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == X_REF_ENTRY_TYPE }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for XRefSection {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        X_REF_SECTION
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == X_REF_SECTION }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for XRefSubsection {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        X_REF_SUBSECTION
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == X_REF_SUBSECTION }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl AstNode for XRefTable {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        X_REF_TABLE
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == X_REF_TABLE }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
 impl From<ArrayExpr> for Expr {
     #[inline]
     fn from(node: ArrayExpr) -> Expr { Expr::ArrayExpr(node) }
@@ -524,5 +686,20 @@ impl std::fmt::Display for StreamExpr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for Trailer {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for XRefEntry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for XRefEntryType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for XRefSection {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for XRefSubsection {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for XRefTable {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
