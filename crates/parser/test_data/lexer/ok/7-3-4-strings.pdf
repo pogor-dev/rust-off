@@ -1,0 +1,38 @@
+% LITERAL STRINGS %
+
+% EXAMPLE 1: The following are valid literal strings:
+
+(This is a string) 
+(Strings can contain newlines 
+and such.) 
+(Strings can contain balanced parentheses () 
+and special characters ( * ! & } ^ %and so on) .) 
+(The following is an empty string .) 
+() 
+(It has zero (0) length.)
+
+% EXAMPLE 2: Reverse solidus and end-of-line marker following it
+
+(These \ 
+two strings \ 
+are the same.) 
+(These two strings are the same.)
+
+% EXAMPLE 3: An end-of-line marker without a preceding reverse solidus
+
+(This string has an end-of-line at the end of it. 
+) 
+(So does this one.\n)
+
+% EXAMPLE 4: Escape sequence to represent characters outside the printable ASCII character set.
+
+(This string contains \245two octal characters\307.)
+
+% HECADECIMAL STRINGS %
+
+% EXAMPLE 1
+<4E6F762073686D6F7A206B6120706F702E>
+
+% EXAMPLE 2
+<901FA3>
+<901FA>
