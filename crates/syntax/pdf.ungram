@@ -81,3 +81,13 @@ Body =
 Trailer =
   'trailer' DictionaryExpr
   'startxref' Literal
+
+//*************************//
+//         Streams         //
+//*************************//
+
+StreamExpr =
+  DictionaryExpr
+  'stream'
+  '#stream_data' // Raw binary or ASCII data
+  'endstream'

@@ -563,6 +563,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
             #([#strict_keywords_tokens] => { $crate::SyntaxKind::#strict_keywords_variants };)*
             #([#contextual_keywords_tokens] => { $crate::SyntaxKind::#contextual_keywords_variants };)*
             #([#edition_dependent_keywords_tokens] => { $crate::SyntaxKind::#edition_dependent_keywords_variants };)*
+            [stream_data] => { $crate::SyntaxKind::STREAM_DATA };
         }
     };
 

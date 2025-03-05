@@ -128,6 +128,21 @@ impl SourceFile {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct StreamExpr {
+    pub(crate) syntax: SyntaxNode,
+}
+impl StreamExpr {
+    #[inline]
+    pub fn dictionary_expr(&self) -> Option<DictionaryExpr> { support::child(&self.syntax) }
+    #[inline]
+    pub fn endstream_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![endstream]) }
+    #[inline]
+    pub fn stream_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![stream]) }
+    #[inline]
+    pub fn stream_data_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![stream_data]) }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Trailer {
     pub(crate) syntax: SyntaxNode,
 }
@@ -381,6 +396,27 @@ impl AstNode for SourceFile {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl AstNode for StreamExpr {
+    #[inline]
+    fn kind() -> SyntaxKind
+    where
+        Self: Sized,
+    {
+        STREAM_EXPR
+    }
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { kind == STREAM_EXPR }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        if Self::can_cast(syntax.kind()) {
+            Some(Self { syntax })
+        } else {
+            None
+        }
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
 impl AstNode for Trailer {
     #[inline]
     fn kind() -> SyntaxKind
@@ -482,6 +518,9 @@ impl std::fmt::Display for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for SourceFile {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for StreamExpr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for Trailer {

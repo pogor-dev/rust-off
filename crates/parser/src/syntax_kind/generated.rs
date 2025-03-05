@@ -16,10 +16,12 @@ pub enum SyntaxKind {
     R_DICT,
     R_KW,
     ENDOBJ_KW,
+    ENDSTREAM_KW,
     FALSE_KW,
     NULL_KW,
     OBJ_KW,
     STARTXREF_KW,
+    STREAM_KW,
     TRAILER_KW,
     TRUE_KW,
     HEX_STRING,
@@ -30,6 +32,7 @@ pub enum SyntaxKind {
     COMMENT,
     ERROR,
     NEWLINE,
+    STREAM_DATA,
     WHITESPACE,
     ARRAY_EXPR,
     BODY,
@@ -43,6 +46,7 @@ pub enum SyntaxKind {
     OBJECT_EXPR,
     OBJECT_ID,
     SOURCE_FILE,
+    STREAM_EXPR,
     TRAILER,
     #[doc(hidden)]
     __LAST,
@@ -72,10 +76,12 @@ impl SyntaxKind {
             | OBJECT_EXPR
             | OBJECT_ID
             | SOURCE_FILE
+            | STREAM_EXPR
             | TRAILER
             | COMMENT
             | ERROR
             | NEWLINE
+            | STREAM_DATA
             | WHITESPACE => panic!("no text for these `SyntaxKind`s"),
             L_BRACK => "[",
             R_BRACK => "]",
@@ -83,10 +89,12 @@ impl SyntaxKind {
             R_DICT => ">>",
             R_KW => "R",
             ENDOBJ_KW => "endobj",
+            ENDSTREAM_KW => "endstream",
             FALSE_KW => "false",
             NULL_KW => "null",
             OBJ_KW => "obj",
             STARTXREF_KW => "startxref",
+            STREAM_KW => "stream",
             TRAILER_KW => "trailer",
             TRUE_KW => "true",
         }
@@ -94,10 +102,12 @@ impl SyntaxKind {
     #[doc = r" Checks whether this syntax kind is a strict keyword for the given edition."]
     #[doc = r" Strict keywords are identifiers that are always considered keywords."]
     pub fn is_strict_keyword(self, edition: Edition) -> bool {
-        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | TRAILER_KW | TRUE_KW)
-            || match self {
-                _ => false,
-            }
+        matches!(
+            self,
+            R_KW | ENDOBJ_KW | ENDSTREAM_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | STREAM_KW | TRAILER_KW | TRUE_KW
+        ) || match self {
+            _ => false,
+        }
     }
     #[doc = r" Checks whether this syntax kind is a weak keyword for the given edition."]
     #[doc = r" Weak keywords are identifiers that are considered keywords only in certain contexts."]
@@ -108,10 +118,12 @@ impl SyntaxKind {
     }
     #[doc = r" Checks whether this syntax kind is a strict or weak keyword for the given edition."]
     pub fn is_keyword(self, edition: Edition) -> bool {
-        matches!(self, R_KW | ENDOBJ_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | TRAILER_KW | TRUE_KW)
-            || match self {
-                _ => false,
-            }
+        matches!(
+            self,
+            R_KW | ENDOBJ_KW | ENDSTREAM_KW | FALSE_KW | NULL_KW | OBJ_KW | STARTXREF_KW | STREAM_KW | TRAILER_KW | TRUE_KW
+        ) || match self {
+            _ => false,
+        }
     }
     pub fn is_punct(self) -> bool { matches!(self, L_BRACK | R_BRACK | L_DICT | R_DICT) }
     pub fn is_literal(self) -> bool { matches!(self, HEX_STRING | INT_NUMBER | LITERAL_STRING | NAME | REAL_NUMBER) }
@@ -119,10 +131,12 @@ impl SyntaxKind {
         let kw = match ident {
             "R" => R_KW,
             "endobj" => ENDOBJ_KW,
+            "endstream" => ENDSTREAM_KW,
             "false" => FALSE_KW,
             "null" => NULL_KW,
             "obj" => OBJ_KW,
             "startxref" => STARTXREF_KW,
+            "stream" => STREAM_KW,
             "trailer" => TRAILER_KW,
             "true" => TRUE_KW,
             _ => return None,
@@ -145,4 +159,4 @@ impl SyntaxKind {
     }
 }
 #[macro_export]
-macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [startxref] => { $ crate :: SyntaxKind :: STARTXREF_KW } ; [trailer] => { $ crate :: SyntaxKind :: TRAILER_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; }
+macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [endstream] => { $ crate :: SyntaxKind :: ENDSTREAM_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [startxref] => { $ crate :: SyntaxKind :: STARTXREF_KW } ; [stream] => { $ crate :: SyntaxKind :: STREAM_KW } ; [trailer] => { $ crate :: SyntaxKind :: TRAILER_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [stream_data] => { $ crate :: SyntaxKind :: STREAM_DATA } ; }
