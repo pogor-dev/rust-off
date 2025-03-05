@@ -1,29 +1,41 @@
 name: Rust
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
+permissions:
+  contents: read
+  actions: read
+  checks: write
 env:
   CARGO_TERM_COLOR: always
-
 jobs:
   build-and-test:
+    name: Build and Test Rust crates
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        crate:
-          - lexer
-          - parser
-    defaults:
-      run:
-        working-directory: ./crates/${{ matrix.crate }}
-    name: Build and Test the ${{ matrix.crate }} crate
     steps:
     - uses: actions/checkout@v4
-    - name: Build ${{ matrix.crate }}
-      run: cargo build --verbose
-    - name: Run tests ${{ matrix.crate }}
-      run: cargo test --verbose
+    - name: Cache
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - name: Install cargo2junit
+      run: cargo install cargo2junit
+    - name: Build binaries in
+      run: cargo build
+    - name: Run tests and convert to JUnit format
+      run: RUSTC_BOOTSTRAP=1 cargo test -- -Z unstable-options --format=json --report-time | tee test-results.json
+    - name: Convert test output to JUnit format
+      run: cat test-results.json | cargo2junit > test-results.xml
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()    # run this step even if previous step failed
+      with:
+        name: Tests                 # Name of the check run which will be created
+        path: test-results.xml         # Path to test results
+        reporter: java-junit        # Format of test results

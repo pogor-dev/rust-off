@@ -131,7 +131,10 @@ impl fmt::Debug for SyntaxText {
 
 impl fmt::Display for SyntaxText {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        self.try_for_each_chunk(|chunk| write!(f, "{:?}", chunk))
+        self.try_for_each_chunk(|chunk| match std::str::from_utf8(chunk) {
+            Ok(s) => write!(f, "{}", s),
+            Err(_) => Err(fmt::Error),
+        })
     }
 }
 
@@ -288,11 +291,8 @@ mod tests {
         fn do_check(t1: &[&[u8]], t2: &[&[u8]]) {
             let t1 = build_tree(t1).text();
             let t2 = build_tree(t2).text();
-            let s1 = t1.to_string();
-            let s2 = t2.to_string();
             let expected = t1.to_string() == t2.to_string();
             let actual = t1 == t2;
-            // TODO: fix test
             assert_eq!(expected, actual, "`{}` (SyntaxText) `{}` (SyntaxText)", t1, t2);
             // let actual = t1 == t2.to_string();
             // assert_eq!(expected, actual, "`{}` (SyntaxText) `{}` (&[u8])", t1, t2);
