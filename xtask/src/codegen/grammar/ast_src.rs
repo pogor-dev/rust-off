@@ -66,7 +66,7 @@ impl ToTokens for Edition {
 /// The punctuations of the language.
 const PUNCT: &[(&str, &str)] = &[("[", "L_BRACK"), ("]", "R_BRACK"), ("<<", "L_DICT"), (">>", "R_DICT")];
 
-const TOKENS: &[&str] = &["ERROR", "WHITESPACE", "NEWLINE", "COMMENT"];
+const TOKENS: &[&str] = &["ERROR", "WHITESPACE", "NEWLINE", "COMMENT", "RAW_STREAM"];
 
 const EOF: &str = "EOF";
 

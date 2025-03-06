@@ -174,22 +174,19 @@ impl<'a> Converter<'a> {
                 pdfc_lexer::TokenKind::Eol => NEWLINE,
                 pdfc_lexer::TokenKind::Whitespace => WHITESPACE,
                 pdfc_lexer::TokenKind::Comment => COMMENT,
-
-                // Keywords that are not recognized by the parser are treated as errors.
                 pdfc_lexer::TokenKind::Ident => {
                     let token_text_str = std::str::from_utf8(token_text).unwrap();
                     SyntaxKind::from_keyword(token_text_str, self.edition).unwrap_or(ERROR)
                 }
-
                 pdfc_lexer::TokenKind::Literal { kind, .. } => {
                     self.extend_literal(token_text.len(), kind);
                     return;
                 }
-
                 pdfc_lexer::TokenKind::OpenBracket => T!['['],
                 pdfc_lexer::TokenKind::CloseBracket => T![']'],
                 pdfc_lexer::TokenKind::OpenDict => T![<<],
                 pdfc_lexer::TokenKind::CloseDict => T![>>],
+                pdfc_lexer::TokenKind::Stream => RAW_STREAM,
                 pdfc_lexer::TokenKind::Eof => EOF,
             }
         };

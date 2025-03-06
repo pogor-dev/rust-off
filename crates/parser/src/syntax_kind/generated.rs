@@ -35,6 +35,7 @@ pub enum SyntaxKind {
     COMMENT,
     ERROR,
     NEWLINE,
+    RAW_STREAM,
     STREAM_DATA,
     WHITESPACE,
     ARRAY_EXPR,
@@ -94,6 +95,7 @@ impl SyntaxKind {
             | COMMENT
             | ERROR
             | NEWLINE
+            | RAW_STREAM
             | STREAM_DATA
             | WHITESPACE => panic!("no text for these `SyntaxKind`s"),
             L_BRACK => "[",

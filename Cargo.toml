@@ -11,6 +11,7 @@ repository = "https://github.com/victor-pogor/rust-off"
 
 [profile.dev]
 debug = "full" # This is the default.
+incremental = true
 # opt-level = 0 # 0 is faster, 3 is slower but more optimized.
 # overflow-checks = false # Disable integer overflow checks.
 

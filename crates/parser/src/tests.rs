@@ -161,37 +161,3 @@ impl TestCase {
         res
     }
 }
-
-#[track_caller]
-fn run_and_expect_no_errors(path: &str) {
-    run_and_expect_no_errors_with_edition(path, Edition::CURRENT)
-}
-
-#[track_caller]
-fn run_and_expect_errors(path: &str) {
-    run_and_expect_errors_with_edition(path, Edition::CURRENT)
-}
-
-#[track_caller]
-fn run_and_expect_no_errors_with_edition(path: &str, edition: Edition) {
-    let path = PathBuf::from(path);
-    let text = fs::read(&path).unwrap().into_boxed_slice();
-    let (actual, errors) = parse(TopEntryPoint::SourceFile, &text, edition);
-    assert!(!errors, "errors in an OK file {}:\n{actual}", path.display());
-    let mut p = PathBuf::from("..");
-    p.push(path);
-    p.set_extension("rast");
-    expect_file![p].assert_eq(&actual)
-}
-
-#[track_caller]
-fn run_and_expect_errors_with_edition(path: &str, edition: Edition) {
-    let path = PathBuf::from(path);
-    let text = fs::read(&path).unwrap().into_boxed_slice();
-    let (actual, errors) = parse(TopEntryPoint::SourceFile, &text, edition);
-    assert!(errors, "no errors in an ERR file {}:\n{actual}", path.display());
-    let mut p = PathBuf::from("..");
-    p.push(path);
-    p.set_extension("rast");
-    expect_file![p].assert_eq(&actual)
-}
