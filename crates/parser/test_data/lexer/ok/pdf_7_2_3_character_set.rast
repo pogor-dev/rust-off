@@ -1,0 +1,5 @@
+NEWLINE "\n"
+NEWLINE "\r\n"
+NEWLINE "\r"
+WHITESPACE " \t\u{c}\0"
+NEWLINE "\r\n"

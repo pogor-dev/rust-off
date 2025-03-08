@@ -13,7 +13,8 @@ use crate::{
 
 mod grammar;
 // mod lints;
-// mod parser_inline_tests;
+mod lexer_tests;
+mod parser_tests;
 
 impl flags::Codegen {
     pub(crate) fn run(self, _sh: &Shell) -> anyhow::Result<()> {
@@ -22,6 +23,8 @@ impl flags::Codegen {
                 grammar::generate(self.check);
             }
             flags::CodegenType::Grammar => grammar::generate(self.check),
+            flags::CodegenType::LexerTests => lexer_tests::generate(self.check),
+            flags::CodegenType::ParserTests => parser_tests::generate(self.check),
         }
         Ok(())
     }

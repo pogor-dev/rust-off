@@ -12,41 +12,11 @@ use expect_test::expect_file;
 use crate::{Edition, LexedStr, TopEntryPoint};
 
 #[rustfmt::skip]
-#[path = "../test_data/generated/runner.rs"]
-mod runner;
+#[path = "../test_data/lexer/generated/runner.rs"]
+mod lexer_runner;
 
-fn infer_edition(file_path: &Path) -> Edition {
-    let file_content = fs::read(&file_path).unwrap().into_boxed_slice();
-    if let Some(edition) = file_content.strip_prefix(b"//@ edition: ") {
-        std::str::from_utf8(&edition[..4])
-            .expect("invalid UTF-8")
-            .parse()
-            .expect("invalid edition directive")
-    } else {
-        Edition::CURRENT
-    }
-}
-
-#[test]
-fn lex_ok() {
-    for case in TestCase::list("lexer/ok") {
-        let _guard = stdx::panic_context::enter(format!("{:?}", case.pdf));
-        let actual = lex(&case.text, infer_edition(&case.pdf));
-        expect_file![case.rast].assert_eq(&actual)
-    }
-}
-
-#[test]
-fn lex_err() {
-    for case in TestCase::list("lexer/err") {
-        let _guard = stdx::panic_context::enter(format!("{:?}", case.pdf));
-        let actual = lex(&case.text, infer_edition(&case.pdf));
-        expect_file![case.rast].assert_eq(&actual)
-    }
-}
-
-fn lex(text: &[u8], edition: Edition) -> String {
-    let lexed = LexedStr::new(edition, text);
+fn lex(text: &[u8]) -> String {
+    let lexed = LexedStr::new(Edition::LATEST, text);
 
     let mut res = String::new();
     for i in 0..lexed.len() {
@@ -160,4 +130,15 @@ impl TestCase {
         res.sort();
         res
     }
+}
+
+#[track_caller]
+fn run_and_expect_no_errors(path: &str) {
+    let path = PathBuf::from(path);
+    let text = fs::read(&path).unwrap().into_boxed_slice();
+    let actual = lex(&text);
+    let mut p = PathBuf::from("..");
+    p.push(path);
+    p.set_extension("rast");
+    expect_file![p].assert_eq(&actual)
 }

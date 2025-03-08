@@ -3,23 +3,13 @@ use std::{env, path::PathBuf};
 
 use xshell::Shell;
 
-mod flags;
-
 mod codegen;
+mod flags;
+mod util;
 
 fn main() -> anyhow::Result<()> {
     let sh = &Shell::new()?;
     sh.change_dir(project_root());
-
-    // TODO: remove this once we have a proper build system
-    if cfg!(debug_assertions) {
-        let cmd = flags::Codegen {
-            check: false,
-            codegen_type: Some(flags::CodegenType::Grammar),
-        }; // Run codegen in debug mode
-        cmd.run(sh)?;
-        return Ok(());
-    }
 
     let flags = flags::Xtask::from_env_or_exit();
 

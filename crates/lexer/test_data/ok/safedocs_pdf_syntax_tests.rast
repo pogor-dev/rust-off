@@ -1,6 +1,6 @@
 Comment "%PDF-1.7"
 Eol "\r\n"
-Comment "%\\xe2\\xe3\\xcf\\xd3"
+Comment "%\\u{e2}\\u{e3}\\u{cf}\\u{d3}"
 Eol "\r\n"
 Comment "%"
 Eol "\r\n"

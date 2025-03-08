@@ -1,0 +1,5 @@
+Eol "\n"
+Eol "\r\n"
+Eol "\r"
+Whitespace " \t\\u{0c}\\u{00}"
+Eol "\r\n"
