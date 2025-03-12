@@ -71,7 +71,7 @@ IndirectReferenceExpr =
 //          Items          //
 //*************************//
 
-SourceFile =
+PdfDocument =
   Body
   Trailer
 
@@ -111,42 +111,3 @@ XRefEntry =
   offset:Literal generation_number:Literal free_or_used:XRefEntryType
 
 XRefEntryType = 'f' | 'n'
-
-//*************************//
-//        Operators        //
-//*************************//
-
-// OperatorExpr =
-//   Operand*
-//   Operator
-
-// Operand =
-//   Literal | IndirectReferenceExpr | ArrayExpr | DictionaryExpr
-
-// Operator =
-//   // Path-painting operators
-//   'b'  | 'B'  | 'b*'  | 'B*'  
-//   // Marked-content, inline image, text, and compatibility operators
-//   | 'BDC' | 'BI' | 'BMC' | 'BT' | 'BX'  
-//   // Path construction and graphics state operators
-//   | 'c'  | 'cm'  
-//   // Additional operators
-//   | 'CS' | 'cs' | 'd' | 'd0' | 'd1' | 'Do' | 'DP' | 'EI' | 'EMC' | 'ET' | 'EX'  
-//   // Additional operators
-//   | 'f' | 'F' | 'f*' | 'G' | 'g' | 'gs' | 'h' | 'i' | 'ID' | 'j' | 'J' | 'K'  
-//   // Additional operators
-//   | 'k' | 'l' | 'm' | 'M' | 'MP' | 'n' | 'q' | 'Q' | 're' | 'RG' | 'rg' | 'ri'  
-//   // Additional operators
-//   | 's' | 'S' | 'SC' | 'sc' | 'SCN' | 'scn' | 'sh' | 'T*' | 'Tc'  
-//   // Additional operators
-//   | 'Td' | 'TD' | 'Tf' | 'Tj' | 'TJ' | 'TL' | 'Tm' | 'Tr' | 'Ts' | 'Tw' | 'Tz'  
-//   // Additional operators
-//   | 'v' | 'w' | 'W' | 'W*' | 'y' | '\'' | '"'  
-//   // Arithmetic operators
-//   | 'abs' | 'cvi' | 'floor' | 'mod' | 'add' | 'atan' | 'ceiling' | 'cos'  
-//   // Relational, boolean, and bitwise operators
-//   | 'and' | 'cvr' | 'div' | 'exp' | 'false' | 'idiv' | 'ln' | 'log' | 'le' | 'mul' | 'neg' | 'round' | 'not' | 'sin' | 'sqrt' | 'sub' | 'truncate' | 'true' | 'bitshift' | 'eq'  
-//   // Conditional operators
-//   | 'If' | 'ge' | 'gt' | 'ifelse' | 'lt' | 'ne' | 'or' | 'xor'  
-//   // Stack operators
-//   | 'copy' | 'exch' | 'pop' | 'dup' | 'index' | 'roll'  

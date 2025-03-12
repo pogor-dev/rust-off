@@ -1,0 +1,6 @@
+PDF_DOCUMENT
+    LITERAL
+        TRUE_KW "true"
+    WHITESPACE " "
+    LITERAL
+        FALSE_KW "false"

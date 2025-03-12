@@ -21,6 +21,8 @@ impl flags::Codegen {
         match self.codegen_type.unwrap_or_default() {
             flags::CodegenType::All => {
                 grammar::generate(self.check);
+                lexer_tests::generate(self.check);
+                parser_tests::generate(self.check);
             }
             flags::CodegenType::Grammar => grammar::generate(self.check),
             flags::CodegenType::LexerTests => lexer_tests::generate(self.check),

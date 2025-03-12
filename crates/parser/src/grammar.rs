@@ -32,8 +32,9 @@ mod expressions;
 mod items;
 
 use crate::{
-    parser::{CompletedMarker, Parser},
-    SyntaxKind::*,
+    parser::{CompletedMarker, Marker, Parser},
+    SyntaxKind::{self, *},
+    TokenSet, T,
 };
 
 pub(crate) mod entry {
@@ -42,10 +43,10 @@ pub(crate) mod entry {
     pub(crate) mod top {
         use super::*;
 
-        pub(crate) fn source_file(p: &mut Parser<'_>) {
+        pub(crate) fn pdf_document(p: &mut Parser<'_>) {
             let m = p.start();
             items::mod_contents(p);
-            m.complete(p, SOURCE_FILE);
+            m.complete(p, PDF_DOCUMENT);
         }
 
         pub(crate) fn expr(p: &mut Parser<'_>) {

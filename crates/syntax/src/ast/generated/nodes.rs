@@ -117,10 +117,10 @@ impl ObjectId {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct SourceFile {
+pub struct PdfDocument {
     pub(crate) syntax: SyntaxNode,
 }
-impl SourceFile {
+impl PdfDocument {
     #[inline]
     pub fn body(&self) -> Option<Body> { support::child(&self.syntax) }
     #[inline]
@@ -432,16 +432,16 @@ impl AstNode for ObjectId {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
-impl AstNode for SourceFile {
+impl AstNode for PdfDocument {
     #[inline]
     fn kind() -> SyntaxKind
     where
         Self: Sized,
     {
-        SOURCE_FILE
+        PDF_DOCUMENT
     }
     #[inline]
-    fn can_cast(kind: SyntaxKind) -> bool { kind == SOURCE_FILE }
+    fn can_cast(kind: SyntaxKind) -> bool { kind == PDF_DOCUMENT }
     #[inline]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -679,7 +679,7 @@ impl std::fmt::Display for ObjectExpr {
 impl std::fmt::Display for ObjectId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
-impl std::fmt::Display for SourceFile {
+impl std::fmt::Display for PdfDocument {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for StreamExpr {

@@ -36,6 +36,8 @@ mod syntax_kind;
 mod tests;
 mod token_set;
 
+pub(crate) use token_set::TokenSet;
+
 pub use edition::Edition;
 
 pub use crate::{
@@ -58,7 +60,7 @@ pub use crate::{
 ///   * the result is a valid tree (there's one root node)
 #[derive(Debug)]
 pub enum TopEntryPoint {
-    SourceFile,
+    PdfDocument,
     // StreamStmts,
     // Pattern,
     // Type,
@@ -69,7 +71,7 @@ impl TopEntryPoint {
     pub fn parse(&self, input: &Input, edition: Edition) -> Output {
         let _p = tracing::info_span!("TopEntryPoint::parse", ?self).entered();
         let entry_point: fn(&'_ mut parser::Parser<'_>) = match self {
-            TopEntryPoint::SourceFile => grammar::entry::top::source_file,
+            TopEntryPoint::PdfDocument => grammar::entry::top::pdf_document,
             // TopEntryPoint::StreamStmts => grammar::entry::top::macro_stmts,
             // TopEntryPoint::Pattern => grammar::entry::top::pattern,
             // TopEntryPoint::Type => grammar::entry::top::type_,

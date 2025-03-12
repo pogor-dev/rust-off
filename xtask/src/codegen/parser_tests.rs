@@ -14,7 +14,7 @@ use crate::{
 
 pub(crate) fn generate(check: bool) {
     let crate_root_path = project_root().join("crates/parser");
-    let test_data_path_str = "test_data/lexer";
+    let test_data_path_str = "test_data/parser";
     let test_data_path = crate_root_path.join(test_data_path_str);
 
     let tests_ok = list(&test_data_path.join("ok")).unwrap();
@@ -23,7 +23,7 @@ pub(crate) fn generate(check: bool) {
     let ok_tests = tests_ok.values().sorted_by(|a, b| a.name.cmp(&b.name)).map(|test| {
         let test_name = quote::format_ident!("{}", test.name);
         let test_file = format!("{test_data_path_str}/ok/{test_name}.pdf");
-        let (test_func, args) = (quote::format_ident!("run_and_expect_no_errors"), quote::quote! {#test_file});
+        let (test_func, args) = (quote::format_ident!("parse_and_expect_no_errors"), quote::quote! {#test_file});
 
         quote::quote! {
             #[test]
@@ -36,7 +36,7 @@ pub(crate) fn generate(check: bool) {
     let err_tests = tests_err.values().sorted_by(|a, b| a.name.cmp(&b.name)).map(|test| {
         let test_name = quote::format_ident!("{}", test.name);
         let test_file = format!("{test_data_path_str}/err/{test_name}.pdf");
-        let (test_func, args) = (quote::format_ident!("run_and_expect_errors"), quote::quote! {#test_file});
+        let (test_func, args) = (quote::format_ident!("parse_and_expect_errors"), quote::quote! {#test_file});
 
         quote::quote! {
             #[test]
@@ -59,7 +59,7 @@ pub(crate) fn generate(check: bool) {
 
     let pretty = reformat(output.to_string());
     ensure_file_contents(
-        crate::flags::CodegenType::LexerTests,
+        crate::flags::CodegenType::ParserTests,
         test_data_path.join("generated/runner.rs").as_ref(),
         &pretty,
         check,

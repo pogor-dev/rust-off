@@ -11,7 +11,7 @@ pub(crate) fn parse_text(text: &[u8], edition: pdfc_parser::Edition) -> (GreenNo
     let _p = tracing::info_span!("parse_text").entered();
     let lexed = pdfc_parser::LexedStr::new(edition, text);
     let parser_input = lexed.to_input(edition);
-    let parser_output = pdfc_parser::TopEntryPoint::SourceFile.parse(&parser_input, edition);
+    let parser_output = pdfc_parser::TopEntryPoint::PdfDocument.parse(&parser_input, edition);
     let (node, errors, _eof) = build_tree(lexed, parser_output);
     (node, errors)
 }
