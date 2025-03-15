@@ -1,0 +1,95 @@
+PDF_DOCUMENT
+  COMMENT "% LITERAL STRINGS %"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 1"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(This is a string)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(Strings can contain newlines \n\\and such.)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(Strings can contain balanced parentheses () \nand special characters ( * ! & } ^ %and so on) .)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(The following is an empty string .)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "()"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(It has zero (0) length.)"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 2"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(These \\\ntwo strings \\\nare the same.)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(These two strings are the same.)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(This string has an end-of-line at the end of it.\n)"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 3"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(So does this one.\\n)"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 4"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(This string contains \\245two octal characters\\307.)"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 5"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(\\0053)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(\\053)"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(\\53)"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 6"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    LITERAL_STRING "(\n)"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% HEX STRINGS %"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 1"
+  NEWLINE "\n"
+  LITERAL
+    HEX_STRING "<4E6F762073686D6F7A206B6120706F702E>"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 2"
+  NEWLINE "\n"
+  LITERAL
+    HEX_STRING "<901FA3>"
+  NEWLINE "\n"
+  LITERAL
+    HEX_STRING "<901FA>"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% EXAMPLE 3"
+  NEWLINE "\n"
+  LITERAL
+    HEX_STRING "<90\0 1F\n A3\t\u{c}>"

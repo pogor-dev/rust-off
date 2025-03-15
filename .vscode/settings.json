@@ -30,9 +30,10 @@
             "source.fixAll": "explicit"
         },
     },
+    "rust-analyzer.runnables.extraEnv": {
+        "CARGO_MANIFEST_DIR": "${workspaceFolder}"
+    },
     "rust-analyzer.testExplorer": true,
     "debug.allowBreakpointsEverywhere": true,
-    "lldb.launch.breakpointMode": "path",
-    "lldb.verboseLogging": false,
     "lldb.consoleMode": "evaluate",
 }

@@ -1,0 +1,97 @@
+PDF_DOCUMENT
+  LITERAL
+    NAME "/Name1"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/ASomewhatLongerName"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/A;Name_With-Various***Characters?"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/1.2"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/$$"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/@pattern"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/.notdef"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/Lime#20Green"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/paired#28#29parentheses"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/The_Key_of_F#23_Minor"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/A#42"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% inline names separated with spaces"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/Name1"
+  WHITESPACE " "
+  LITERAL
+    NAME "/ASomewhatLongerName"
+  WHITESPACE " "
+  LITERAL
+    NAME "/A;Name_With-Various***Characters?"
+  WHITESPACE " "
+  LITERAL
+    NAME "/1.2"
+  WHITESPACE " "
+  LITERAL
+    NAME "/$$"
+  WHITESPACE " "
+  LITERAL
+    NAME "/@pattern"
+  WHITESPACE " "
+  LITERAL
+    NAME "/.notdef"
+  WHITESPACE " "
+  LITERAL
+    NAME "/Lime#20Green"
+  WHITESPACE " "
+  LITERAL
+    NAME "/paired#28#29parentheses"
+  WHITESPACE " "
+  LITERAL
+    NAME "/The_Key_of_F#23_Minor"
+  WHITESPACE " "
+  LITERAL
+    NAME "/A#42"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% inline names without separation"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  LITERAL
+    NAME "/Name1"
+  LITERAL
+    NAME "/ASomewhatLongerName"
+  LITERAL
+    NAME "/A;Name_With-Various***Characters?"
+  LITERAL
+    NAME "/1.2"
+  LITERAL
+    NAME "/$$"
+  LITERAL
+    NAME "/@pattern"
+  LITERAL
+    NAME "/.notdef"
+  LITERAL
+    NAME "/Lime#20Green"
+  LITERAL
+    NAME "/paired#28#29parentheses"
+  LITERAL
+    NAME "/The_Key_of_F#23_Minor"
+  LITERAL
+    NAME "/A#42"

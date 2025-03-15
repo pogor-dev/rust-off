@@ -18,7 +18,7 @@ fn main() -> anyhow::Result<()> {
     }
 }
 
-/// Returns the path to the root directory of `rust-analyzer` project.
+/// Returns the path to the root directory of `pdf-analyzer` project.
 fn project_root() -> PathBuf {
     let dir = env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| env!("CARGO_MANIFEST_DIR").to_owned());
     PathBuf::from(dir).parent().unwrap().to_owned()

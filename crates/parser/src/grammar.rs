@@ -28,6 +28,7 @@
 //! Non-opt rules typically start with `assert!(p.at(FIRST_TOKEN))`, the
 //! caller is responsible for branching on the first token.
 
+mod atom;
 mod expressions;
 mod items;
 
@@ -45,7 +46,7 @@ pub(crate) mod entry {
 
         pub(crate) fn pdf_document(p: &mut Parser<'_>) {
             let m = p.start();
-            items::mod_contents(p);
+            items::pdf_contents(p);
             m.complete(p, PDF_DOCUMENT);
         }
 

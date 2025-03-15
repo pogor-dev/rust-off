@@ -1,9 +1,9 @@
 PDF_DOCUMENT
-    INDIRECT_REFERENCE
-        LITERAL
-            INT_NUMBER "12"
-        WHITESPACE " "
-        LITERAL
-            INT_NUMBER "0"
-        WHITESPACE " "
-        R_KW "R"
+  INDIRECT_REFERENCE
+    LITERAL
+      INT_NUMBER "12"
+    WHITESPACE " "
+    LITERAL
+      INT_NUMBER "0"
+    WHITESPACE " "
+    R_KW "R"

@@ -1,5 +1,3 @@
-mod atom;
-
 use super::*;
 
 const EXPR_FIRST: TokenSet = LHS_FIRST;

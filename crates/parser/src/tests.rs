@@ -1,11 +1,7 @@
 mod prefix_entries;
 mod top_entries;
 
-use std::{
-    fmt::Write,
-    fs,
-    path::{Path, PathBuf},
-};
+use std::{env, fmt::Write, fs, path::PathBuf};
 
 use expect_test::expect_file;
 
@@ -122,7 +118,8 @@ struct TestCase {
 
 impl TestCase {
     fn list(path: &'static str) -> Vec<TestCase> {
-        let crate_root_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let binding = project_root();
+        let crate_root_dir = binding.as_path();
         let test_data_dir = crate_root_dir.join("test_data");
         let dir = test_data_dir.join(path);
 
@@ -169,4 +166,10 @@ fn parse_and_expect_no_errors_with_edition(path: &str, edition: Edition) {
     p.push(path);
     p.set_extension("rast");
     expect_file![p].assert_eq(&actual)
+}
+
+/// Returns the path to the root directory of `pdf-analyzer` project.
+fn project_root() -> PathBuf {
+    let dir = env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| env!("CARGO_MANIFEST_DIR").to_owned());
+    PathBuf::from(dir).parent().unwrap().to_owned()
 }

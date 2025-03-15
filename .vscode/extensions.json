@@ -9,6 +9,6 @@
         "tamasfe.even-better-toml",
         "amodio.tsl-problem-matcher",
         "ms-vscode.extension-test-runner",
-        "pdfassociation.pdf-cos-syntax",
+        "EditorConfig.EditorConfig",
     ]
 }
