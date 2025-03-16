@@ -7,5 +7,5 @@ pub(super) fn pdf_contents(p: &mut Parser<'_>) {
 }
 
 pub(super) fn pdf_body(p: &mut Parser<'_>) {
-    atom::literal(p);
+    atom::atom_expr(p);
 }

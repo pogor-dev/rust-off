@@ -33,7 +33,7 @@ fn expr_bp(p: &mut Parser<'_>, m: Option<Marker>, _bp: u8) -> Option<CompletedMa
     Some(lhs)
 }
 
-const LHS_FIRST: TokenSet = atom::LITERAL_FIRST;
+const LHS_FIRST: TokenSet = atom::ATOM_EXPR_FIRST;
 
 fn lhs(p: &mut Parser<'_>) -> Option<CompletedMarker> {
     let lhs = atom::atom_expr(p)?;
