@@ -17,9 +17,15 @@ pub(super) fn atom_expr(p: &mut Parser<'_>) -> Option<CompletedMarker> {
     if let Some(m) = literal(p) {
         return Some(m);
     }
+    let la = p.nth(1);
     let done = match p.current() {
         T!['['] => array_expr(p),
         T![<<] => dictionary_expr(p),
+        k if k.is_keyword(edition::Edition::LATEST) => {
+            p.bump_any();
+            return None;
+        }
+        INT_NUMBER if la == INT_NUMBER && p.nth(2) == T![R] => indirect_reference(p),
         _ => {
             p.err_and_bump("expected expression");
             return None;
@@ -61,4 +67,15 @@ fn dictionary_expr(p: &mut Parser<'_>) -> CompletedMarker {
 
     p.expect(T![>>]);
     m.complete(p, DICTIONARY_EXPR)
+}
+
+fn indirect_reference(p: &mut Parser<'_>) -> CompletedMarker {
+    assert!(p.at(INT_NUMBER));
+    let m = p.start();
+
+    p.bump(INT_NUMBER);
+    p.bump(INT_NUMBER);
+    p.bump(T![R]);
+
+    m.complete(p, INDIRECT_REFERENCE_EXPR)
 }
