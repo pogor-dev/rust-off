@@ -33,10 +33,6 @@ fn array_expr(p: &mut Parser<'_>) -> CompletedMarker {
 
     p.bump(T!['[']);
     while !p.at(EOF) && !p.at(T![']']) {
-        if p.at(T!['[']) {
-            array_expr(p);
-        }
-
         if expressions::expr(p).is_none() {
             break;
         }

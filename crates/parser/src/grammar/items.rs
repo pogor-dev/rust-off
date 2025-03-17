@@ -1,11 +1,7 @@
 use super::*;
 
-pub(super) fn pdf_contents(p: &mut Parser<'_>) {
-    while !(p.at(EOF)) {
-        pdf_body(p);
-    }
-}
-
 pub(super) fn pdf_body(p: &mut Parser<'_>) {
-    atom::atom_expr(p);
+    while !(p.at(EOF)) {
+        atom::atom_expr(p);
+    }
 }

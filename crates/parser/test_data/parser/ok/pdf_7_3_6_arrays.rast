@@ -1,5 +1,41 @@
 PDF_DOCUMENT
-  COMMENT "%[549 3.14 false (Ralph) /SomeName]"
+  ARRAY_EXPR
+    L_BRACK "["
+    LITERAL
+      INT_NUMBER "549"
+    WHITESPACE " "
+    LITERAL
+      REAL_NUMBER "3.14"
+    WHITESPACE " "
+    LITERAL
+      FALSE_KW "false"
+    WHITESPACE " "
+    LITERAL
+      LITERAL_STRING "(Ralph)"
+    WHITESPACE " "
+    LITERAL
+      NAME "/SomeName"
+    R_BRACK "]"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% Nested arrays"
+  NEWLINE "\n"
+  ARRAY_EXPR
+    L_BRACK "["
+    ARRAY_EXPR
+      L_BRACK "["
+      R_BRACK "]"
+    R_BRACK "]"
+  NEWLINE "\n"
+  ARRAY_EXPR
+    L_BRACK "["
+    ARRAY_EXPR
+      L_BRACK "["
+      R_BRACK "]"
+    ARRAY_EXPR
+      L_BRACK "["
+      R_BRACK "]"
+    R_BRACK "]"
   NEWLINE "\n"
   ARRAY_EXPR
     L_BRACK "["
@@ -25,4 +61,3 @@ PDF_DOCUMENT
       R_BRACK "]"
     R_BRACK "]"
   NEWLINE "\n"
-error 82: expected expression
