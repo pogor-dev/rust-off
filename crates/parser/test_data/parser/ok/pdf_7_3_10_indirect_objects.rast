@@ -2,17 +2,18 @@ PDF_DOCUMENT
   COMMENT "% EXAMPLE 1: Indirect object definition"
   NEWLINE "\n"
   NEWLINE "\n"
-  OBJECT_ID
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "12"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\n"
     LITERAL
-      INT_NUMBER "12"
-    WHITESPACE " "
-    LITERAL
-      INT_NUMBER "0"
-    WHITESPACE " "
-    OBJ_KW "obj"
-  NEWLINE "\n"
-  LITERAL
-    LITERAL_STRING "(Brillig)"
-  NEWLINE "\n"
-  ENDOBJ_KW "endobj"
+      LITERAL_STRING "(Brillig)"
+    NEWLINE "\n"
+    ENDOBJ_KW "endobj"
   NEWLINE "\n"

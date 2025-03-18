@@ -45,10 +45,10 @@ pub enum SyntaxKind {
     DICTIONARY_ITEM_KEY_EXPR,
     DICTIONARY_ITEM_VALUE_EXPR,
     EXPR,
+    INDIRECT_OBJECT_EXPR,
+    INDIRECT_OBJECT_ID,
     INDIRECT_REFERENCE_EXPR,
     LITERAL,
-    OBJECT_EXPR,
-    OBJECT_ID,
     PDF_DOCUMENT,
     STREAM_EXPR,
     TRAILER,
@@ -80,10 +80,10 @@ impl SyntaxKind {
             | DICTIONARY_ITEM_KEY_EXPR
             | DICTIONARY_ITEM_VALUE_EXPR
             | EXPR
+            | INDIRECT_OBJECT_EXPR
+            | INDIRECT_OBJECT_ID
             | INDIRECT_REFERENCE_EXPR
             | LITERAL
-            | OBJECT_EXPR
-            | OBJECT_ID
             | PDF_DOCUMENT
             | STREAM_EXPR
             | TRAILER
