@@ -79,6 +79,10 @@ impl<'t> Parser<'t> {
         }
     }
 
+    pub(crate) fn nth_at_ts(&self, n: usize, kinds: TokenSet) -> bool {
+        kinds.contains(self.nth(n))
+    }
+
     /// Consume the next token if `kind` matches.
     pub(crate) fn eat(&mut self, kind: SyntaxKind) -> bool {
         if !self.at(kind) {

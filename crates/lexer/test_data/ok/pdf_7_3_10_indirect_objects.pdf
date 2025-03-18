@@ -1,9 +1,5 @@
 % EXAMPLE 1: Indirect object definition
 
-12 0 obj 
-(Brillig) 
+12 0 obj
+(Brillig)
 endobj
-
-% EXAMPLE 2: Indirect reference
-
-12 0 R
