@@ -77,9 +77,11 @@ pub struct IndirectObjectExpr {
 }
 impl IndirectObjectExpr {
     #[inline]
-    pub fn data(&self) -> Option<Expr> { support::child(&self.syntax) }
+    pub fn expr(&self) -> Option<Expr> { support::child(&self.syntax) }
     #[inline]
     pub fn indirect_object_id(&self) -> Option<IndirectObjectId> { support::child(&self.syntax) }
+    #[inline]
+    pub fn stream_expr(&self) -> Option<StreamExpr> { support::child(&self.syntax) }
     #[inline]
     pub fn endobj_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![endobj]) }
 }

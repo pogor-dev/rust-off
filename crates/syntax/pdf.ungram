@@ -58,7 +58,7 @@ Literal =
 
 IndirectObjectExpr =
   IndirectObjectId
-  data:Expr
+  Expr | StreamExpr
   'endobj'
 
 IndirectObjectId =
