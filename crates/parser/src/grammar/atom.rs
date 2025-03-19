@@ -14,6 +14,9 @@ fn literal(p: &mut Parser<'_>) -> Option<CompletedMarker> {
 }
 
 pub(super) fn atom_expr(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if let Some(p) = indirect_reference(p) {
+        return Some(p);
+    }
     if let Some(m) = literal(p) {
         return Some(m);
     }
@@ -24,12 +27,29 @@ pub(super) fn atom_expr(p: &mut Parser<'_>) -> Option<CompletedMarker> {
             p.bump_any();
             return None;
         }
+        k if k == STREAM_DATA => {
+            p.bump_any();
+            return None;
+        }
         _ => {
             p.err_and_bump("expected expression");
             return None;
         }
     };
     return Some(done);
+}
+
+pub(super) fn indirect_reference(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    match p.nth_at(0, INT_NUMBER) && p.nth_at(1, INT_NUMBER) && p.nth_at(2, T![R]) {
+        true => {
+            let m = p.start();
+            literal(p);
+            literal(p);
+            atom_expr(p);
+            Some(m.complete(p, INDIRECT_REFERENCE_EXPR))
+        }
+        false => None,
+    }
 }
 
 fn array_expr(p: &mut Parser<'_>) -> CompletedMarker {

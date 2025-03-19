@@ -36,11 +36,10 @@ fn expr_bp(p: &mut Parser<'_>, m: Option<Marker>, _bp: u8) -> Option<CompletedMa
 const LHS_FIRST: TokenSet = atom::ATOM_EXPR_FIRST;
 
 fn lhs(p: &mut Parser<'_>) -> Option<CompletedMarker> {
-    let lhs = atom::atom_expr(p)?;
-    let cm = postfix_expr(p, lhs);
-    return Some(cm);
-}
-
-fn postfix_expr(_p: &mut Parser<'_>, lhs: CompletedMarker) -> CompletedMarker {
-    lhs
+    let _kind = match p.current() {
+        _ => {
+            let lhs = atom::atom_expr(p)?;
+            return Some(lhs);
+        }
+    };
 }

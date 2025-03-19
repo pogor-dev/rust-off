@@ -100,3 +100,21 @@ PDF_DOCUMENT
     WHITESPACE " "
     R_DICT ">>"
   NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% Dictionary with indirect reference"
+  NEWLINE "\n"
+  DICTIONARY_EXPR
+    L_DICT "<<"
+    LITERAL
+      NAME "/Length"
+    WHITESPACE " "
+    INDIRECT_REFERENCE_EXPR
+      LITERAL
+        INT_NUMBER "8"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      R_KW "R"
+    R_DICT ">>"
+  NEWLINE "\n"

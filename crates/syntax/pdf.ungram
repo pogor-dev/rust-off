@@ -21,7 +21,6 @@
 Expr = Literal
   | ArrayExpr
   | DictionaryExpr
-  | IndirectObjectExpr
   | IndirectReferenceExpr
 
 ArrayExpr =

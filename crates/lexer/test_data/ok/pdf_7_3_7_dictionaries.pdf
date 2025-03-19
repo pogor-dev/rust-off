@@ -17,3 +17,6 @@
 
 % Nested dictionaies
 << << >> >>
+
+% Dictionary with indirect reference
+<</Length 8 0 R>>
