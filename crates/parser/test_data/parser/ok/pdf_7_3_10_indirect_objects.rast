@@ -17,3 +17,19 @@ PDF_DOCUMENT
     NEWLINE "\n"
     ENDOBJ_KW "endobj"
   NEWLINE "\n"
+  NEWLINE "\n"
+  COMMENT "% Empty object"
+  NEWLINE "\n"
+  NEWLINE "\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "2"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\n"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\n"

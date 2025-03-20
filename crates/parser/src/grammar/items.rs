@@ -22,22 +22,29 @@ fn indirect_object(p: &mut Parser<'_>) -> Option<CompletedMarker> {
         return None;
     };
 
-    // indirect object body
+    let k = p.current();
+    indirect_object_body(p);
+    let k = p.current();
+
+    assert!(p.at(T![endobj]));
+    atom::atom_expr(p); // endobj
+    return Some(m.complete(p, INDIRECT_OBJECT_EXPR));
+}
+
+fn indirect_object_body(p: &mut Parser<'_>) {
+    // When the object body is empty, we can just return, as there is no need to parse anything.
+    if p.at(T![endobj]) {
+        return;
+    }
+
     let object_body = match expressions::expr(p) {
         Some(object_body) => object_body,
-        None => {
-            m.abandon(p);
-            return None;
-        }
+        None => return,
     };
 
     if object_body.kind() == DICTIONARY_EXPR && p.at(T![stream]) {
         stream_expr(p);
     }
-
-    assert!(p.at(T![endobj]));
-    atom::atom_expr(p); // endobj
-    return Some(m.complete(p, INDIRECT_OBJECT_EXPR));
 }
 
 fn indirect_reference_definition(p: &mut Parser<'_>) -> Option<CompletedMarker> {
