@@ -220,7 +220,6 @@ impl XRefTable {
 pub enum Expr {
     ArrayExpr(ArrayExpr),
     DictionaryExpr(DictionaryExpr),
-    IndirectObjectExpr(IndirectObjectExpr),
     IndirectReferenceExpr(IndirectReferenceExpr),
     Literal(Literal),
 }
@@ -610,10 +609,6 @@ impl From<DictionaryExpr> for Expr {
     #[inline]
     fn from(node: DictionaryExpr) -> Expr { Expr::DictionaryExpr(node) }
 }
-impl From<IndirectObjectExpr> for Expr {
-    #[inline]
-    fn from(node: IndirectObjectExpr) -> Expr { Expr::IndirectObjectExpr(node) }
-}
 impl From<IndirectReferenceExpr> for Expr {
     #[inline]
     fn from(node: IndirectReferenceExpr) -> Expr { Expr::IndirectReferenceExpr(node) }
@@ -624,13 +619,12 @@ impl From<Literal> for Expr {
 }
 impl AstNode for Expr {
     #[inline]
-    fn can_cast(kind: SyntaxKind) -> bool { matches!(kind, ARRAY_EXPR | DICTIONARY_EXPR | INDIRECT_OBJECT_EXPR | INDIRECT_REFERENCE_EXPR | LITERAL) }
+    fn can_cast(kind: SyntaxKind) -> bool { matches!(kind, ARRAY_EXPR | DICTIONARY_EXPR | INDIRECT_REFERENCE_EXPR | LITERAL) }
     #[inline]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         let res = match syntax.kind() {
             ARRAY_EXPR => Expr::ArrayExpr(ArrayExpr { syntax }),
             DICTIONARY_EXPR => Expr::DictionaryExpr(DictionaryExpr { syntax }),
-            INDIRECT_OBJECT_EXPR => Expr::IndirectObjectExpr(IndirectObjectExpr { syntax }),
             INDIRECT_REFERENCE_EXPR => Expr::IndirectReferenceExpr(IndirectReferenceExpr { syntax }),
             LITERAL => Expr::Literal(Literal { syntax }),
             _ => return None,
@@ -642,7 +636,6 @@ impl AstNode for Expr {
         match self {
             Expr::ArrayExpr(it) => &it.syntax,
             Expr::DictionaryExpr(it) => &it.syntax,
-            Expr::IndirectObjectExpr(it) => &it.syntax,
             Expr::IndirectReferenceExpr(it) => &it.syntax,
             Expr::Literal(it) => &it.syntax,
         }

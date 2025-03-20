@@ -34,12 +34,10 @@ impl<'a> LexedStr<'a> {
     pub fn new(edition: Edition, text: &'a [u8]) -> LexedStr<'a> {
         let _p = tracing::info_span!("LexedStr::new").entered();
         let mut conv = Converter::new(edition, text);
+        let mut tokenized = pdfc_lexer::tokenize(text);
 
-        // Re-create the tokenizer from scratch every token because `GuardedStrPrefix` is one token in the lexer
-        // but we want to split it to two in edition <2024.
-        while let Some(token) = pdfc_lexer::tokenize(&text[conv.offset..]).next() {
+        while let Some(token) = tokenized.next() {
             let token_text = &text[conv.offset..][..token.len as usize];
-
             conv.extend_token(&token.kind, token_text);
         }
 
@@ -175,8 +173,12 @@ impl<'a> Converter<'a> {
                 pdfc_lexer::TokenKind::Whitespace => WHITESPACE,
                 pdfc_lexer::TokenKind::Comment => COMMENT,
                 pdfc_lexer::TokenKind::Ident => {
-                    let token_text_str = std::str::from_utf8(token_text).unwrap();
-                    SyntaxKind::from_keyword(token_text_str, self.edition).unwrap_or(ERROR)
+                    let token_text_str: String = token_text
+                        .iter()
+                        .map(|&c| if c.is_ascii() { (c as char).to_string() } else { format!("\\x{:02x}", c) })
+                        .collect();
+
+                    SyntaxKind::from_keyword(token_text_str.as_str(), self.edition).unwrap_or(ERROR)
                 }
                 pdfc_lexer::TokenKind::Literal { kind, .. } => {
                     self.extend_literal(token_text.len(), kind);
@@ -186,7 +188,7 @@ impl<'a> Converter<'a> {
                 pdfc_lexer::TokenKind::CloseBracket => T![']'],
                 pdfc_lexer::TokenKind::OpenDict => T![<<],
                 pdfc_lexer::TokenKind::CloseDict => T![>>],
-                pdfc_lexer::TokenKind::Stream => RAW_STREAM,
+                pdfc_lexer::TokenKind::RawStreamData => RAW_STREAM,
                 pdfc_lexer::TokenKind::Eof => EOF,
             }
         };

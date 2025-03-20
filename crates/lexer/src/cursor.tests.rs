@@ -131,28 +131,28 @@ mod tests {
     #[test]
     fn eat_while_word_consumes_until_word_is_found() {
         let mut cursor = Cursor::new(b"123PDF456");
-        cursor.eat_while_word(b"PDF");
-        assert_eq!(cursor.pos_within_token(), 6);
+        cursor.eat_while_word(|s| s.starts_with(b"PDF"));
+        assert_eq!(cursor.pos_within_token(), 3);
     }
 
     #[test]
     fn eat_while_word_does_consume_if_word_is_at_start() {
         let mut cursor = Cursor::new(b"PDF123456");
-        cursor.eat_while_word(b"PDF");
-        assert_eq!(cursor.pos_within_token(), 3);
+        cursor.eat_while_word(|s| s.starts_with(b"PDF"));
+        assert_eq!(cursor.pos_within_token(), 0);
     }
 
     #[test]
     fn eat_while_word_consumes_entire_input_if_word_not_found() {
         let mut cursor = Cursor::new(b"123456");
-        cursor.eat_while_word(b"PDF");
+        cursor.eat_while_word(|s| s.starts_with(b"PDF"));
         assert_eq!(cursor.pos_within_token(), 6);
     }
 
     #[test]
     fn eat_while_word_stops_at_first_occurrence_of_word() {
         let mut cursor = Cursor::new(b"123PDFPDF456");
-        cursor.eat_while_word(b"PDF");
-        assert_eq!(cursor.pos_within_token(), 6);
+        cursor.eat_while_word(|s| s.starts_with(b"PDF"));
+        assert_eq!(cursor.pos_within_token(), 3);
     }
 }

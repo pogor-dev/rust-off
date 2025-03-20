@@ -16,6 +16,16 @@ impl Cursor<'_> {
         };
 
         let token_kind = match first_byte {
+            _ if self.is_prev_token_stream() => {
+                // PDF stream object.
+                // The stream object is a special object that contains binary data and is marked by the `stream` and `endstream` keywords.
+                // The stream content is skipped by the lexer and is decoded/parsed later by the parser.
+                // See ISO `32000-1:2008`, Section 7.3.8 Stream Objects.
+                self.set_prev_token_stream(false);
+                self.eat_while_word(|word| word.starts_with(b"endstream"));
+                TokenKind::RawStreamData
+            }
+
             // End of line marker. Sometimes it is required by the PDF spec (e.g. in PDF object keywords).
             // See ISO `32000-1:2008`, Section 7.2.3 Character Set.
             b if is_eol(b) => {
@@ -39,12 +49,8 @@ impl Cursor<'_> {
             // PDF keyword.
             b if b.is_ascii_alphabetic() => {
                 if b == b's' && self.try_eat_word(b"tream") {
-                    // PDF stream object.
-                    // The stream object is a special object that contains binary data and is marked by the `stream` and `endstream` keywords.
-                    // The stream content is skipped by the lexer and is decoded/parsed later by the parser.
-                    // See ISO `32000-1:2008`, Section 7.3.8 Stream Objects.
-                    self.eat_while_word(b"endstream");
-                    TokenKind::Stream
+                    self.set_prev_token_stream(true);
+                    TokenKind::Ident
                 } else {
                     // PDF keyword or identifier.
                     self.eat_while(|b| b.is_ascii_alphanumeric());

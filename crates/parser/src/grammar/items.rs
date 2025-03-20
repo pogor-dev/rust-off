@@ -31,7 +31,7 @@ fn indirect_object(p: &mut Parser<'_>) -> Option<CompletedMarker> {
         }
     };
 
-    if object_body.kind() == DICTIONARY_EXPR && p.at(RAW_STREAM) {
+    if object_body.kind() == DICTIONARY_EXPR && p.at(T![stream]) {
         stream_expr(p);
     }
 
@@ -54,15 +54,14 @@ fn indirect_reference_definition(p: &mut Parser<'_>) -> Option<CompletedMarker> 
 }
 
 fn stream_expr(p: &mut Parser<'_>) -> CompletedMarker {
-    // assert!(p.at(T![stream]));
+    assert!(p.at(T![stream]));
     let m = p.start();
 
-    // p.bump(T![stream]);
-    // TODO: change the lexer to differentiate between stream and endstream
-    while !p.at(EOF) && !p.at(T![endobj]) {
+    p.bump(T![stream]);
+    while !p.at(EOF) && !p.at(T![endstream]) {
         p.bump_any();
     }
 
-    // p.expect(T![endstream]);
+    p.expect(T![endstream]);
     m.complete(p, STREAM_EXPR)
 }
