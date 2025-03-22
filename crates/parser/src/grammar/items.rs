@@ -32,7 +32,7 @@ fn file_trailer(p: &mut Parser<'_>) -> Option<CompletedMarker> {
     let m = p.start();
     p.bump(T![trailer]);
 
-    let ss = match expressions::expr(p) {
+    match expressions::expr(p) {
         Some(expr) if expr.kind() == DICTIONARY_EXPR => expr,
         _ => {
             m.abandon(p);
