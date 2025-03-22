@@ -1,0 +1,32 @@
+PDF_DOCUMENT
+  TRAILER
+    TRAILER_KW "trailer"
+    NEWLINE "\n"
+    WHITESPACE "    "
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      NEWLINE "\n"
+      WHITESPACE "        "
+      LITERAL
+        NAME "/key1"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "123"
+      NEWLINE "\n"
+      WHITESPACE "        "
+      LITERAL
+        NAME "/key2"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "456"
+      NEWLINE "\n"
+      WHITESPACE "    "
+      R_DICT ">>"
+    NEWLINE "\n"
+    STARTXREF_KW "startxref"
+    NEWLINE "\n"
+    LITERAL
+      INT_NUMBER "4587"
+  NEWLINE "\n"
+  COMMENT "%%EOF"
+  NEWLINE "\n"

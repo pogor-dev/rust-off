@@ -68,6 +68,7 @@ fn array_expr(p: &mut Parser<'_>) -> CompletedMarker {
 }
 
 fn dictionary_expr(p: &mut Parser<'_>) -> CompletedMarker {
+    // TODO: << no_valid_name no_valid_value >>
     assert!(p.at(T![<<]));
     let m = p.start();
 

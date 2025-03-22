@@ -27,6 +27,8 @@ mod ok {
     #[test]
     fn pdf_7_5_4_xref_table() { parse_and_expect_no_errors("test_data/parser/ok/pdf_7_5_4_xref_table.pdf"); }
     #[test]
+    fn pdf_7_5_5_file_trailer() { parse_and_expect_no_errors("test_data/parser/ok/pdf_7_5_5_file_trailer.pdf"); }
+    #[test]
     fn safedocs_pdf_syntax_tests() { parse_and_expect_no_errors("test_data/parser/ok/safedocs_pdf_syntax_tests.pdf"); }
 }
 mod err {

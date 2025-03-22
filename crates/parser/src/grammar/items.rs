@@ -15,76 +15,47 @@ pub(super) fn pdf_item(p: &mut Parser<'_>) -> Option<CompletedMarker> {
         return Some(m);
     }
 
+    if let Some(m) = file_trailer(p) {
+        return Some(m);
+    }
+
     expressions::expr(p)
-}
-
-fn cross_reference_table(p: &mut Parser<'_>) -> Option<CompletedMarker> {
-    // The cross-reference table consists of one or more cross-reference sections.
-    // Each cross-reference section starts with the xref keyword. See ISO 32000-1:2008, 7.5.4.
-    if !p.at(T![xref]) {
-        return None;
-    }
-
-    let m = p.start();
-
-    while !(p.at(EOF)) {
-        if cross_reference_section(p).is_none() {
-            break;
-        }
-    }
-
-    Some(m.complete(p, X_REF_TABLE))
-}
-
-fn cross_reference_section(p: &mut Parser<'_>) -> Option<CompletedMarker> {
-    if !p.at(T![xref]) {
-        return None;
-    }
-
-    let m = p.start();
-    p.bump(T![xref]);
-
-    while !(p.at(EOF)) {
-        if cross_reference_sub_section(p).is_none() {
-            break;
-        }
-    }
-
-    Some(m.complete(p, X_REF_SECTION))
-}
-
-fn cross_reference_sub_section(p: &mut Parser<'_>) -> Option<CompletedMarker> {
-    if !p.nth_at(0, INT_NUMBER) && !p.nth_at(1, INT_NUMBER) {
-        return None;
-    }
-
-    let m = p.start();
-    atom::atom_expr(p); // object number
-    atom::atom_expr(p); // number of consecutive entries
-
-    while !(p.at(EOF)) {
-        if cross_reference_entry(p).is_none() {
-            break;
-        }
-    }
-
-    Some(m.complete(p, X_REF_SUBSECTION))
 }
 
 const X_REF_ENTRTY_TYPES: TokenSet = TokenSet::new(&[T![f], T![n]]);
 
-fn cross_reference_entry(p: &mut Parser<'_>) -> Option<CompletedMarker> {
-    if !p.nth_at(0, INT_NUMBER) && !p.nth_at(1, INT_NUMBER) && !p.nth_at_ts(2, X_REF_ENTRTY_TYPES) {
+fn file_trailer(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if !p.at(T![trailer]) {
         return None;
     }
 
     let m = p.start();
-    atom::atom_expr(p); // object number
-    atom::atom_expr(p); // generation number
-    atom::atom_expr(p); // 'f' or 'n' keyword
-                        // assert_eq!(p.current(), NEWLINE);
-    p.eat(NEWLINE); // end-of-line marker is part of the entry
-    Some(m.complete(p, X_REF_ENTRY))
+    p.bump(T![trailer]);
+
+    let ss = match expressions::expr(p) {
+        Some(expr) if expr.kind() == DICTIONARY_EXPR => expr,
+        _ => {
+            m.abandon(p);
+            return None;
+        }
+    };
+
+    if !p.at(T![startxref]) {
+        m.abandon(p);
+        return None;
+    }
+
+    p.bump(T![startxref]);
+
+    if !p.at(INT_NUMBER) {
+        m.abandon(p);
+        return None;
+    }
+
+    atom::atom_expr(p); // byte offset of the last cross-reference section
+
+    // TODO: %%EOF
+    Some(m.complete(p, TRAILER))
 }
 
 fn indirect_object(p: &mut Parser<'_>) -> Option<CompletedMarker> {
@@ -142,4 +113,69 @@ fn stream_expr(p: &mut Parser<'_>) -> CompletedMarker {
 
     p.expect(T![endstream]);
     m.complete(p, STREAM_EXPR)
+}
+
+fn cross_reference_table(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    // The cross-reference table consists of one or more cross-reference sections.
+    // Each cross-reference section starts with the xref keyword. See ISO 32000-1:2008, 7.5.4.
+    if !p.at(T![xref]) {
+        return None;
+    }
+
+    let m = p.start();
+
+    while !(p.at(EOF)) {
+        if cross_reference_section(p).is_none() {
+            break;
+        }
+    }
+
+    Some(m.complete(p, X_REF_TABLE))
+}
+
+fn cross_reference_section(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if !p.at(T![xref]) {
+        return None;
+    }
+
+    let m = p.start();
+    p.bump(T![xref]);
+
+    while !(p.at(EOF)) {
+        if cross_reference_sub_section(p).is_none() {
+            break;
+        }
+    }
+
+    Some(m.complete(p, X_REF_SECTION))
+}
+
+fn cross_reference_sub_section(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if !p.nth_at(0, INT_NUMBER) && !p.nth_at(1, INT_NUMBER) {
+        return None;
+    }
+
+    let m = p.start();
+    atom::atom_expr(p); // object number
+    atom::atom_expr(p); // number of consecutive entries
+
+    while !(p.at(EOF)) {
+        if cross_reference_entry(p).is_none() {
+            break;
+        }
+    }
+
+    Some(m.complete(p, X_REF_SUBSECTION))
+}
+
+fn cross_reference_entry(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if !p.nth_at(0, INT_NUMBER) && !p.nth_at(1, INT_NUMBER) && !p.nth_at_ts(2, X_REF_ENTRTY_TYPES) {
+        return None;
+    }
+
+    let m = p.start();
+    atom::atom_expr(p); // object number
+    atom::atom_expr(p); // generation number
+    atom::atom_expr(p); // 'f' or 'n' keyword
+    Some(m.complete(p, X_REF_ENTRY))
 }
