@@ -1,1 +1,6 @@
 [549 3.14 false (Ralph) /SomeName]
+
+% Nested arrays
+[[]]
+[[][]]
+[(this is a nested array) [1 [true null] <0A>]]

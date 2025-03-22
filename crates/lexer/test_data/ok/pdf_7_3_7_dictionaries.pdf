@@ -1,12 +1,22 @@
-<</Type /Example 
-    /Subtype /DictionaryExample 
-    /Version 0.01 
-    /IntegerItem 12 
-    /StringItem (a string) 
-    /Subdictionary << 
-        /Item1 0.4 
-        /Item2 true 
-        /LastItem (not !) 
-        /VeryLastItem (OK) 
-    >> 
+<</Type /Example
+    /Subtype /DictionaryExample
+    /Version 0.01
+    /IntegerItem 12
+    /StringItem (a string)
+    /Subdictionary <<
+        /Item1 0.4
+        /Item2 true
+        /LastItem (not !)
+        /VeryLastItem (OK)
+    >>
 >>
+
+% Empty dictionary
+<<>>
+<< >>
+
+% Nested dictionaies
+<< << >> >>
+
+% Dictionary with indirect reference
+<</Length 8 0 R>>

@@ -1,0 +1,66 @@
+PDF_DOCUMENT
+  X_REF_TABLE
+    X_REF_SECTION
+      XREF_KW "xref"
+      NEWLINE "\n"
+      X_REF_SUBSECTION
+        LITERAL
+          INT_NUMBER "0"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "6"
+        NEWLINE "\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000000003"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "65535"
+          WHITESPACE " "
+          F_KW "f"
+        NEWLINE "\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000000017"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000000081"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000000000"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00007"
+          WHITESPACE " "
+          F_KW "f"
+        NEWLINE "\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000000331"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000000409"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+  NEWLINE "\n"

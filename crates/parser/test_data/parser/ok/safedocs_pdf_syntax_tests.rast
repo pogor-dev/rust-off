@@ -1,517 +1,802 @@
-COMMENT "%PDF-1.7"
-NEWLINE "\r\n"
-COMMENT "%\\xe2\\xe3\\xcf\\xd3"
-NEWLINE "\r\n"
-COMMENT "%"
-NEWLINE "\r\n"
-COMMENT "% (c) PDF Association, 2020"
-NEWLINE "\r\n"
-COMMENT "% Peter Wyatt, Principal Scientist - for SafeDocs"
-NEWLINE "\r\n"
-COMMENT "%"
-NEWLINE "\r\n"
-COMMENT "% This PDF has been hand-written to cover as many combinations of compacted PDF syntax as possible"
-NEWLINE "\r\n"
-COMMENT "% (meaning not using whitespace between tokens and delimiters). This file will get RUINED if it gets"
-NEWLINE "\r\n"
-COMMENT "% \"repaired\" by tools such as mutool clean!!!!"
-NEWLINE "\r\n"
-COMMENT "%"
-NEWLINE "\r\n"
-COMMENT "% Note also that this PDF file is NOT checked by rendering as many constructs are"
-NEWLINE "\r\n"
-COMMENT "% necessarily artificial and will not relate to graphics. It is designed to check a parser's ability to "
-NEWLINE "\r\n"
-COMMENT "% read compacted syntax without error, such as with the Trail Of Bit's PolyTracker/PolyFile tools. "
-NEWLINE "\r\n"
-COMMENT "% However this is still a 100% valid PDF and should render in every viewer."
-NEWLINE "\r\n"
-COMMENT "%"
-NEWLINE "\r\n"
-COMMENT "% See also the corresponding \"Compacted PDF Syntax Matrix\" document for the 121 possible combinations."
-NEWLINE "\r\n"
-COMMENT "%"
-NEWLINE "\r\n"
-COMMENT "% This material is based upon work supported by the Defense Advanced"
-NEWLINE "\r\n"
-COMMENT "% Research Projects Agency (DARPA) under Contract No. HR001119C0079."
-NEWLINE "\r\n"
-COMMENT "% Any opinions, findings and conclusions or recommendations expressed"
-NEWLINE "\r\n"
-COMMENT "% in this material are those of the author(s) and do not necessarily"
-NEWLINE "\r\n"
-COMMENT "% reflect the views of the Defense Advanced Research Projects Agency"
-NEWLINE "\r\n"
-COMMENT "% (DARPA). Approved for public release."
-NEWLINE "\r\n"
-COMMENT "%"
-NEWLINE "\r\n"
-INT_NUMBER "1"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-OBJ_KW "obj"
-NEWLINE "\r\n"
-L_DICT "<<"
-NAME "/Type"
-NAME "/Catalog"
-NAME "/MarkInfo"
-L_DICT "<<"
-COMMENT "%comment after dictionary start token"
-NEWLINE "\r\n"
-NAME "/Marked"
-WHITESPACE " "
-TRUE_KW "true"
-NAME "/Suspects"
-WHITESPACE " "
-TRUE_KW "true"
-COMMENT "%comment after a boolean"
-NEWLINE "\r\n"
-NAME "/UserProperties"
-WHITESPACE " "
-TRUE_KW "true"
-R_DICT ">>"
-NAME "/StructTreeRoot"
-WHITESPACE " "
-NULL_KW "null"
-NAME "/AA"
-L_DICT "<<"
-NAME "/WP"
-L_DICT "<<"
-NAME "/S"
-NAME "/JavaScript"
-NAME "/JS"
-LITERAL_STRING "(//JavaScript comment\r\napp.alert\\( \"Document Will Print Action!!\"\\))"
-R_DICT ">>"
-R_DICT ">>"
-NAME "/Pages"
-WHITESPACE " "
-INT_NUMBER "3"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-R_DICT ">>"
-COMMENT "%comment after dictionary close token"
-NEWLINE "\r\n"
-ENDOBJ_KW "endobj"
-NEWLINE "\r\n"
-INT_NUMBER "2"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-OBJ_KW "obj"
-NEWLINE "\r\n"
-ENDOBJ_KW "endobj"
-NEWLINE "\r\n"
-INT_NUMBER "3"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-OBJ_KW "obj"
-NEWLINE "\r\n"
-L_DICT "<<"
-NAME "/FakeBigDataArray"
-L_BRACK "["
-TRUE_KW "true"
-L_BRACK "["
-L_BRACK "["
-L_BRACK "["
-R_BRACK "]"
-R_BRACK "]"
-R_BRACK "]"
-TRUE_KW "true"
-HEX_STRING "<686931>"
-NULL_KW "null"
-HEX_STRING "<686932>"
-NULL_KW "null"
-L_BRACK "["
-NAME "/Dummy"
-R_BRACK "]"
-LITERAL_STRING "(hi3)"
-L_BRACK "["
-LITERAL_STRING "(hi4)"
-LITERAL_STRING "(hi5)"
-TRUE_KW "true"
-LITERAL_STRING "(hi6)"
-NULL_KW "null"
-LITERAL_STRING "(hi7)"
-INT_NUMBER "12"
-LITERAL_STRING "(hi8)"
-R_BRACK "]"
-REAL_NUMBER "-1."
-L_DICT "<<"
-NAME "/ABC"
-WHITESPACE " "
-REAL_NUMBER "+.123"
-NAME "/DEF"
-WHITESPACE " "
-REAL_NUMBER "+.0"
-R_DICT ">>"
-L_BRACK "["
-R_BRACK "]"
-LITERAL_STRING "(hi99)"
-L_BRACK "["
-R_BRACK "]"
-NULL_KW "null"
-L_BRACK "["
-R_BRACK "]"
-L_DICT "<<"
-NAME "/DEF"
-WHITESPACE " "
-NULL_KW "null"
-R_DICT ">>"
-TRUE_KW "true"
-L_DICT "<<"
-NAME "/GHI"
-NAME "/JKL"
-R_DICT ">>"
-L_BRACK "["
-L_DICT "<<"
-NAME "/MNO"
-WHITESPACE " "
-REAL_NUMBER "+.0"
-R_DICT ">>"
-R_BRACK "]"
-HEX_STRING "<686933>"
-INT_NUMBER "1"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-L_BRACK "["
-INT_NUMBER "1"
-WHITESPACE " "
-INT_NUMBER "2"
-WHITESPACE " "
-INT_NUMBER "3"
-R_BRACK "]"
-INT_NUMBER "6"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-HEX_STRING "<686934>"
-INT_NUMBER "4"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-LITERAL_STRING "(hi9)"
-INT_NUMBER "2"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-L_DICT "<<"
-NAME "/QRS"
-WHITESPACE " "
-TRUE_KW "true"
-R_DICT ">>"
-L_BRACK "["
-TRUE_KW "true"
-R_BRACK "]"
-L_DICT "<<"
-NAME "/TUV"
-WHITESPACE " "
-TRUE_KW "true"
-R_DICT ">>"
-HEX_STRING "<686935>"
-L_DICT "<<"
-NAME "/XYZ"
-WHITESPACE " "
-TRUE_KW "true"
-R_DICT ">>"
-INT_NUMBER "3"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-L_DICT "<<"
-NAME "/AAB"
-WHITESPACE " "
-TRUE_KW "true"
-R_DICT ">>"
-LITERAL_STRING "(hi10)"
-L_DICT "<<"
-NAME "/AAC"
-WHITESPACE " "
-TRUE_KW "true"
-R_DICT ">>"
-NULL_KW "null"
-HEX_STRING "<686936>"
-TRUE_KW "true"
-LITERAL_STRING "(hi11)"
-HEX_STRING "<686937>"
-LITERAL_STRING "(hi12)"
-REAL_NUMBER "+.0"
-HEX_STRING "<686938>"
-R_BRACK "]"
-NEWLINE "\r\n"
-NAME "/Type"
-NAME "/Pages"
-NAME "/Count"
-WHITESPACE " "
-INT_NUMBER "1"
-NAME "/Kids"
-L_BRACK "["
-INT_NUMBER "4"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-COMMENT "%comment after indirect ref"
-NEWLINE "\r\n"
-R_BRACK "]"
-R_DICT ">>"
-ENDOBJ_KW "endobj"
-NEWLINE "\r\n"
-INT_NUMBER "4"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-OBJ_KW "obj"
-NEWLINE "\r\n"
-L_DICT "<<"
-NAME "/Type"
-NAME "/Page"
-NAME "/Parent"
-WHITESPACE " "
-INT_NUMBER "3"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-NAME "/MediaBox"
-L_BRACK "["
-COMMENT "%comment after array start token"
-NEWLINE "\r\n"
-INT_NUMBER "+0"
-WHITESPACE " "
-REAL_NUMBER ".0"
-WHITESPACE " "
-INT_NUMBER "999"
-WHITESPACE " "
-REAL_NUMBER "999."
-R_BRACK "]"
-COMMENT "%comment after array end token"
-NEWLINE "\r\n"
-NAME "/CropBox"
-L_BRACK "["
-INT_NUMBER "+0"
-WHITESPACE " "
-REAL_NUMBER ".0"
-WHITESPACE " "
-INT_NUMBER "999"
-COMMENT "%comment after an integer"
-NEWLINE "\r\n"
-REAL_NUMBER "999."
-R_BRACK "]"
-NAME "/Contents"
-L_BRACK "["
-INT_NUMBER "5"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-R_BRACK "]"
-NAME "/UserUnit"
-WHITESPACE " "
-REAL_NUMBER "+0.88"
-NAME "/Annots"
-WHITESPACE " "
-NULL_KW "null"
-COMMENT "%comment after null"
-NEWLINE "\r\n"
-NAME "/Resources"
-L_DICT "<<"
-NAME "/Pattern"
-L_DICT "<<"
-R_DICT ">>"
-NAME "/ProcSet"
-L_BRACK "["
-NULL_KW "null"
-R_BRACK "]"
-NAME "/ExtGState"
-L_DICT "<<"
-NAME "/"
-WHITESPACE " "
-INT_NUMBER "6"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-R_DICT ">>"
-NAME "/Font"
-L_DICT "<<"
-NAME "/F1"
-L_DICT "<<"
-NAME "/Type"
-NAME "/Font"
-NAME "/Subtype"
-NAME "/Type1"
-NAME "/BaseFont"
-NAME "/Times-Bold"
-NAME "/Encoding"
-NAME "/WinAnsiEncoding"
-R_DICT ">>"
-R_DICT ">>"
-R_DICT ">>"
-R_DICT ">>"
-NEWLINE "\r\n"
-ENDOBJ_KW "endobj"
-NEWLINE "\r\n"
-INT_NUMBER "5"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-OBJ_KW "obj"
-NEWLINE "\r\n"
-L_DICT "<<"
-NAME "/Length"
-WHITESPACE " "
-INT_NUMBER "809"
-WHITESPACE "  "
-R_DICT ">>"
-NEWLINE "\r\n"
-RAW_STREAM "stream\r\n/BreakMyParser <</FakeBigDataArray[true[[[]]]true<686931>null<686932>null[/Dummy](hi3)[(hi4)(hi5)true(hi6)null(hi7)12(hi8)]-1.<</ABC +.123/DEF +.0>>[](hi99)[]null[]<</DEF null>>true<</GHI/JKL>>[<</MNO +.0>>]<686933>[1 2 3]<686934>(hi9)<</QRS true>>[true]<</TUV true>><686935><</XYZ true>><</AAB true>>(hi10)<</AAC true>>null<686936>true(hi11)<686937>(hi12)+.0<686938>]>> DP\r\n% Visible file marker\r\nBT/F1 30 Tf 0 Tr 1 0 0 1 10 950 Tm(PDF compacted syntax sequences according to ISO 32000)Tj 1 0 0 1 10 900 Tm \r\n(This file must NOT be resaved or modified by any tool!! v3.0) Tj ET\r\n% 3 colored vector graphic squares that are clipped\r\n/ gs q 40 w 75 75 400 400 re W S % stroke then clip a path with a wide black border\r\n1 0. .0 rg 75 75 200 200 re f 0 1 0 rg 275 75 200 200 re f .0 0 1 rg 275 275 200 200 re f Q\r\nendstream"
-NEWLINE "\r\n"
-ENDOBJ_KW "endobj"
-NEWLINE "\r\n"
-INT_NUMBER "6"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-OBJ_KW "obj"
-NEWLINE "\r\n"
-L_DICT "<<"
-NAME "/Type"
-NAME "/ExtGState"
-NAME "/ca"
-WHITESPACE " "
-REAL_NUMBER "0.33"
-NAME "/CA"
-WHITESPACE " "
-REAL_NUMBER "0.66"
-COMMENT "%comment after a real"
-NEWLINE "\r\n"
-R_DICT ">>"
-ENDOBJ_KW "endobj"
-NEWLINE "\r\n"
-INT_NUMBER "7"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-OBJ_KW "obj"
-NEWLINE "\r\n"
-L_DICT "<<"
-NAME "/Subject"
-LITERAL_STRING "(Compacted Syntax v3.0)"
-COMMENT "%comment after literal string end"
-NEWLINE "\r\n"
-NAME "/Title"
-HEX_STRING "<436f6d7061637465642073796e746178>"
-COMMENT "%comment after hex string end"
-NEWLINE "\r\n"
-NAME "/Keywords"
-LITERAL_STRING "(PDF,Compacted,Syntax,ISO 32000-2:2020)"
-NAME "/CreationDate"
-LITERAL_STRING "(D:20200317)"
-NAME "/Author"
-LITERAL_STRING "(Peter Wyatt)"
-NAME "/Creator"
-HEX_STRING "<48616e642d65646974>"
-NAME "/Producer"
-HEX_STRING "<48616e642d65646974>"
-R_DICT ">>"
-NEWLINE "\r\n"
-ENDOBJ_KW "endobj"
-NEWLINE "\r\n"
-XREF_KW "xref"
-NEWLINE "\r\n"
-INT_NUMBER "0"
-WHITESPACE " "
-INT_NUMBER "8"
-NEWLINE "\r\n"
-INT_NUMBER "0000000000"
-WHITESPACE " "
-INT_NUMBER "65535"
-WHITESPACE " "
-F_KW "f"
-NEWLINE "\r\n"
-INT_NUMBER "0000001228"
-WHITESPACE " "
-INT_NUMBER "00000"
-WHITESPACE " "
-N_KW "n"
-NEWLINE "\r\n"
-INT_NUMBER "0000001555"
-WHITESPACE " "
-INT_NUMBER "00000"
-WHITESPACE " "
-N_KW "n"
-NEWLINE "\r\n"
-INT_NUMBER "0000001572"
-WHITESPACE " "
-INT_NUMBER "00000"
-WHITESPACE " "
-N_KW "n"
-NEWLINE "\r\n"
-INT_NUMBER "0000002031"
-WHITESPACE " "
-INT_NUMBER "00000"
-WHITESPACE " "
-N_KW "n"
-NEWLINE "\r\n"
-INT_NUMBER "0000002428"
-WHITESPACE " "
-INT_NUMBER "00000"
-WHITESPACE " "
-N_KW "n"
-NEWLINE "\r\n"
-INT_NUMBER "0000003294"
-WHITESPACE " "
-INT_NUMBER "00000"
-WHITESPACE " "
-N_KW "n"
-NEWLINE "\r\n"
-INT_NUMBER "0000003369"
-WHITESPACE " "
-INT_NUMBER "00000"
-WHITESPACE " "
-N_KW "n"
-NEWLINE "\r\n"
-TRAILER_KW "trailer"
-NEWLINE "\r\n"
-L_DICT "<<"
-NAME "/Root"
-WHITESPACE " "
-INT_NUMBER "1"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-NAME "/Info"
-COMMENT "%comment after name"
-NEWLINE "\r\n"
-INT_NUMBER "7"
-WHITESPACE " "
-INT_NUMBER "0"
-WHITESPACE " "
-R_KW "R"
-NAME "/ID"
-L_BRACK "["
-HEX_STRING "<18D6B641245C03FABE67D93AD879D6EC>"
-HEX_STRING "<6264992C92074533A46A019C7CF9BFB6>"
-R_BRACK "]"
-NAME "/Size"
-WHITESPACE " "
-INT_NUMBER "8"
-R_DICT ">>"
-NEWLINE "\r\n"
-STARTXREF_KW "startxref"
-NEWLINE "\r\n"
-INT_NUMBER "3679"
-WHITESPACE "  "
-NEWLINE "\r\n"
-COMMENT "%%EOF"
+PDF_DOCUMENT
+  COMMENT "%PDF-1.7"
+  NEWLINE "\r\n"
+  COMMENT "%\\xe2\\xe3\\xcf\\xd3"
+  NEWLINE "\r\n"
+  COMMENT "%"
+  NEWLINE "\r\n"
+  COMMENT "% (c) PDF Association, 2020"
+  NEWLINE "\r\n"
+  COMMENT "% Peter Wyatt, Principal Scientist - for SafeDocs"
+  NEWLINE "\r\n"
+  COMMENT "%"
+  NEWLINE "\r\n"
+  COMMENT "% This PDF has been hand-written to cover as many combinations of compacted PDF syntax as possible"
+  NEWLINE "\r\n"
+  COMMENT "% (meaning not using whitespace between tokens and delimiters). This file will get RUINED if it gets"
+  NEWLINE "\r\n"
+  COMMENT "% \"repaired\" by tools such as mutool clean!!!!"
+  NEWLINE "\r\n"
+  COMMENT "%"
+  NEWLINE "\r\n"
+  COMMENT "% Note also that this PDF file is NOT checked by rendering as many constructs are"
+  NEWLINE "\r\n"
+  COMMENT "% necessarily artificial and will not relate to graphics. It is designed to check a parser's ability to "
+  NEWLINE "\r\n"
+  COMMENT "% read compacted syntax without error, such as with the Trail Of Bit's PolyTracker/PolyFile tools. "
+  NEWLINE "\r\n"
+  COMMENT "% However this is still a 100% valid PDF and should render in every viewer."
+  NEWLINE "\r\n"
+  COMMENT "%"
+  NEWLINE "\r\n"
+  COMMENT "% See also the corresponding \"Compacted PDF Syntax Matrix\" document for the 121 possible combinations."
+  NEWLINE "\r\n"
+  COMMENT "%"
+  NEWLINE "\r\n"
+  COMMENT "% This material is based upon work supported by the Defense Advanced"
+  NEWLINE "\r\n"
+  COMMENT "% Research Projects Agency (DARPA) under Contract No. HR001119C0079."
+  NEWLINE "\r\n"
+  COMMENT "% Any opinions, findings and conclusions or recommendations expressed"
+  NEWLINE "\r\n"
+  COMMENT "% in this material are those of the author(s) and do not necessarily"
+  NEWLINE "\r\n"
+  COMMENT "% reflect the views of the Defense Advanced Research Projects Agency"
+  NEWLINE "\r\n"
+  COMMENT "% (DARPA). Approved for public release."
+  NEWLINE "\r\n"
+  COMMENT "%"
+  NEWLINE "\r\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "1"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\r\n"
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      LITERAL
+        NAME "/Type"
+      LITERAL
+        NAME "/Catalog"
+      LITERAL
+        NAME "/MarkInfo"
+      DICTIONARY_EXPR
+        L_DICT "<<"
+        COMMENT "%comment after dictionary start token"
+        NEWLINE "\r\n"
+        LITERAL
+          NAME "/Marked"
+        WHITESPACE " "
+        LITERAL
+          TRUE_KW "true"
+        LITERAL
+          NAME "/Suspects"
+        WHITESPACE " "
+        LITERAL
+          TRUE_KW "true"
+        COMMENT "%comment after a boolean"
+        NEWLINE "\r\n"
+        LITERAL
+          NAME "/UserProperties"
+        WHITESPACE " "
+        LITERAL
+          TRUE_KW "true"
+        R_DICT ">>"
+      LITERAL
+        NAME "/StructTreeRoot"
+      WHITESPACE " "
+      LITERAL
+        NULL_KW "null"
+      LITERAL
+        NAME "/AA"
+      DICTIONARY_EXPR
+        L_DICT "<<"
+        LITERAL
+          NAME "/WP"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/S"
+          LITERAL
+            NAME "/JavaScript"
+          LITERAL
+            NAME "/JS"
+          LITERAL
+            LITERAL_STRING "(//JavaScript comment\r\napp.alert\\( \"Document Will Print Action!!\"\\))"
+          R_DICT ">>"
+        R_DICT ">>"
+      LITERAL
+        NAME "/Pages"
+      WHITESPACE " "
+      INDIRECT_REFERENCE_EXPR
+        LITERAL
+          INT_NUMBER "3"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "0"
+        WHITESPACE " "
+        R_KW "R"
+      R_DICT ">>"
+    COMMENT "%comment after dictionary close token"
+    NEWLINE "\r\n"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\r\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "2"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\r\n"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\r\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "3"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\r\n"
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      LITERAL
+        NAME "/FakeBigDataArray"
+      ARRAY_EXPR
+        L_BRACK "["
+        LITERAL
+          TRUE_KW "true"
+        ARRAY_EXPR
+          L_BRACK "["
+          ARRAY_EXPR
+            L_BRACK "["
+            ARRAY_EXPR
+              L_BRACK "["
+              R_BRACK "]"
+            R_BRACK "]"
+          R_BRACK "]"
+        LITERAL
+          TRUE_KW "true"
+        LITERAL
+          HEX_STRING "<686931>"
+        LITERAL
+          NULL_KW "null"
+        LITERAL
+          HEX_STRING "<686932>"
+        LITERAL
+          NULL_KW "null"
+        ARRAY_EXPR
+          L_BRACK "["
+          LITERAL
+            NAME "/Dummy"
+          R_BRACK "]"
+        LITERAL
+          LITERAL_STRING "(hi3)"
+        ARRAY_EXPR
+          L_BRACK "["
+          LITERAL
+            LITERAL_STRING "(hi4)"
+          LITERAL
+            LITERAL_STRING "(hi5)"
+          LITERAL
+            TRUE_KW "true"
+          LITERAL
+            LITERAL_STRING "(hi6)"
+          LITERAL
+            NULL_KW "null"
+          LITERAL
+            LITERAL_STRING "(hi7)"
+          LITERAL
+            INT_NUMBER "12"
+          LITERAL
+            LITERAL_STRING "(hi8)"
+          R_BRACK "]"
+        LITERAL
+          REAL_NUMBER "-1."
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/ABC"
+          WHITESPACE " "
+          LITERAL
+            REAL_NUMBER "+.123"
+          LITERAL
+            NAME "/DEF"
+          WHITESPACE " "
+          LITERAL
+            REAL_NUMBER "+.0"
+          R_DICT ">>"
+        ARRAY_EXPR
+          L_BRACK "["
+          R_BRACK "]"
+        LITERAL
+          LITERAL_STRING "(hi99)"
+        ARRAY_EXPR
+          L_BRACK "["
+          R_BRACK "]"
+        LITERAL
+          NULL_KW "null"
+        ARRAY_EXPR
+          L_BRACK "["
+          R_BRACK "]"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/DEF"
+          WHITESPACE " "
+          LITERAL
+            NULL_KW "null"
+          R_DICT ">>"
+        LITERAL
+          TRUE_KW "true"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/GHI"
+          LITERAL
+            NAME "/JKL"
+          R_DICT ">>"
+        ARRAY_EXPR
+          L_BRACK "["
+          DICTIONARY_EXPR
+            L_DICT "<<"
+            LITERAL
+              NAME "/MNO"
+            WHITESPACE " "
+            LITERAL
+              REAL_NUMBER "+.0"
+            R_DICT ">>"
+          R_BRACK "]"
+        LITERAL
+          HEX_STRING "<686933>"
+        INDIRECT_REFERENCE_EXPR
+          LITERAL
+            INT_NUMBER "1"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "0"
+          WHITESPACE " "
+          R_KW "R"
+        ARRAY_EXPR
+          L_BRACK "["
+          LITERAL
+            INT_NUMBER "1"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "2"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "3"
+          R_BRACK "]"
+        INDIRECT_REFERENCE_EXPR
+          LITERAL
+            INT_NUMBER "6"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "0"
+          WHITESPACE " "
+          R_KW "R"
+        LITERAL
+          HEX_STRING "<686934>"
+        INDIRECT_REFERENCE_EXPR
+          LITERAL
+            INT_NUMBER "4"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "0"
+          WHITESPACE " "
+          R_KW "R"
+        LITERAL
+          LITERAL_STRING "(hi9)"
+        INDIRECT_REFERENCE_EXPR
+          LITERAL
+            INT_NUMBER "2"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "0"
+          WHITESPACE " "
+          R_KW "R"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/QRS"
+          WHITESPACE " "
+          LITERAL
+            TRUE_KW "true"
+          R_DICT ">>"
+        ARRAY_EXPR
+          L_BRACK "["
+          LITERAL
+            TRUE_KW "true"
+          R_BRACK "]"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/TUV"
+          WHITESPACE " "
+          LITERAL
+            TRUE_KW "true"
+          R_DICT ">>"
+        LITERAL
+          HEX_STRING "<686935>"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/XYZ"
+          WHITESPACE " "
+          LITERAL
+            TRUE_KW "true"
+          R_DICT ">>"
+        INDIRECT_REFERENCE_EXPR
+          LITERAL
+            INT_NUMBER "3"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "0"
+          WHITESPACE " "
+          R_KW "R"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/AAB"
+          WHITESPACE " "
+          LITERAL
+            TRUE_KW "true"
+          R_DICT ">>"
+        LITERAL
+          LITERAL_STRING "(hi10)"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/AAC"
+          WHITESPACE " "
+          LITERAL
+            TRUE_KW "true"
+          R_DICT ">>"
+        LITERAL
+          NULL_KW "null"
+        LITERAL
+          HEX_STRING "<686936>"
+        LITERAL
+          TRUE_KW "true"
+        LITERAL
+          LITERAL_STRING "(hi11)"
+        LITERAL
+          HEX_STRING "<686937>"
+        LITERAL
+          LITERAL_STRING "(hi12)"
+        LITERAL
+          REAL_NUMBER "+.0"
+        LITERAL
+          HEX_STRING "<686938>"
+        R_BRACK "]"
+      NEWLINE "\r\n"
+      LITERAL
+        NAME "/Type"
+      LITERAL
+        NAME "/Pages"
+      LITERAL
+        NAME "/Count"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "1"
+      LITERAL
+        NAME "/Kids"
+      ARRAY_EXPR
+        L_BRACK "["
+        INDIRECT_REFERENCE_EXPR
+          LITERAL
+            INT_NUMBER "4"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "0"
+          WHITESPACE " "
+          R_KW "R"
+        COMMENT "%comment after indirect ref"
+        NEWLINE "\r\n"
+        R_BRACK "]"
+      R_DICT ">>"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\r\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "4"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\r\n"
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      LITERAL
+        NAME "/Type"
+      LITERAL
+        NAME "/Page"
+      LITERAL
+        NAME "/Parent"
+      WHITESPACE " "
+      INDIRECT_REFERENCE_EXPR
+        LITERAL
+          INT_NUMBER "3"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "0"
+        WHITESPACE " "
+        R_KW "R"
+      LITERAL
+        NAME "/MediaBox"
+      ARRAY_EXPR
+        L_BRACK "["
+        COMMENT "%comment after array start token"
+        NEWLINE "\r\n"
+        LITERAL
+          INT_NUMBER "+0"
+        WHITESPACE " "
+        LITERAL
+          REAL_NUMBER ".0"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "999"
+        WHITESPACE " "
+        LITERAL
+          REAL_NUMBER "999."
+        R_BRACK "]"
+      COMMENT "%comment after array end token"
+      NEWLINE "\r\n"
+      LITERAL
+        NAME "/CropBox"
+      ARRAY_EXPR
+        L_BRACK "["
+        LITERAL
+          INT_NUMBER "+0"
+        WHITESPACE " "
+        LITERAL
+          REAL_NUMBER ".0"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "999"
+        COMMENT "%comment after an integer"
+        NEWLINE "\r\n"
+        LITERAL
+          REAL_NUMBER "999."
+        R_BRACK "]"
+      LITERAL
+        NAME "/Contents"
+      ARRAY_EXPR
+        L_BRACK "["
+        INDIRECT_REFERENCE_EXPR
+          LITERAL
+            INT_NUMBER "5"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "0"
+          WHITESPACE " "
+          R_KW "R"
+        R_BRACK "]"
+      LITERAL
+        NAME "/UserUnit"
+      WHITESPACE " "
+      LITERAL
+        REAL_NUMBER "+0.88"
+      LITERAL
+        NAME "/Annots"
+      WHITESPACE " "
+      LITERAL
+        NULL_KW "null"
+      COMMENT "%comment after null"
+      NEWLINE "\r\n"
+      LITERAL
+        NAME "/Resources"
+      DICTIONARY_EXPR
+        L_DICT "<<"
+        LITERAL
+          NAME "/Pattern"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          R_DICT ">>"
+        LITERAL
+          NAME "/ProcSet"
+        ARRAY_EXPR
+          L_BRACK "["
+          LITERAL
+            NULL_KW "null"
+          R_BRACK "]"
+        LITERAL
+          NAME "/ExtGState"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/"
+          WHITESPACE " "
+          INDIRECT_REFERENCE_EXPR
+            LITERAL
+              INT_NUMBER "6"
+            WHITESPACE " "
+            LITERAL
+              INT_NUMBER "0"
+            WHITESPACE " "
+            R_KW "R"
+          R_DICT ">>"
+        LITERAL
+          NAME "/Font"
+        DICTIONARY_EXPR
+          L_DICT "<<"
+          LITERAL
+            NAME "/F1"
+          DICTIONARY_EXPR
+            L_DICT "<<"
+            LITERAL
+              NAME "/Type"
+            LITERAL
+              NAME "/Font"
+            LITERAL
+              NAME "/Subtype"
+            LITERAL
+              NAME "/Type1"
+            LITERAL
+              NAME "/BaseFont"
+            LITERAL
+              NAME "/Times-Bold"
+            LITERAL
+              NAME "/Encoding"
+            LITERAL
+              NAME "/WinAnsiEncoding"
+            R_DICT ">>"
+          R_DICT ">>"
+        R_DICT ">>"
+      R_DICT ">>"
+    NEWLINE "\r\n"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\r\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "5"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\r\n"
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      LITERAL
+        NAME "/Length"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "809"
+      WHITESPACE "  "
+      R_DICT ">>"
+    NEWLINE "\r\n"
+    STREAM_EXPR
+      STREAM_KW "stream"
+      RAW_STREAM "\r\n/BreakMyParser <</FakeBigDataArray[true[[[]]]true<686931>null<686932>null[/Dummy](hi3)[(hi4)(hi5)true(hi6)null(hi7)12(hi8)]-1.<</ABC +.123/DEF +.0>>[](hi99)[]null[]<</DEF null>>true<</GHI/JKL>>[<</MNO +.0>>]<686933>[1 2 3]<686934>(hi9)<</QRS true>>[true]<</TUV true>><686935><</XYZ true>><</AAB true>>(hi10)<</AAC true>>null<686936>true(hi11)<686937>(hi12)+.0<686938>]>> DP\r\n% Visible file marker\r\nBT/F1 30 Tf 0 Tr 1 0 0 1 10 950 Tm(PDF compacted syntax sequences according to ISO 32000)Tj 1 0 0 1 10 900 Tm \r\n(This file must NOT be resaved or modified by any tool!! v3.0) Tj ET\r\n% 3 colored vector graphic squares that are clipped\r\n/ gs q 40 w 75 75 400 400 re W S % stroke then clip a path with a wide black border\r\n1 0. .0 rg 75 75 200 200 re f 0 1 0 rg 275 75 200 200 re f .0 0 1 rg 275 275 200 200 re f Q\r\n"
+      ENDSTREAM_KW "endstream"
+    NEWLINE "\r\n"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\r\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "6"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\r\n"
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      LITERAL
+        NAME "/Type"
+      LITERAL
+        NAME "/ExtGState"
+      LITERAL
+        NAME "/ca"
+      WHITESPACE " "
+      LITERAL
+        REAL_NUMBER "0.33"
+      LITERAL
+        NAME "/CA"
+      WHITESPACE " "
+      LITERAL
+        REAL_NUMBER "0.66"
+      COMMENT "%comment after a real"
+      NEWLINE "\r\n"
+      R_DICT ">>"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\r\n"
+  INDIRECT_OBJECT_EXPR
+    INDIRECT_OBJECT_ID
+      LITERAL
+        INT_NUMBER "7"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "0"
+      WHITESPACE " "
+      OBJ_KW "obj"
+    NEWLINE "\r\n"
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      LITERAL
+        NAME "/Subject"
+      LITERAL
+        LITERAL_STRING "(Compacted Syntax v3.0)"
+      COMMENT "%comment after literal string end"
+      NEWLINE "\r\n"
+      LITERAL
+        NAME "/Title"
+      LITERAL
+        HEX_STRING "<436f6d7061637465642073796e746178>"
+      COMMENT "%comment after hex string end"
+      NEWLINE "\r\n"
+      LITERAL
+        NAME "/Keywords"
+      LITERAL
+        LITERAL_STRING "(PDF,Compacted,Syntax,ISO 32000-2:2020)"
+      LITERAL
+        NAME "/CreationDate"
+      LITERAL
+        LITERAL_STRING "(D:20200317)"
+      LITERAL
+        NAME "/Author"
+      LITERAL
+        LITERAL_STRING "(Peter Wyatt)"
+      LITERAL
+        NAME "/Creator"
+      LITERAL
+        HEX_STRING "<48616e642d65646974>"
+      LITERAL
+        NAME "/Producer"
+      LITERAL
+        HEX_STRING "<48616e642d65646974>"
+      R_DICT ">>"
+    NEWLINE "\r\n"
+    ENDOBJ_KW "endobj"
+  NEWLINE "\r\n"
+  X_REF_TABLE
+    X_REF_SECTION
+      XREF_KW "xref"
+      NEWLINE "\r\n"
+      X_REF_SUBSECTION
+        LITERAL
+          INT_NUMBER "0"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "8"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000000000"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "65535"
+          WHITESPACE " "
+          F_KW "f"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000001228"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000001555"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000001572"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000002031"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000002428"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000003294"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+        NEWLINE "\r\n"
+        X_REF_ENTRY
+          LITERAL
+            INT_NUMBER "0000003369"
+          WHITESPACE " "
+          LITERAL
+            INT_NUMBER "00000"
+          WHITESPACE " "
+          N_KW "n"
+  NEWLINE "\r\n"
+  TRAILER
+    TRAILER_KW "trailer"
+    NEWLINE "\r\n"
+    DICTIONARY_EXPR
+      L_DICT "<<"
+      LITERAL
+        NAME "/Root"
+      WHITESPACE " "
+      INDIRECT_REFERENCE_EXPR
+        LITERAL
+          INT_NUMBER "1"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "0"
+        WHITESPACE " "
+        R_KW "R"
+      LITERAL
+        NAME "/Info"
+      COMMENT "%comment after name"
+      NEWLINE "\r\n"
+      INDIRECT_REFERENCE_EXPR
+        LITERAL
+          INT_NUMBER "7"
+        WHITESPACE " "
+        LITERAL
+          INT_NUMBER "0"
+        WHITESPACE " "
+        R_KW "R"
+      LITERAL
+        NAME "/ID"
+      ARRAY_EXPR
+        L_BRACK "["
+        LITERAL
+          HEX_STRING "<18D6B641245C03FABE67D93AD879D6EC>"
+        LITERAL
+          HEX_STRING "<6264992C92074533A46A019C7CF9BFB6>"
+        R_BRACK "]"
+      LITERAL
+        NAME "/Size"
+      WHITESPACE " "
+      LITERAL
+        INT_NUMBER "8"
+      R_DICT ">>"
+    NEWLINE "\r\n"
+    STARTXREF_KW "startxref"
+    NEWLINE "\r\n"
+    LITERAL
+      INT_NUMBER "3679"
+  WHITESPACE "  "
+  NEWLINE "\r\n"
+  COMMENT "%%EOF"

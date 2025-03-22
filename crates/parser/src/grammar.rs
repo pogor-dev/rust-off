@@ -46,7 +46,7 @@ pub(crate) mod entry {
 
         pub(crate) fn pdf_document(p: &mut Parser<'_>) {
             let m = p.start();
-            items::pdf_contents(p);
+            items::pdf_body(p);
             m.complete(p, PDF_DOCUMENT);
         }
 

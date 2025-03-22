@@ -21,11 +21,10 @@
 Expr = Literal
   | ArrayExpr
   | DictionaryExpr
-  | ObjectExpr
   | IndirectReferenceExpr
 
 ArrayExpr =
-  '[' 
+  '['
   Expr*
   ']'
 
@@ -56,12 +55,12 @@ Literal =
 //        Objects          //
 //*************************//
 
-ObjectExpr =
-  ObjectId
-  data:Expr
+IndirectObjectExpr =
+  IndirectObjectId
+  Expr | StreamExpr
   'endobj'
 
-ObjectId =
+IndirectObjectId =
  object_number:Literal generation_number:Literal 'obj'
 
 IndirectReferenceExpr =
@@ -76,7 +75,7 @@ PdfDocument =
   Trailer
 
 Body =
-  ObjectExpr*
+  IndirectObjectExpr*
 
 Trailer =
   'trailer' DictionaryExpr

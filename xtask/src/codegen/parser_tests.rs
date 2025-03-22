@@ -9,12 +9,12 @@ use itertools::Itertools as _;
 
 use crate::{
     codegen::{ensure_file_contents, reformat},
+    flags::CodegenType,
     project_root,
 };
 
-pub(crate) fn generate(check: bool) {
+pub(crate) fn generate(codegen_type: CodegenType, test_data_path_str: &str, check: bool) {
     let crate_root_path = project_root().join("crates/parser");
-    let test_data_path_str = "test_data/parser";
     let test_data_path = crate_root_path.join(test_data_path_str);
 
     let tests_ok = list(&test_data_path.join("ok")).unwrap();
@@ -23,7 +23,11 @@ pub(crate) fn generate(check: bool) {
     let ok_tests = tests_ok.values().sorted_by(|a, b| a.name.cmp(&b.name)).map(|test| {
         let test_name = quote::format_ident!("{}", test.name);
         let test_file = format!("{test_data_path_str}/ok/{test_name}.pdf");
-        let (test_func, args) = (quote::format_ident!("parse_and_expect_no_errors"), quote::quote! {#test_file});
+        let fun_name = match codegen_type {
+            CodegenType::ParserLexerStrTests => quote::format_ident!("lex_and_expect_no_errors"),
+            _ => quote::format_ident!("parse_and_expect_no_errors"),
+        };
+        let (test_func, args) = (fun_name, quote::quote! {#test_file});
 
         quote::quote! {
             #[test]
@@ -36,7 +40,11 @@ pub(crate) fn generate(check: bool) {
     let err_tests = tests_err.values().sorted_by(|a, b| a.name.cmp(&b.name)).map(|test| {
         let test_name = quote::format_ident!("{}", test.name);
         let test_file = format!("{test_data_path_str}/err/{test_name}.pdf");
-        let (test_func, args) = (quote::format_ident!("parse_and_expect_errors"), quote::quote! {#test_file});
+        let fun_name = match codegen_type {
+            CodegenType::ParserLexerStrTests => quote::format_ident!("lex_and_expect_errors"),
+            _ => quote::format_ident!("parse_and_expect_errors"),
+        };
+        let (test_func, args) = (fun_name, quote::quote! {#test_file});
 
         quote::quote! {
             #[test]
@@ -58,12 +66,7 @@ pub(crate) fn generate(check: bool) {
     };
 
     let pretty = reformat(output.to_string());
-    ensure_file_contents(
-        crate::flags::CodegenType::ParserTests,
-        test_data_path.join("generated/runner.rs").as_ref(),
-        &pretty,
-        check,
-    );
+    ensure_file_contents(codegen_type, test_data_path.join("generated/runner.rs").as_ref(), &pretty, check);
 }
 
 #[derive(Debug)]
@@ -94,5 +97,6 @@ fn list(dir: &Path) -> Result<HashMap<String, TestCase>> {
 
 #[test]
 fn test() {
-    generate(true);
+    generate(CodegenType::ParserLexerStrTests, "test_data/lexer", true);
+    generate(CodegenType::ParserTests, "test_data/parser", true);
 }

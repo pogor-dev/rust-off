@@ -9,6 +9,7 @@ mod cursor_tests;
 pub struct Cursor<'a> {
     len_remaining: usize,
     iter: slice::Iter<'a, u8>,
+    is_prev_token_stream: bool,
 }
 
 impl<'a> Cursor<'a> {
@@ -16,6 +17,7 @@ impl<'a> Cursor<'a> {
         Cursor {
             len_remaining: input.len(),
             iter: input.iter(),
+            is_prev_token_stream: false,
         }
     }
 
@@ -48,11 +50,8 @@ impl<'a> Cursor<'a> {
         }
     }
 
-    pub(crate) fn eat_while_word(&mut self, word: &[u8]) {
-        while !self.is_eof() {
-            if self.try_eat_word(word) {
-                break;
-            }
+    pub(crate) fn eat_while_word(&mut self, predicate: impl Fn(&[u8]) -> bool) {
+        while !predicate(self.iter.as_slice()) && !self.is_eof() {
             self.next();
         }
     }
@@ -84,5 +83,13 @@ impl<'a> Cursor<'a> {
 
     pub(crate) fn reset_pos_within_token(&mut self) {
         self.len_remaining = self.iter.as_slice().len();
+    }
+
+    pub(crate) fn is_prev_token_stream(&self) -> bool {
+        self.is_prev_token_stream
+    }
+
+    pub(crate) fn set_prev_token_stream(&mut self, is_stream: bool) {
+        self.is_prev_token_stream = is_stream;
     }
 }

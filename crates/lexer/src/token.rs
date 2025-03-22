@@ -34,7 +34,7 @@ pub enum TokenKind {
     /// A stream token, e.g. `stream`, `endstream`.
     /// The stream token is a special token that is used to mark the beginning and end of a stream object.
     /// The stream content is skipped by the lexer and is decoded/parsed later by the parser.
-    Stream,
+    RawStreamData,
 
     /// A literal token, e.g. `123`, `3.14`.
     ///

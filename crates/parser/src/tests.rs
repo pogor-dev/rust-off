@@ -1,7 +1,4 @@
-mod prefix_entries;
-mod top_entries;
-
-use std::{env, fmt::Write, fs, path::PathBuf};
+use std::{fmt::Write, fs, path::PathBuf};
 
 use expect_test::expect_file;
 
@@ -39,26 +36,6 @@ fn escape_bytes(text: &[u8]) -> String {
         .collect();
 
     escaped_text
-}
-
-#[test]
-fn parse_ok() {
-    for case in TestCase::list("parser/ok") {
-        let _guard = stdx::panic_context::enter(format!("{:?}", case.pdf));
-        let (actual, errors) = parse(TopEntryPoint::PdfDocument, &case.text, Edition::CURRENT);
-        assert!(!errors, "errors in an OK file {}:\n{actual}", case.pdf.display());
-        expect_file![case.rast].assert_eq(&actual);
-    }
-}
-
-#[test]
-fn parse_err() {
-    for case in TestCase::list("parser/err") {
-        let _guard = stdx::panic_context::enter(format!("{:?}", case.pdf));
-        let (actual, errors) = parse(TopEntryPoint::PdfDocument, &case.text, Edition::CURRENT);
-        assert!(errors, "no errors in an ERR file {}:\n{actual}", case.pdf.display());
-        expect_file![case.rast].assert_eq(&actual)
-    }
 }
 
 fn parse(entry: TopEntryPoint, text: &[u8], edition: Edition) -> (String, bool) {
@@ -109,39 +86,8 @@ fn parse(entry: TopEntryPoint, text: &[u8], edition: Edition) -> (String, bool) 
     (buf, has_errors)
 }
 
-#[derive(PartialEq, Eq, PartialOrd, Ord)]
-struct TestCase {
-    pdf: PathBuf,
-    rast: PathBuf,
-    text: Box<[u8]>,
-}
-
-impl TestCase {
-    fn list(path: &'static str) -> Vec<TestCase> {
-        let binding = project_root();
-        let crate_root_dir = binding.as_path();
-        let test_data_dir = crate_root_dir.join("test_data");
-        let dir = test_data_dir.join(path);
-
-        let mut res = Vec::new();
-        let read_dir = fs::read_dir(&dir).unwrap_or_else(|err| panic!("can't `read_dir` {}: {err}", dir.display()));
-        for file in read_dir {
-            let file = file.unwrap();
-            let path = file.path();
-            if path.extension().unwrap_or_default() == "pdf" {
-                let pdf = path;
-                let rast = pdf.with_extension("rast");
-                let text = fs::read(&pdf).unwrap().into_boxed_slice();
-                res.push(TestCase { pdf, rast, text });
-            }
-        }
-        res.sort();
-        res
-    }
-}
-
 #[track_caller]
-fn run_and_expect_no_errors(path: &str) {
+fn lex_and_expect_no_errors(path: &str) {
     let path = PathBuf::from(path);
     let text = fs::read(&path).unwrap().into_boxed_slice();
     let actual = lex(&text);
@@ -166,10 +112,4 @@ fn parse_and_expect_no_errors_with_edition(path: &str, edition: Edition) {
     p.push(path);
     p.set_extension("rast");
     expect_file![p].assert_eq(&actual)
-}
-
-/// Returns the path to the root directory of `pdf-analyzer` project.
-fn project_root() -> PathBuf {
-    let dir = env::var("CARGO_MANIFEST_DIR").unwrap_or_else(|_| env!("CARGO_MANIFEST_DIR").to_owned());
-    PathBuf::from(dir).parent().unwrap().to_owned()
 }
