@@ -82,6 +82,7 @@ fn cross_reference_entry(p: &mut Parser<'_>) -> Option<CompletedMarker> {
     atom::atom_expr(p); // object number
     atom::atom_expr(p); // generation number
     atom::atom_expr(p); // 'f' or 'n' keyword
+                        // assert_eq!(p.current(), NEWLINE);
     p.eat(NEWLINE); // end-of-line marker is part of the entry
     Some(m.complete(p, X_REF_ENTRY))
 }
