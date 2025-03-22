@@ -19,14 +19,16 @@ mod parser_tests;
 impl flags::Codegen {
     pub(crate) fn run(self, _sh: &Shell) -> anyhow::Result<()> {
         match self.codegen_type.unwrap_or_default() {
-            flags::CodegenType::All => {
+            CodegenType::All => {
                 grammar::generate(self.check);
                 lexer_tests::generate(self.check);
-                parser_tests::generate(self.check);
+                parser_tests::generate(CodegenType::ParserLexerStrTests, "test_data/lexer", self.check);
+                parser_tests::generate(CodegenType::ParserTests, "test_data/parser", self.check);
             }
-            flags::CodegenType::Grammar => grammar::generate(self.check),
-            flags::CodegenType::LexerTests => lexer_tests::generate(self.check),
-            flags::CodegenType::ParserTests => parser_tests::generate(self.check),
+            CodegenType::Grammar => grammar::generate(self.check),
+            CodegenType::LexerTests => lexer_tests::generate(self.check),
+            CodegenType::ParserLexerStrTests => parser_tests::generate(CodegenType::ParserLexerStrTests, "test_data/lexer", self.check),
+            CodegenType::ParserTests => parser_tests::generate(CodegenType::ParserTests, "test_data/parser", self.check),
         }
         Ok(())
     }

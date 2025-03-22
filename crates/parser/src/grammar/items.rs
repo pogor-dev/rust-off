@@ -11,7 +11,79 @@ pub(super) fn pdf_item(p: &mut Parser<'_>) -> Option<CompletedMarker> {
         return Some(m);
     }
 
+    if let Some(m) = cross_reference_table(p) {
+        return Some(m);
+    }
+
     expressions::expr(p)
+}
+
+fn cross_reference_table(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    // The cross-reference table consists of one or more cross-reference sections.
+    // Each cross-reference section starts with the xref keyword. See ISO 32000-1:2008, 7.5.4.
+    if !p.at(T![xref]) {
+        return None;
+    }
+
+    let m = p.start();
+
+    while !(p.at(EOF)) {
+        if cross_reference_section(p).is_none() {
+            break;
+        }
+    }
+
+    Some(m.complete(p, X_REF_TABLE))
+}
+
+fn cross_reference_section(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if !p.at(T![xref]) {
+        return None;
+    }
+
+    let m = p.start();
+    p.bump(T![xref]);
+
+    while !(p.at(EOF)) {
+        if cross_reference_sub_section(p).is_none() {
+            break;
+        }
+    }
+
+    Some(m.complete(p, X_REF_SECTION))
+}
+
+fn cross_reference_sub_section(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if !p.nth_at(0, INT_NUMBER) && !p.nth_at(1, INT_NUMBER) {
+        return None;
+    }
+
+    let m = p.start();
+    atom::atom_expr(p); // object number
+    atom::atom_expr(p); // number of consecutive entries
+
+    while !(p.at(EOF)) {
+        if cross_reference_entry(p).is_none() {
+            break;
+        }
+    }
+
+    Some(m.complete(p, X_REF_SUBSECTION))
+}
+
+const X_REF_ENTRTY_TYPES: TokenSet = TokenSet::new(&[T![f], T![n]]);
+
+fn cross_reference_entry(p: &mut Parser<'_>) -> Option<CompletedMarker> {
+    if !p.nth_at(0, INT_NUMBER) && !p.nth_at(1, INT_NUMBER) && !p.nth_at_ts(2, X_REF_ENTRTY_TYPES) {
+        return None;
+    }
+
+    let m = p.start();
+    atom::atom_expr(p); // object number
+    atom::atom_expr(p); // generation number
+    atom::atom_expr(p); // 'f' or 'n' keyword
+    p.eat(NEWLINE); // end-of-line marker is part of the entry
+    Some(m.complete(p, X_REF_ENTRY))
 }
 
 fn indirect_object(p: &mut Parser<'_>) -> Option<CompletedMarker> {
@@ -22,9 +94,7 @@ fn indirect_object(p: &mut Parser<'_>) -> Option<CompletedMarker> {
         return None;
     };
 
-    let k = p.current();
     indirect_object_body(p);
-    let k = p.current();
 
     assert!(p.at(T![endobj]));
     atom::atom_expr(p); // endobj

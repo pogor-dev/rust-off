@@ -38,6 +38,7 @@ pub enum CodegenType {
     All,
     Grammar,
     LexerTests,
+    ParserLexerStrTests,
     ParserTests,
 }
 
@@ -47,6 +48,7 @@ impl fmt::Display for CodegenType {
             Self::All => write!(f, "all"),
             Self::Grammar => write!(f, "grammar"),
             Self::LexerTests => write!(f, "lexer_tests"),
+            Self::ParserLexerStrTests => write!(f, "parser_lexer_str_tests"),
             Self::ParserTests => write!(f, "parser_tests"),
         }
     }
