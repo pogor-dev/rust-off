@@ -56,10 +56,12 @@ pub(crate) fn generate(codegen_type: CodegenType, test_data_path_str: &str, chec
 
     let output = quote::quote! {
         mod ok {
+            #![allow(unused_imports)]
             use crate::tests::*;
             #(#ok_tests)*
         }
         mod err {
+            #![allow(unused_imports)]
             use crate::tests::*;
             #(#err_tests)*
         }

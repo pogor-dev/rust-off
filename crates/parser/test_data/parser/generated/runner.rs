@@ -1,4 +1,5 @@
 mod ok {
+    #![allow(unused_imports)]
     use crate::tests::*;
     #[test]
     fn pdf_7_2_3_character_set() { parse_and_expect_no_errors("test_data/parser/ok/pdf_7_2_3_character_set.pdf"); }
@@ -32,5 +33,6 @@ mod ok {
     fn safedocs_pdf_syntax_tests() { parse_and_expect_no_errors("test_data/parser/ok/safedocs_pdf_syntax_tests.pdf"); }
 }
 mod err {
+    #![allow(unused_imports)]
     use crate::tests::*;
 }

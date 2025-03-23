@@ -1,4 +1,6 @@
 //! This file is actually hand-written, but the submodules are indeed generated.
+#![allow(warnings)]
+
 #[rustfmt::skip]
 pub(crate) mod nodes;
 #[rustfmt::skip]

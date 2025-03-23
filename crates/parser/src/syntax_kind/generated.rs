@@ -119,6 +119,7 @@ impl SyntaxKind {
     }
     #[doc = r" Checks whether this syntax kind is a strict keyword for the given edition."]
     #[doc = r" Strict keywords are identifiers that are always considered keywords."]
+    #[allow(unused_variables)]
     pub fn is_strict_keyword(self, edition: Edition) -> bool {
         matches!(
             self,
@@ -129,12 +130,14 @@ impl SyntaxKind {
     }
     #[doc = r" Checks whether this syntax kind is a weak keyword for the given edition."]
     #[doc = r" Weak keywords are identifiers that are considered keywords only in certain contexts."]
+    #[allow(unused_variables)]
     pub fn is_contextual_keyword(self, edition: Edition) -> bool {
         match self {
             _ => false,
         }
     }
     #[doc = r" Checks whether this syntax kind is a strict or weak keyword for the given edition."]
+    #[allow(unused_variables)]
     pub fn is_keyword(self, edition: Edition) -> bool {
         matches!(
             self,
@@ -145,6 +148,7 @@ impl SyntaxKind {
     }
     pub fn is_punct(self) -> bool { matches!(self, L_BRACK | R_BRACK | L_DICT | R_DICT) }
     pub fn is_literal(self) -> bool { matches!(self, HEX_STRING | INT_NUMBER | LITERAL_STRING | NAME | REAL_NUMBER) }
+    #[allow(unused_variables)]
     pub fn from_keyword(ident: &str, edition: Edition) -> Option<SyntaxKind> {
         let kw = match ident {
             "R" => R_KW,
@@ -164,10 +168,13 @@ impl SyntaxKind {
         };
         Some(kw)
     }
+    #[allow(unused_variables)]
     pub fn from_contextual_keyword(ident: &str, edition: Edition) -> Option<SyntaxKind> {
+        #[allow(unused_variables)]
         let kw = match ident {
             _ => return None,
         };
+        #[allow(unreachable_code)]
         Some(kw)
     }
     pub fn from_char(c: char) -> Option<SyntaxKind> {

@@ -47,10 +47,12 @@ pub(crate) fn generate(check: bool) {
 
     let output = quote::quote! {
         mod ok {
+            #![allow(unused_imports)]
             use crate::tests::*;
             #(#ok_tests)*
         }
         mod err {
+            #![allow(unused_imports)]
             use crate::tests::*;
             #(#err_tests)*
         }

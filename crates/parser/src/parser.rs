@@ -99,24 +99,13 @@ impl<'t> Parser<'t> {
         true
     }
 
+    #[allow(dead_code)]
     pub(crate) fn eat_contextual_kw(&mut self, kind: SyntaxKind) -> bool {
         if !self.at_contextual_kw(kind) {
             return false;
         }
         self.bump_remap(kind);
         true
-    }
-
-    fn at_composite2(&self, n: usize, k1: SyntaxKind, k2: SyntaxKind) -> bool {
-        self.inp.kind(self.pos + n) == k1 && self.inp.kind(self.pos + n + 1) == k2 && self.inp.is_joint(self.pos + n)
-    }
-
-    fn at_composite3(&self, n: usize, k1: SyntaxKind, k2: SyntaxKind, k3: SyntaxKind) -> bool {
-        self.inp.kind(self.pos + n) == k1
-            && self.inp.kind(self.pos + n + 1) == k2
-            && self.inp.kind(self.pos + n + 2) == k3
-            && self.inp.is_joint(self.pos + n)
-            && self.inp.is_joint(self.pos + n + 1)
     }
 
     /// Checks if the current token is in `kinds`.
@@ -129,6 +118,7 @@ impl<'t> Parser<'t> {
         self.inp.contextual_kind(self.pos) == kw
     }
 
+    #[allow(dead_code)]
     /// Checks if the nth token is contextual keyword `kw`.
     pub(crate) fn nth_at_contextual_kw(&self, n: usize, kw: SyntaxKind) -> bool {
         self.inp.contextual_kind(self.pos + n) == kw
@@ -226,6 +216,7 @@ impl<'t> Parser<'t> {
         self.events.push(event);
     }
 
+    #[allow(dead_code)]
     pub(crate) fn edition(&self) -> Edition {
         self.edition
     }
@@ -281,6 +272,7 @@ impl Marker {
 
 pub(crate) struct CompletedMarker {
     start_pos: u32,
+    #[allow(dead_code)]
     end_pos: u32,
     kind: SyntaxKind,
 }
@@ -303,6 +295,7 @@ impl CompletedMarker {
     /// Append a new `START` events as `[START, FINISH, NEWSTART]`,
     /// then mark `NEWSTART` as `START`'s parent with saving its relative
     /// distance to `NEWSTART` into forward_parent(=2 in this case);
+    #[allow(dead_code)]
     pub(crate) fn precede(self, p: &mut Parser<'_>) -> Marker {
         let new_pos = p.start();
         let idx = self.start_pos as usize;
@@ -332,6 +325,7 @@ impl CompletedMarker {
         self.kind
     }
 
+    #[allow(dead_code)]
     pub(crate) fn last_token(&self, p: &Parser<'_>) -> Option<SyntaxKind> {
         let end_pos = self.end_pos as usize;
         debug_assert_eq!(p.events[end_pos - 1], Event::Finish);

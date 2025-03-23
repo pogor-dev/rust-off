@@ -496,6 +496,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
 
             /// Checks whether this syntax kind is a strict keyword for the given edition.
             /// Strict keywords are identifiers that are always considered keywords.
+            #[allow(unused_variables)]
             pub fn is_strict_keyword(self, edition: Edition) -> bool {
                 matches!(self, #(#strict_keywords_variants)|*)
                 || match self {
@@ -506,6 +507,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
 
             /// Checks whether this syntax kind is a weak keyword for the given edition.
             /// Weak keywords are identifiers that are considered keywords only in certain contexts.
+            #[allow(unused_variables)]
             pub fn is_contextual_keyword(self, edition: Edition) -> bool {
                 match self {
                     #(#contextual_keywords_variants_match_arm => true,)*
@@ -514,6 +516,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
             }
 
             /// Checks whether this syntax kind is a strict or weak keyword for the given edition.
+            #[allow(unused_variables)]
             pub fn is_keyword(self, edition: Edition) -> bool {
                 matches!(self, #(#strict_keywords_variants)|*)
                 || match self {
@@ -531,6 +534,7 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
                 matches!(self, #(#literals)|*)
             }
 
+            #[allow(unused_variables)]
             pub fn from_keyword(ident: &str, edition: Edition) -> Option<SyntaxKind> {
                 let kw = match ident {
                     #(#strict_keywords => #strict_keywords_variants,)*
@@ -540,11 +544,14 @@ fn generate_syntax_kinds(grammar: KindsSrc) -> String {
                 Some(kw)
             }
 
+            #[allow(unused_variables)]
             pub fn from_contextual_keyword(ident: &str, edition: Edition) -> Option<SyntaxKind> {
+                #[allow(unused_variables)]
                 let kw = match ident {
                     #(#contextual_keywords_str_match_arm => #contextual_keywords_variants,)*
                     _ => return None,
                 };
+                #[allow(unreachable_code)]
                 Some(kw)
             }
 

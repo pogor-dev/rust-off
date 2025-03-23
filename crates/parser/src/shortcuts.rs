@@ -28,30 +28,10 @@ impl LexedStr<'_> {
     pub fn to_input(&self, _edition: Edition) -> crate::Input {
         let _p = tracing::info_span!("LexedStr::to_input").entered();
         let mut res = crate::Input::default();
-        let mut was_joint = false;
         for i in 0..self.len() {
             let kind = self.kind(i);
-            if kind.is_trivia() {
-                was_joint = false
-            } else {
-                if was_joint {
-                    res.was_joint();
-                }
-
+            if !kind.is_trivia() {
                 res.push(kind);
-
-                // Tag the token as joint if it is float with a fractional part
-                // we use this jointness to inform the parser about what token split
-                // event to emit when we encounter a float literal in a field access
-                if kind == SyntaxKind::REAL_NUMBER {
-                    if !self.text(i).ends_with(b".") {
-                        res.was_joint();
-                    } else {
-                        was_joint = false;
-                    }
-                } else {
-                    was_joint = true;
-                }
             }
         }
         res
@@ -114,8 +94,8 @@ impl Builder<'_, '_> {
             State::PendingExit => (self.sink)(StrStep::Exit),
             State::Normal => (),
         }
-        self.eat_trivias();
-        self.do_token(kind, n_tokens as usize);
+        self.eat_trivias(); // eat leading trivias
+        self.do_token(kind, n_tokens as usize); // eat the token
     }
 
     fn enter(&mut self, kind: SyntaxKind) {
@@ -133,9 +113,9 @@ impl Builder<'_, '_> {
         let n_trivias = (self.pos..self.lexed.len()).take_while(|&it| self.lexed.kind(it).is_trivia()).count();
         let leading_trivias = self.pos..self.pos + n_trivias;
         let n_attached_trivias = n_attached_trivias(kind, leading_trivias.rev().map(|it| (self.lexed.kind(it), self.lexed.text(it))));
-        self.eat_n_trivias(n_trivias - n_attached_trivias);
-        (self.sink)(StrStep::Enter { kind });
-        self.eat_n_trivias(n_attached_trivias);
+        self.eat_n_trivias(n_trivias - n_attached_trivias); // eat leading trivias, except attached ones inside the node
+        (self.sink)(StrStep::Enter { kind }); // enter the node
+        self.eat_n_trivias(n_attached_trivias); // eat attached trivias, so they are attached inside the node
     }
 
     fn exit(&mut self) {
@@ -173,13 +153,7 @@ impl Builder<'_, '_> {
 
 fn n_attached_trivias<'a>(kind: SyntaxKind, _trivias: impl Iterator<Item = (SyntaxKind, &'a [u8])>) -> usize {
     match kind {
+        // X_REF_ENTRY => 1,
         _ => 0,
     }
-}
-
-fn split_once_u8(slice: &[u8], delimiter: u8) -> Option<(&[u8], &[u8])> {
-    let mut split_iter = slice.splitn(2, |&byte| byte == delimiter);
-    let first = split_iter.next()?;
-    let second = split_iter.next()?;
-    Some((first, second))
 }

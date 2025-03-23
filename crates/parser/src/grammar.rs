@@ -34,7 +34,7 @@ mod items;
 
 use crate::{
     parser::{CompletedMarker, Marker, Parser},
-    SyntaxKind::{self, *},
+    SyntaxKind::*,
     TokenSet, T,
 };
 

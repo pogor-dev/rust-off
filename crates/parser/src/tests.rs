@@ -5,10 +5,12 @@ use expect_test::expect_file;
 use crate::{Edition, LexedStr, TopEntryPoint};
 
 #[rustfmt::skip]
+#[allow(unused_imports)]
 #[path = "../test_data/lexer/generated/runner.rs"]
 mod lexer_runner;
 
 #[rustfmt::skip]
+#[allow(unused_imports)]
 #[path = "../test_data/parser/generated/runner.rs"]
 mod parser_runner;
 

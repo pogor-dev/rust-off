@@ -5,7 +5,6 @@ use xshell::Shell;
 
 mod codegen;
 mod flags;
-mod util;
 
 fn main() -> anyhow::Result<()> {
     let sh = &Shell::new()?;
