@@ -685,7 +685,7 @@ PDF_DOCUMENT
             INT_NUMBER "65535"
           WHITESPACE " "
           F_KW "f"
-        NEWLINE "\r\n"
+          NEWLINE "\r\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000001228"
@@ -694,7 +694,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\r\n"
+          NEWLINE "\r\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000001555"
@@ -703,7 +703,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\r\n"
+          NEWLINE "\r\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000001572"
@@ -712,7 +712,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\r\n"
+          NEWLINE "\r\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000002031"
@@ -721,7 +721,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\r\n"
+          NEWLINE "\r\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000002428"
@@ -730,7 +730,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\r\n"
+          NEWLINE "\r\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000003294"
@@ -739,7 +739,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\r\n"
+          NEWLINE "\r\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000003369"
@@ -748,7 +748,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-  NEWLINE "\r\n"
+          NEWLINE "\r\n"
   TRAILER
     TRAILER_KW "trailer"
     NEWLINE "\r\n"

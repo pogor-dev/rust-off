@@ -59,7 +59,9 @@ pub(crate) enum Event {
     },
 
     /// Complete the previous `Start` event
-    Finish,
+    Finish {
+        kind: SyntaxKind,
+    },
 
     /// Produce a single leaf-element.
     /// `n_raw_tokens` is used to glue complex contextual tokens.
@@ -119,7 +121,7 @@ pub(super) fn process(mut events: Vec<Event>) -> Output {
                     }
                 }
             }
-            Event::Finish => res.leave_node(),
+            Event::Finish { kind } => res.leave_node(kind),
             Event::Token { kind, n_raw_tokens } => {
                 res.token(kind, n_raw_tokens);
             }

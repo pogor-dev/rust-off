@@ -13,7 +13,7 @@ use std::mem;
 
 use crate::{
     Edition, LexedStr, Step,
-    SyntaxKind::{self},
+    SyntaxKind::{self, *},
 };
 
 #[derive(Debug)]
@@ -53,7 +53,7 @@ impl LexedStr<'_> {
                     n_input_tokens: n_raw_tokens,
                 } => builder.token(kind, n_raw_tokens),
                 Step::Enter { kind } => builder.enter(kind),
-                Step::Exit => builder.exit(),
+                Step::Exit { kind } => builder.exit(kind),
                 Step::Error { msg } => {
                     let text_pos = builder.lexed.text_start(builder.pos);
                     (builder.sink)(StrStep::Error { msg, pos: text_pos });
@@ -112,13 +112,18 @@ impl Builder<'_, '_> {
 
         let n_trivias = (self.pos..self.lexed.len()).take_while(|&it| self.lexed.kind(it).is_trivia()).count();
         let leading_trivias = self.pos..self.pos + n_trivias;
-        let n_attached_trivias = n_attached_trivias(kind, leading_trivias.rev().map(|it| (self.lexed.kind(it), self.lexed.text(it))));
+        let n_attached_trivias = n_attached_leading_trivias(kind, leading_trivias.rev().map(|it| (self.lexed.kind(it), self.lexed.text(it))));
         self.eat_n_trivias(n_trivias - n_attached_trivias); // eat leading trivias, except attached ones inside the node
         (self.sink)(StrStep::Enter { kind }); // enter the node
         self.eat_n_trivias(n_attached_trivias); // eat attached trivias, so they are attached inside the node
     }
 
-    fn exit(&mut self) {
+    fn exit(&mut self, kind: SyntaxKind) {
+        let n_trivias = (self.pos..self.lexed.len()).take_while(|&it| self.lexed.kind(it).is_trivia()).count();
+        let trailing_trivias = self.pos..self.pos + n_trivias;
+        let n_attached_trivias = n_attached_trailing_trivias(kind, trailing_trivias.map(|it| (self.lexed.kind(it), self.lexed.text(it))));
+        self.eat_n_trivias(n_attached_trivias); // eat trailing trivias, so they are attached inside the node before exiting
+
         match mem::replace(&mut self.state, State::PendingExit) {
             State::PendingEnter => unreachable!(),
             State::PendingExit => (self.sink)(StrStep::Exit),
@@ -151,9 +156,15 @@ impl Builder<'_, '_> {
     }
 }
 
-fn n_attached_trivias<'a>(kind: SyntaxKind, _trivias: impl Iterator<Item = (SyntaxKind, &'a [u8])>) -> usize {
+fn n_attached_leading_trivias<'a>(kind: SyntaxKind, _trivias: impl Iterator<Item = (SyntaxKind, &'a [u8])>) -> usize {
     match kind {
-        // X_REF_ENTRY => 1,
+        _ => 0,
+    }
+}
+
+fn n_attached_trailing_trivias<'a>(kind: SyntaxKind, _trivias: impl Iterator<Item = (SyntaxKind, &'a [u8])>) -> usize {
+    match kind {
+        X_REF_ENTRY => 1,
         _ => 0,
     }
 }

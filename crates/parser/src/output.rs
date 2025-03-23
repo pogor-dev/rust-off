@@ -25,7 +25,7 @@ pub struct Output {
 pub enum Step<'a> {
     Token { kind: SyntaxKind, n_input_tokens: u8 },
     Enter { kind: SyntaxKind },
-    Exit,
+    Exit { kind: SyntaxKind },
     Error { msg: &'a str },
 }
 
@@ -62,7 +62,10 @@ impl Output {
                     let kind: SyntaxKind = (((event & Self::KIND_MASK) >> Self::KIND_SHIFT) as u16).into();
                     Step::Enter { kind }
                 }
-                Self::EXIT_EVENT => Step::Exit,
+                Self::EXIT_EVENT => {
+                    let kind = (((event & Self::KIND_MASK) >> Self::KIND_SHIFT) as u16).into();
+                    Step::Exit { kind }
+                }
                 _ => unreachable!(),
             }
         })
@@ -78,8 +81,8 @@ impl Output {
         self.event.push(e)
     }
 
-    pub(crate) fn leave_node(&mut self) {
-        let e = ((Self::EXIT_EVENT as u32) << Self::TAG_SHIFT) | Self::EVENT_MASK;
+    pub(crate) fn leave_node(&mut self, kind: SyntaxKind) {
+        let e = ((kind as u16 as u32) << Self::KIND_SHIFT) | ((Self::EXIT_EVENT as u32) << Self::TAG_SHIFT) | Self::EVENT_MASK;
         self.event.push(e)
     }
 

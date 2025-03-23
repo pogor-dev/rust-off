@@ -18,7 +18,7 @@ PDF_DOCUMENT
             INT_NUMBER "65535"
           WHITESPACE " "
           F_KW "f"
-        NEWLINE "\n"
+          NEWLINE "\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000000017"
@@ -27,7 +27,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\n"
+          NEWLINE "\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000000081"
@@ -36,7 +36,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\n"
+          NEWLINE "\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000000000"
@@ -45,7 +45,7 @@ PDF_DOCUMENT
             INT_NUMBER "00007"
           WHITESPACE " "
           F_KW "f"
-        NEWLINE "\n"
+          NEWLINE "\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000000331"
@@ -54,7 +54,7 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-        NEWLINE "\n"
+          NEWLINE "\n"
         X_REF_ENTRY
           LITERAL
             INT_NUMBER "0000000409"
@@ -63,4 +63,4 @@ PDF_DOCUMENT
             INT_NUMBER "00000"
           WHITESPACE " "
           N_KW "n"
-  NEWLINE "\n"
+          NEWLINE "\n"

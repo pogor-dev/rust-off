@@ -90,7 +90,7 @@ impl TopEntryPoint {
                 first = false;
                 match step {
                     Step::Enter { .. } => depth += 1,
-                    Step::Exit => depth -= 1,
+                    Step::Exit { .. } => depth -= 1,
                     Step::Token { .. } | Step::Error { .. } => (),
                 }
             }

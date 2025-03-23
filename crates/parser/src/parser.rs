@@ -248,7 +248,7 @@ impl Marker {
             }
             _ => unreachable!(),
         }
-        p.push_event(Event::Finish);
+        p.push_event(Event::Finish { kind });
         let end_pos = p.events.len() as u32;
         CompletedMarker::new(self.pos, end_pos, kind)
     }
@@ -328,7 +328,7 @@ impl CompletedMarker {
     #[allow(dead_code)]
     pub(crate) fn last_token(&self, p: &Parser<'_>) -> Option<SyntaxKind> {
         let end_pos = self.end_pos as usize;
-        debug_assert_eq!(p.events[end_pos - 1], Event::Finish);
+        debug_assert!(matches!(p.events[end_pos - 1], Event::Finish { .. }));
         p.events[..end_pos].iter().rev().find_map(|event| match event {
             Event::Token { kind, .. } => Some(*kind),
             _ => None,
