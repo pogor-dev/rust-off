@@ -1,28 +1,18 @@
-PDF_DOCUMENT
-  INDIRECT_REFERENCE_EXPR
-    LITERAL
-      INT_NUMBER "12"
-    WHITESPACE " "
-    LITERAL
-      INT_NUMBER "0"
-    WHITESPACE " "
-    R_KW "R"
-  NEWLINE "\n"
-  INDIRECT_REFERENCE_EXPR
-    LITERAL
-      INT_NUMBER "6"
-    WHITESPACE " "
-    LITERAL
-      INT_NUMBER "1"
-    WHITESPACE " "
-    R_KW "R"
-  WHITESPACE " "
-  INDIRECT_REFERENCE_EXPR
-    LITERAL
-      INT_NUMBER "4"
-    WHITESPACE " "
-    LITERAL
-      INT_NUMBER "1"
-    WHITESPACE " "
-    R_KW "R"
-  NEWLINE "\n"
+Literal { kind: Int } "12"
+Whitespace " "
+Literal { kind: Int } "0"
+Whitespace " "
+Ident "R"
+Eol "\n"
+Literal { kind: Int } "6"
+Whitespace " "
+Literal { kind: Int } "1"
+Whitespace " "
+Ident "R"
+Whitespace " "
+Literal { kind: Int } "4"
+Whitespace " "
+Literal { kind: Int } "1"
+Whitespace " "
+Ident "R"
+Eol "\n"

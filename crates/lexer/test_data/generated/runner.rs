@@ -8,6 +8,8 @@ mod ok {
     #[test]
     fn pdf_7_3_10_indirect_objects() { run_and_expect_no_errors("test_data/ok/pdf_7_3_10_indirect_objects.pdf"); }
     #[test]
+    fn pdf_7_3_10_indirect_references() { run_and_expect_no_errors("test_data/ok/pdf_7_3_10_indirect_references.pdf"); }
+    #[test]
     fn pdf_7_3_2_booleans() { run_and_expect_no_errors("test_data/ok/pdf_7_3_2_booleans.pdf"); }
     #[test]
     fn pdf_7_3_3_numbers() { run_and_expect_no_errors("test_data/ok/pdf_7_3_3_numbers.pdf"); }
