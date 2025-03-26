@@ -1,7 +1,7 @@
 [package]
-name = "base-db"
+name = "vfs"
 version = "0.0.0"
-description = "Basic database traits for rust-analyzer."
+description = "A virtual file system for rust-analyzer."
 
 authors.workspace = true
 edition.workspace = true
@@ -11,7 +11,14 @@ repository.workspace = true
 
 [dependencies]
 # Add any dependencies required for your project here
-vfs.workspace = true
+indexmap.workspace = true
+rustc-hash.workspace = true
+tracing.workspace = true
+stdx.workspace = true
+nohash-hasher.workspace = true
+crossbeam-channel.workspace = true
+paths.workspace = true
+fst = "0.4.7"
 
 [dev-dependencies]
 # Add any development dependencies here

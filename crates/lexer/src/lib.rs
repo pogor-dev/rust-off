@@ -20,14 +20,14 @@ impl Cursor<'_> {
                 // PDF stream object.
                 // The stream object is a special object that contains binary data and is marked by the `stream` and `endstream` keywords.
                 // The stream content is skipped by the lexer and is decoded/parsed later by the parser.
-                // See ISO `32000-1:2008`, Section 7.3.8 Stream Objects.
+                // See ISO `32000-2:2008`, Section 7.3.8 Stream Objects.
                 self.set_prev_token_stream(false);
                 self.eat_while_word(|word| word.starts_with(b"endstream"));
                 TokenKind::RawStreamData
             }
 
             // End of line marker. Sometimes it is required by the PDF spec (e.g. in PDF object keywords).
-            // See ISO `32000-1:2008`, Section 7.2.3 Character Set.
+            // See ISO `32000-2:2008`, Section 7.2.3 Character Set.
             b if is_eol(b) => {
                 self.eat_eol(b);
                 TokenKind::Eol
@@ -40,7 +40,7 @@ impl Cursor<'_> {
             }
 
             // Numeric literal that starts with a digit and/or plus/minus sign.
-            // See ISO `32000-1:2008`, Section 7.3.3 Numeric Objects.
+            // See ISO `32000-2:2008`, Section 7.3.3 Numeric Objects.
             b if matches!(b, b'+' | b'-' | b'.') || b.is_ascii_digit() => {
                 let literal_kind = self.number(b);
                 TokenKind::Literal { kind: literal_kind }
@@ -59,7 +59,7 @@ impl Cursor<'_> {
             }
 
             // PDF Name.
-            // See ISO `32000-1:2008`, Section 7.3.5 Name Objects.
+            // See ISO `32000-2:2008`, Section 7.3.5 Name Objects.
             b'/' => {
                 // Consume the name until a delimiter or whitespace is encountered.
                 self.eat_while(|b| !is_whitespace(b) && !is_delimiter(b));
@@ -67,7 +67,7 @@ impl Cursor<'_> {
             }
 
             // PDF literal string.
-            // See ISO `32000-1:2008`, Section 7.3.4.2 Literal Strings.
+            // See ISO `32000-2:2008`, Section 7.3.4.2 Literal Strings.
             b'(' => {
                 if self.eat_literal_string() && self.pos_within_token() > 1 {
                     TokenKind::Literal {
@@ -79,7 +79,7 @@ impl Cursor<'_> {
             }
 
             // PDF hexademical string.
-            // See ISO `32000-1:2008`, Section 7.3.4.3 Hexadecimal Strings.
+            // See ISO `32000-2:2008`, Section 7.3.4.3 Hexadecimal Strings.
             b'<' if self.peek_first() != b'<' => {
                 self.eat_while(|b| b.is_ascii_hexdigit() || is_whitespace(b));
 
@@ -92,24 +92,24 @@ impl Cursor<'_> {
             }
 
             // PDF Comments
-            // See ISO `32000-1:2008`, Section 7.2.4 Comments.
+            // See ISO `32000-2:2008`, Section 7.2.4 Comments.
             b'%' => {
                 self.eat_while(|b| !is_eol(b));
                 TokenKind::Comment
             }
 
             // One-symbol tokens.
-            b'[' => TokenKind::OpenBracket,  // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
-            b']' => TokenKind::CloseBracket, // See ISO `32000-1:2008`, Section 7.3.6 Array Objects.
+            b'[' => TokenKind::OpenBracket,  // See ISO `32000-2:2008`, Section 7.3.6 Array Objects.
+            b']' => TokenKind::CloseBracket, // See ISO `32000-2:2008`, Section 7.3.6 Array Objects.
             b'<' => {
                 // We ensured before that this is not a hex string.
-                // See ISO `32000-1:2008`, Section 7.3.7 Dictionary Objects.
+                // See ISO `32000-2:2008`, Section 7.3.7 Dictionary Objects.
                 self.next();
                 TokenKind::OpenDict
             }
             b'>' if self.peek_first() == b'>' => {
                 self.next();
-                TokenKind::CloseDict // See ISO `32000-1:2008`, Section 7.3.7 Dictionary Objects.
+                TokenKind::CloseDict // See ISO `32000-2:2008`, Section 7.3.7 Dictionary Objects.
             }
 
             _ => TokenKind::Unknown,
@@ -207,7 +207,7 @@ fn is_eol(b: u8) -> bool {
     )
 }
 
-/// See ISO `32000-1:2008`, Section 7.2.3 Character Set, Table 1 Whitespace characters.
+/// See ISO `32000-2:2008`, Section 7.2.3 Character Set, Table 1 Whitespace characters.
 fn is_whitespace(b: u8) -> bool {
     matches!(
         b,
@@ -220,7 +220,7 @@ fn is_whitespace(b: u8) -> bool {
     )
 }
 
-/// See ISO `32000-1:2008`, Section 7.2.3 Character Set, Table 2 Delimiter characters.
+/// See ISO `32000-2:2008`, Section 7.2.3 Character Set, Table 2 Delimiter characters.
 fn is_delimiter(b: u8) -> bool {
     matches!(
         b,

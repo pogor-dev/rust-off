@@ -1,7 +1,7 @@
 [package]
-name = "base-db"
+name = "paths"
 version = "0.0.0"
-description = "Basic database traits for rust-analyzer."
+description = "Path wrappers for absolute and relative paths rust-analyzer."
 
 authors.workspace = true
 edition.workspace = true
@@ -11,10 +11,13 @@ repository.workspace = true
 
 [dependencies]
 # Add any dependencies required for your project here
-vfs.workspace = true
+camino.workspace = true
 
 [dev-dependencies]
 # Add any development dependencies here
+
+[features]
+serde1 = ["camino/serde1"]
 
 [lints]
 workspace = true
