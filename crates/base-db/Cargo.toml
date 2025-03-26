@@ -12,6 +12,14 @@ repository.workspace = true
 [dependencies]
 # Add any dependencies required for your project here
 vfs.workspace = true
+salsa.workspace = true
+triomphe.workspace = true
+tracing.workspace = true
+la-arena.workspace = true
+query-group.workspace = true
+span.workspace = true
+rustc-hash.workspace = true
+pdfc-syntax.workspace = true
 
 [dev-dependencies]
 # Add any development dependencies here

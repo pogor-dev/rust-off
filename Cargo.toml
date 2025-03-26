@@ -42,6 +42,9 @@ limit = { path = "./crates/limit", version = "0.0.0" }
 rowan = { path = "./crates/rowan", version = "0.16.1" }
 vfs = { path = "./crates/vfs", version = "0.0.0" }
 paths = { path = "./crates/paths", version = "0.0.0" }
+query-group = { package = "query-group-macro", path = "./crates/query-group-macro", version = "0.0.0" }
+span = { path = "./crates/span", version = "0.0.0" }
+pdfc-syntax = { path = "./crates/syntax", version = "0.0.0" }
 
 # non-local crates
 anyhow = "1.0.97"
@@ -53,6 +56,17 @@ indexmap = { version = "2.8.0", features = ["serde"] }
 rustc-hash = "2.1.1"
 nohash-hasher = "0.2.0"
 crossbeam-channel = "0.5.14"
+salsa = "0.19"
+triomphe = { version = "0.1.14", default-features = false, features = ["std"] }
+la-arena = { version = "0.3.1" }
+text-size = "1.1.1"
+
+# We need to freeze the version of the crate, as the raw-api feature is considered unstable
+dashmap = { version = "=5.5.3", features = ["raw-api"] }
+# We need to freeze the version of the crate, as it needs to match with dashmap
+hashbrown = { version = "=0.14.5", features = [
+  "inline-more",
+], default-features = false }
 
 [workspace.lints.rust]
 # remember to update RUSTFLAGS in ci.yml if you add something here

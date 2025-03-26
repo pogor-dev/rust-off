@@ -41,7 +41,7 @@ pub use crate::{
 };
 
 pub use pdfc_parser::{Edition, SyntaxKind, T};
-pub use rowan::{GreenNode, TextRange, TextSize};
+pub use rowan::{GreenNode, TextRange, TextSize, WalkEvent};
 use std::{marker::PhantomData, sync::Arc};
 
 /// `Parse` is the result of the parsing: a syntax tree and a collection of
@@ -154,4 +154,18 @@ macro_rules! match_ast {
         $( if let Some($it) = $($path::)+cast($node.clone()) { $res } else )*
         { $catch_all }
     }};
+}
+
+/// `SourceFile` represents a parse tree for a single Rust file.
+pub use crate::ast::PdfDocument;
+
+impl PdfDocument {
+    pub fn parse(text: &[u8], edition: Edition) -> Parse<PdfDocument> {
+        let _p = tracing::info_span!("SourceFile::parse").entered();
+        let (green, errors) = parsing::parse_text(text, edition);
+        let root = SyntaxNode::new_root(green.clone());
+
+        assert_eq!(root.kind(), SyntaxKind::PDF_DOCUMENT);
+        Parse::new(green, errors)
+    }
 }
