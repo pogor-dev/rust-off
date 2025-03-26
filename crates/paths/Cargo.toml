@@ -11,13 +11,11 @@ repository.workspace = true
 
 [dependencies]
 # Add any dependencies required for your project here
-camino.workspace = true
 
 [dev-dependencies]
 # Add any development dependencies here
 
 [features]
-serde1 = ["camino/serde1"]
 
 [lints]
 workspace = true

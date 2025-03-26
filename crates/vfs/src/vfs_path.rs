@@ -1,5 +1,5 @@
 //! Abstract-ish representation of paths for VFS.
-use std::fmt;
+use std::{fmt, path::Path};
 
 use paths::{AbsPath, AbsPathBuf, RelPath};
 
@@ -340,10 +340,7 @@ impl VirtualPath {
     }
 
     fn strip_prefix(&self, base: &VirtualPath) -> Option<&RelPath> {
-        <_ as AsRef<paths::Utf8Path>>::as_ref(&self.0)
-            .strip_prefix(&base.0)
-            .ok()
-            .map(RelPath::new_unchecked)
+        <_ as AsRef<Path>>::as_ref(&self.0).strip_prefix(&base.0).ok().map(RelPath::new_unchecked)
     }
 
     /// Remove the last component of `self`.

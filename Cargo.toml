@@ -53,7 +53,6 @@ indexmap = { version = "2.8.0", features = ["serde"] }
 rustc-hash = "2.1.1"
 nohash-hasher = "0.2.0"
 crossbeam-channel = "0.5.14"
-camino = "1.1.9"
 
 [workspace.lints.rust]
 # remember to update RUSTFLAGS in ci.yml if you add something here
@@ -74,42 +73,8 @@ restriction = { level = "allow", priority = -1 }
 style = { level = "warn", priority = -1 }
 suspicious = { level = "warn", priority = -1 }
 
-## allow following lints
-too_long_first_doc_paragraph = "allow"
-# subjective
-single_match = "allow"
-# () makes a fine error in most cases
-result_unit_err = "allow"
-# We don't expose public APIs that matter like this
-len_without_is_empty = "allow"
-# We have macros that rely on this currently
-enum_variant_names = "allow"
-# Builder pattern disagrees
-new_ret_no_self = "allow"
-# Has a bunch of false positives
-useless_asref = "allow"
-# Has false positives
-assigning_clones = "allow"
-# Does not work with macros
-vec_init_then_push = "allow"
-# Our tests have a lot of these
-literal_string_with_formatting_args = "allow"
-# This lint has been empowered but now also triggers on cases where its invalid to do so
-# due to it ignoring move analysis
-unnecessary_map_or = "allow"
-
-## Following lints should be tackled at some point
-too_many_arguments = "allow"
-type_complexity = "allow"
-wrong_self_convention = "allow"
-
 ## warn at following lints
 # CI raises these to deny
-dbg_macro = "warn"
 todo = "warn"
 print_stdout = "warn"
 print_stderr = "warn"
-
-rc_buffer = "warn"
-str_to_string = "warn"
-
