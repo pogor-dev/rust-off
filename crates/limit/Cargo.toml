@@ -17,3 +17,6 @@ repository.workspace = true
 
 [features]
 tracking = []
+
+[lints]
+workspace = true

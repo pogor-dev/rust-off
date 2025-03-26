@@ -1,6 +1,7 @@
 [package]
-name = "pdfc-parser"
+name = "base-db"
 version = "0.0.0"
+description = "Basic database traits for rust-analyzer."
 
 authors.workspace = true
 edition.workspace = true
@@ -10,20 +11,9 @@ repository.workspace = true
 
 [dependencies]
 # Add any dependencies required for your project here
-edition.workspace = true
-pdfc-lexer.workspace = true
-limit.workspace = true
-tracing = { workspace = true, optional = true }
-drop_bomb = "0.1.5"
 
 [dev-dependencies]
 # Add any development dependencies here
-stdx.workspace = true
-expect-test = "1.5.1"
-
-[features]
-default = ["tracing"]
-in-rust-tree = []
 
 [lints]
 workspace = true
