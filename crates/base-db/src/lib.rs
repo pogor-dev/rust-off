@@ -48,7 +48,7 @@ pub struct SourceRootInput {
 }
 
 // Database which stores all significant input facts: source code and project
-/// model. Everything else in rust-analyzer is derived from these queries.
+/// model. Everything else in pdf-analyzer is derived from these queries.
 #[query_group::query_group]
 pub trait RootQueryDb: SourceDatabase + salsa::Database {
     /// Parses the file into the syntax tree.

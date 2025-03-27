@@ -1,7 +1,7 @@
 [package]
 name = "span"
 version = "0.0.0"
-description = "File and span related types for rust-analyzer."
+description = "File and span related types for pdf-analyzer."
 
 authors.workspace = true
 edition.workspace = true

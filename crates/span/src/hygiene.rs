@@ -8,17 +8,17 @@
 //!
 //! # The Expansion Order Hierarchy
 //!
-//! `ExpnData` in rustc, rust-analyzer's version is [`MacroCallLoc`]. Traversing the hierarchy
+//! `ExpnData` in rustc, pdf-analyzer's version is [`MacroCallLoc`]. Traversing the hierarchy
 //! upwards can be achieved by walking up [`MacroCallLoc::kind`]'s contained file id, as
 //! [`MacroFile`]s are interned [`MacroCallLoc`]s.
 //!
 //! # The Macro Definition Hierarchy
 //!
-//! `SyntaxContextData` in rustc and rust-analyzer. Basically the same in both.
+//! `SyntaxContextData` in rustc and pdf-analyzer. Basically the same in both.
 //!
 //! # The Call-site Hierarchy
 //!
-//! `ExpnData::call_site` in rustc, [`MacroCallLoc::call_site`] in rust-analyzer.
+//! `ExpnData::call_site` in rustc, [`MacroCallLoc::call_site`] in pdf-analyzer.
 use std::fmt;
 
 use crate::{Edition, MacroCallId};

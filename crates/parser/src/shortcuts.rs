@@ -1,6 +1,6 @@
 //! Shortcuts that span lexer/parser abstraction.
 //!
-//! The way Rust works, parser doesn't necessary parse text, and you might
+//! The way PDF works, parser doesn't necessary parse text, and you might
 //! tokenize text without parsing it further. So, it makes sense to keep
 //! abstract token parsing, and string tokenization as completely separate
 //! layers.

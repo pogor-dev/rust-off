@@ -364,7 +364,7 @@ impl HirFileId {
 }
 
 /// Legacy span type, only defined here as it is still used by the proc-macro server.
-/// While rust-analyzer doesn't use this anymore at all, RustRover relies on the legacy type for
+/// While pdf-analyzer doesn't use this anymore at all, RustRover relies on the legacy type for
 /// proc-macro expansion.
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct TokenId(pub u32);

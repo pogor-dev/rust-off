@@ -1,9 +1,9 @@
-//! This module specifies the input to rust-analyzer. In some sense, this is
+//! This module specifies the input to pdf-analyzer. In some sense, this is
 //! **the** most important module, because all other fancy stuff is strictly
 //! derived from this input.
 //!
 //! Note that neither this module, nor any other part of the analyzer's core do
-//! actual IO. See `vfs` and `project_model` in the `rust-analyzer` crate for how
+//! actual IO. See `vfs` and `project_model` in the `pdf-analyzer` crate for how
 //! actual IO is done and lowered to input.
 
 use vfs::{file_set::FileSet, AnchoredPath, FileId, VfsPath};

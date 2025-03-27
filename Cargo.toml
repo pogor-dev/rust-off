@@ -45,6 +45,8 @@ paths = { path = "./crates/paths", version = "0.0.0" }
 query-group = { package = "query-group-macro", path = "./crates/query-group-macro", version = "0.0.0" }
 span = { path = "./crates/span", version = "0.0.0" }
 pdfc-syntax = { path = "./crates/syntax", version = "0.0.0" }
+hir = { path = "./crates/hir", version = "0.0.0" }
+hir-ty = { path = "./crates/hir-ty", version = "0.0.0" }
 
 # non-local crates
 anyhow = "1.0.97"
