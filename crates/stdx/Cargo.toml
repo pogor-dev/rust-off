@@ -11,6 +11,11 @@ repository.workspace = true
 
 [dependencies]
 # Add any dependencies required for your project here
+tracing.workspace = true
+itertools.workspace = true
 
 [dev-dependencies]
 # Add any development dependencies here
+
+[lints]
+workspace = true

@@ -1,0 +1,27 @@
+[package]
+name = "vfs"
+version = "0.0.0"
+description = "A virtual file system for pdf-analyzer."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Add any dependencies required for your project here
+indexmap.workspace = true
+rustc-hash.workspace = true
+tracing.workspace = true
+stdx.workspace = true
+nohash-hasher.workspace = true
+crossbeam-channel.workspace = true
+paths.workspace = true
+fst = "0.4.7"
+
+[dev-dependencies]
+# Add any development dependencies here
+
+[lints]
+workspace = true

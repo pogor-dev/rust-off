@@ -1,0 +1,196 @@
+//! Global `Arc`-based object interning infrastructure.
+//!
+//! Eventually this should probably be replaced with salsa-based interning.
+
+use std::{
+    borrow::Borrow,
+    fmt,
+    hash::{BuildHasherDefault, Hash, Hasher},
+    mem::{self, ManuallyDrop},
+    ptr::NonNull,
+    sync::OnceLock,
+};
+
+use dashmap::{DashMap, SharedValue};
+use hashbrown::{hash_map::RawEntryMut, HashMap};
+use rustc_hash::FxHasher;
+use triomphe::Arc;
+
+pub mod symbols;
+
+unsafe impl Send for TaggedArcPtr {}
+unsafe impl Sync for TaggedArcPtr {}
+
+/// A pointer that points to a pointer to a `str`, it may be backed as a `&'static &'static str` or
+/// `Arc<Box<str>>` but its size is that of a thin pointer. The active variant is encoded as a tag
+/// in the LSB of the alignment niche.
+// Note, Ideally this would encode a `ThinArc<str>` and `ThinRef<str>`/`ThinConstPtr<str>` instead of the double indirection.
+#[derive(PartialEq, Eq, Hash, Copy, Clone, Debug)]
+struct TaggedArcPtr {
+    packed: NonNull<*const str>,
+}
+
+impl TaggedArcPtr {
+    const BOOL_BITS: usize = true as usize;
+
+    const fn non_arc(r: &'static &'static str) -> Self {
+        assert!(align_of::<&'static &'static str>().trailing_zeros() as usize > Self::BOOL_BITS);
+        // SAFETY: The pointer is non-null as it is derived from a reference
+        // Ideally we would call out to `pack_arc` but for a `false` tag, unfortunately the
+        // packing stuff requires reading out the pointer to an integer which is not supported
+        // in const contexts, so here we make use of the fact that for the non-arc version the
+        // tag is false (0) and thus does not need touching the actual pointer value.ext)
+
+        let packed = unsafe { NonNull::new_unchecked((r as *const &str).cast::<*const str>().cast_mut()) };
+        Self { packed }
+    }
+
+    fn arc(arc: Arc<Box<str>>) -> Self {
+        assert!(align_of::<&'static &'static str>().trailing_zeros() as usize > Self::BOOL_BITS);
+        Self {
+            packed: Self::pack_arc(
+                // Safety: `Arc::into_raw` always returns a non null pointer
+                unsafe { NonNull::new_unchecked(Arc::into_raw(arc).cast_mut().cast()) },
+            ),
+        }
+    }
+
+    /// Retrieves the tag.
+    ///
+    /// # Safety
+    ///
+    /// You can only drop the `Arc` if the instance is dropped.
+    #[inline]
+    pub(crate) unsafe fn try_as_arc_owned(self) -> Option<ManuallyDrop<Arc<Box<str>>>> {
+        // Unpack the tag from the alignment niche
+        let tag = self.packed.as_ptr().addr() & Self::BOOL_BITS;
+        if tag != 0 {
+            // Safety: We checked that the tag is non-zero -> true, so we are pointing to the data offset of an `Arc`
+            Some(ManuallyDrop::new(unsafe { Arc::from_raw(self.pointer().as_ptr().cast::<Box<str>>()) }))
+        } else {
+            None
+        }
+    }
+
+    #[inline]
+    fn pack_arc(ptr: NonNull<*const str>) -> NonNull<*const str> {
+        let packed_tag = true as usize;
+
+        unsafe {
+            // Safety: The pointer is derived from a non-null and bit-oring it with true (1) will
+            // not make it null.
+            NonNull::new_unchecked(ptr.as_ptr().map_addr(|addr| addr | packed_tag))
+        }
+    }
+
+    #[inline]
+    pub(crate) fn pointer(self) -> NonNull<*const str> {
+        // SAFETY: The resulting pointer is guaranteed to be NonNull as we only modify the niche bytes
+        unsafe { NonNull::new_unchecked(self.packed.as_ptr().map_addr(|addr| addr & !Self::BOOL_BITS)) }
+    }
+
+    #[inline]
+    pub(crate) fn as_str(&self) -> &str {
+        // SAFETY: We always point to a pointer to a str no matter what variant is active
+        unsafe { *self.pointer().as_ptr().cast::<&str>() }
+    }
+}
+
+#[derive(PartialEq, Eq, Hash)]
+pub struct Symbol {
+    repr: TaggedArcPtr,
+}
+
+impl fmt::Debug for Symbol {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.as_str().fmt(f)
+    }
+}
+
+static MAP: OnceLock<DashMap<SymbolProxy, (), BuildHasherDefault<FxHasher>>> = OnceLock::new();
+
+impl Symbol {
+    pub fn as_str(&self) -> &str {
+        self.repr.as_str()
+    }
+}
+
+impl Symbol {
+    pub fn intern(s: &str) -> Self {
+        let (mut shard, hash) = Self::select_shard(s);
+        // Atomically,
+        // - check if `obj` is already in the map
+        //   - if so, copy out its entry, conditionally bumping the backing Arc and return it
+        //   - if not, put it into a box and then into an Arc, insert it, bump the ref-count and return the copy
+        // This needs to be atomic (locking the shard) to avoid races with other thread, which could
+        // insert the same object between us looking it up and inserting it.
+        match shard.raw_entry_mut().from_key_hashed_nocheck(hash, s) {
+            RawEntryMut::Occupied(occ) => Self {
+                repr: increase_arc_refcount(occ.key().0),
+            },
+            RawEntryMut::Vacant(vac) => Self {
+                repr: increase_arc_refcount(
+                    vac.insert_hashed_nocheck(hash, SymbolProxy(TaggedArcPtr::arc(Arc::new(Box::<str>::from(s)))), SharedValue::new(()))
+                        .0
+                         .0,
+                ),
+            },
+        }
+    }
+
+    pub fn empty() -> Self {
+        symbols::__empty.clone()
+    }
+
+    #[inline]
+    fn select_shard(
+        s: &str,
+    ) -> (
+        dashmap::RwLockWriteGuard<'static, HashMap<SymbolProxy, SharedValue<()>, BuildHasherDefault<FxHasher>>>,
+        u64,
+    ) {
+        let storage = MAP.get_or_init(symbols::prefill);
+        let hash = {
+            let mut hasher = std::hash::BuildHasher::build_hasher(storage.hasher());
+            s.hash(&mut hasher);
+            hasher.finish()
+        };
+        let shard_idx = storage.determine_shard(hash as usize);
+        let shard = &storage.shards()[shard_idx];
+        (shard.write(), hash)
+    }
+}
+
+fn increase_arc_refcount(repr: TaggedArcPtr) -> TaggedArcPtr {
+    // SAFETY: We're not dropping the `Arc`.
+    let Some(arc) = (unsafe { repr.try_as_arc_owned() }) else {
+        return repr;
+    };
+    // increase the ref count
+    mem::forget(Arc::clone(&arc));
+    repr
+}
+
+impl Clone for Symbol {
+    fn clone(&self) -> Self {
+        Self {
+            repr: increase_arc_refcount(self.repr),
+        }
+    }
+}
+
+// only exists so we can use `from_key_hashed_nocheck` with a &str
+#[derive(Debug, PartialEq, Eq)]
+struct SymbolProxy(TaggedArcPtr);
+
+impl Hash for SymbolProxy {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.0.as_str().hash(state);
+    }
+}
+
+impl Borrow<str> for SymbolProxy {
+    fn borrow(&self) -> &str {
+        self.0.as_str()
+    }
+}
