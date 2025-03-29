@@ -3,7 +3,10 @@
 
 mod body;
 
-pub use self::body::Body;
+pub use self::body::{Body, BodySourceMap};
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct ExpressionStore {}
+
+#[derive(Debug, Eq, PartialEq, Default)]
+pub struct ExpressionStoreSourceMap {}

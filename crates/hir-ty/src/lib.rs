@@ -4,6 +4,8 @@
 mod infer;
 
 #[cfg(test)]
+mod test_db;
+#[cfg(test)]
 mod tests;
 
 pub use infer::InferenceResult;

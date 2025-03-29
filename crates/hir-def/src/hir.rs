@@ -13,8 +13,11 @@
 //! See also a neighboring `body` module.
 
 use intern::Symbol;
+use la_arena::Idx;
 use pdfc_syntax::ast;
 use rustc_apfloat::ieee::{Half as f16, Quad as f128};
+
+pub type ExprId = Idx<Expr>;
 
 // We leave float values as a string to avoid double rounding.
 // For PartialEq, string comparison should work, as ordering is not important
@@ -83,3 +86,6 @@ impl From<ast::LiteralKind> for Literal {
         }
     }
 }
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub enum Expr {}

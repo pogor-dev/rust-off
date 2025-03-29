@@ -1,7 +1,7 @@
 [package]
-name = "hir-def"
+name = "test-utils"
 version = "0.0.0"
-description = "RPC Api for the `proc-macro-srv` crate of rust-analyzer."
+description = "Assorted testing utilities for rust-analyzer"
 
 authors.workspace = true
 edition.workspace = true
@@ -10,14 +10,12 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
+# Avoid adding deps here, this crate is widely used in tests it should compile fast!
 # Non-local deps
-rustc_apfloat = "0.2.2"
-la-arena.workspace = true
+text-size.workspace = true
+stdx.workspace = true
 
 # Local deps
-intern.workspace = true
-pdfc-syntax.workspace = true
-pdfc-lexer.workspace = true
 
 [dev-dependencies]
 # Non-local deps

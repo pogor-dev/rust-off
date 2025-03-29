@@ -12,9 +12,12 @@ repository.workspace = true
 [dependencies]
 # Non-local deps
 tracing.workspace = true
+salsa.workspace = true
+triomphe.workspace = true
 
 # Local deps
 hir-def.workspace = true
+base-db.workspace = true
 
 [dev-dependencies]
 # Non-local deps
@@ -23,6 +26,7 @@ tracing-tree.workspace = true
 tracing-subscriber.workspace = true
 
 # Local deps
+test-fixture.workspace = true
 
 [lints]
 workspace = true

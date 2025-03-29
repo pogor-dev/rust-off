@@ -1,7 +1,7 @@
 [package]
-name = "hir-def"
+name = "test-fixture"
 version = "0.0.0"
-description = "RPC Api for the `proc-macro-srv` crate of rust-analyzer."
+description = "Test fixtures for rust-analyzer."
 
 authors.workspace = true
 edition.workspace = true
@@ -11,13 +11,11 @@ repository.workspace = true
 
 [dependencies]
 # Non-local deps
-rustc_apfloat = "0.2.2"
-la-arena.workspace = true
 
 # Local deps
-intern.workspace = true
-pdfc-syntax.workspace = true
-pdfc-lexer.workspace = true
+base-db.workspace = true
+span.workspace = true
+test-utils.workspace = true
 
 [dev-dependencies]
 # Non-local deps

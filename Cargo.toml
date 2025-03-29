@@ -49,6 +49,8 @@ hir = { path = "./crates/hir", version = "0.0.0" }
 hir-def = { path = "./crates/hir-def", version = "0.0.0" }
 hir-ty = { path = "./crates/hir-ty", version = "0.0.0" }
 intern = { path = "./crates/intern", version = "0.0.0" }
+test-fixture = { path = "./crates/test-fixture", version = "0.0.0" }
+test-utils = { path = "./crates/test-utils", version = "0.0.0" }
 
 # non-local crates
 anyhow = "1.0.97"
@@ -66,6 +68,7 @@ la-arena = { version = "0.3.1" }
 text-size = "1.1.1"
 cargo-llvm-cov = "0.6.16"
 expect-test = "1.5.1"
+semver = "1.0.26"
 tracing-tree = "0.4.0"
 tracing-subscriber = { version = "0.3.19", default-features = false, features = [
   "registry",

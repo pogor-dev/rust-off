@@ -5,6 +5,7 @@ use expect_test::Expect;
 use hir_def::expr_store::{Body, BodySourceMap};
 use std::env;
 use std::sync::LazyLock;
+use test_fixture::WithFixture;
 use tracing_subscriber::{layer::SubscriberExt, Registry};
 use tracing_tree::HierarchicalLayer;
 

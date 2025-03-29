@@ -10,19 +10,24 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# Add any dependencies required for your project here
-vfs.workspace = true
+# Non-local deps
 salsa.workspace = true
 triomphe.workspace = true
 tracing.workspace = true
 la-arena.workspace = true
+rustc-hash.workspace = true
+semver.workspace = true
+
+# Local deps
+vfs.workspace = true
 query-group.workspace = true
 span.workspace = true
-rustc-hash.workspace = true
 pdfc-syntax.workspace = true
 
 [dev-dependencies]
-# Add any development dependencies here
+# Non-local deps
+
+# Local deps
 
 [lints]
 workspace = true

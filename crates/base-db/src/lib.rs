@@ -7,6 +7,7 @@ pub use crate::{
     change::FileChange,
     input::{SourceRoot, SourceRootId},
 };
+pub use semver::Version;
 
 use pdfc_syntax::{ast, Parse, SyntaxError};
 pub use query_group::{self};
@@ -101,3 +102,6 @@ fn parse_errors(db: &dyn RootQueryDb, file_id: EditionedFileId) -> Option<Arc<[S
         [..] => Some(errors.into()),
     }
 }
+
+#[query_group::query_group]
+pub trait ExpandDatabase: RootQueryDb {}
