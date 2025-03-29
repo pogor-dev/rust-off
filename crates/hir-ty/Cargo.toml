@@ -10,11 +10,15 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# Add any dependencies required for your project here
+# Non-local deps
 
+# Local deps
 
 [dev-dependencies]
-# Add any development dependencies here
+# Non-local deps
+expect-test.workspace = true
+
+# Local deps
 
 [lints]
 workspace = true

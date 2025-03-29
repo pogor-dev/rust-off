@@ -63,6 +63,8 @@ salsa = "0.19"
 triomphe = { version = "0.1.14", default-features = false, features = ["std"] }
 la-arena = { version = "0.3.1" }
 text-size = "1.1.1"
+cargo-llvm-cov = "0.6.16"
+expect-test = "1.5.1"
 
 # We need to freeze the version of the crate, as the raw-api feature is considered unstable
 dashmap = { version = "=5.5.3", features = ["raw-api"] }
@@ -70,12 +72,6 @@ dashmap = { version = "=5.5.3", features = ["raw-api"] }
 hashbrown = { version = "=0.14.5", features = [
   "inline-more",
 ], default-features = false }
-
-[workspace.dev-dependencies]
-# local crates
-
-# non-local crates
-cargo-llvm-cov = "0.6.16"
 
 [workspace.lints.rust]
 # remember to update RUSTFLAGS in ci.yml if you add something here

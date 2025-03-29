@@ -19,7 +19,7 @@ drop_bomb = "0.1.5"
 [dev-dependencies]
 # Add any development dependencies here
 stdx.workspace = true
-expect-test = "1.5.1"
+expect-test.workspace = true
 
 [features]
 default = ["tracing"]
