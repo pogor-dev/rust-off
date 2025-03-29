@@ -27,12 +27,11 @@ extern crate pdfc_lexer;
 #[cfg(feature = "in-rust-tree")]
 extern crate pdfc_lexer;
 
+pub mod ast;
 mod parsing;
 mod syntax_error;
 mod syntax_node;
 mod validation;
-
-pub mod ast;
 
 pub use crate::{
     ast::{AstNode, AstToken},

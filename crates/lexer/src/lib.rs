@@ -3,6 +3,7 @@ pub use crate::token::{LiteralKind, Token, TokenKind};
 
 mod cursor;
 mod token;
+pub mod unescape;
 
 #[cfg(test)]
 mod tests;

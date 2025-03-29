@@ -1,7 +1,7 @@
 [package]
-name = "hir-def"
+name = "intern"
 version = "0.0.0"
-description = "RPC Api for the `proc-macro-srv` crate of rust-analyzer."
+description = "Global `Arc`-based object interning infrastructure for rust-analyzer."
 
 authors.workspace = true
 edition.workspace = true
@@ -11,12 +11,12 @@ repository.workspace = true
 
 [dependencies]
 # Non-local deps
-rustc_apfloat = "0.2.2"
+triomphe.workspace = true
+dashmap.workspace = true
+hashbrown.workspace = true
+rustc-hash.workspace = true
 
 # Local deps
-intern.workspace = true
-pdfc-syntax.workspace = true
-pdfc-lexer.workspace = true
 
 [dev-dependencies]
 # Non-local deps
