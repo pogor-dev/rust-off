@@ -11,12 +11,16 @@ repository.workspace = true
 
 [dependencies]
 # Non-local deps
+tracing.workspace = true
 
 # Local deps
+hir-def.workspace = true
 
 [dev-dependencies]
 # Non-local deps
 expect-test.workspace = true
+tracing-tree.workspace = true
+tracing-subscriber.workspace = true
 
 # Local deps
 

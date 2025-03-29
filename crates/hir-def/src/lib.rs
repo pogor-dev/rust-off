@@ -8,4 +8,5 @@
 //! actually true.
 
 pub mod builtin_type;
+pub mod expr_store;
 pub mod hir;

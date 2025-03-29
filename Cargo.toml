@@ -46,6 +46,7 @@ query-group = { package = "query-group-macro", path = "./crates/query-group-macr
 span = { path = "./crates/span", version = "0.0.0" }
 pdfc-syntax = { path = "./crates/syntax", version = "0.0.0" }
 hir = { path = "./crates/hir", version = "0.0.0" }
+hir-def = { path = "./crates/hir-def", version = "0.0.0" }
 hir-ty = { path = "./crates/hir-ty", version = "0.0.0" }
 intern = { path = "./crates/intern", version = "0.0.0" }
 
@@ -65,7 +66,15 @@ la-arena = { version = "0.3.1" }
 text-size = "1.1.1"
 cargo-llvm-cov = "0.6.16"
 expect-test = "1.5.1"
-
+tracing-tree = "0.4.0"
+tracing-subscriber = { version = "0.3.19", default-features = false, features = [
+  "registry",
+  "fmt",
+  "local-time",
+  "std",
+  "time",
+  "tracing-log",
+] }
 # We need to freeze the version of the crate, as the raw-api feature is considered unstable
 dashmap = { version = "=5.5.3", features = ["raw-api"] }
 # We need to freeze the version of the crate, as it needs to match with dashmap
