@@ -33,6 +33,7 @@ checksum = "ace50bade8e6234aa140d9a2f552bbee1db4d353f69b8217bc503490fc1a9f26"
 name = "base-db"
 version = "0.0.0"
 dependencies = [
+ "dashmap 5.5.3",
  "la-arena",
  "pdfc-syntax",
  "query-group-macro",

@@ -80,7 +80,6 @@ pub struct Fixture {
 
 pub struct FixtureWithProjectMeta {
     pub fixture: Vec<Fixture>,
-    pub version: Option<String>,
 }
 
 impl FixtureWithProjectMeta {
@@ -108,23 +107,63 @@ impl FixtureWithProjectMeta {
         let fixture = trim_indent(ra_fixture);
         let fixture = fixture.as_str();
         let mut res: Vec<Fixture> = Vec::new();
-        let mut version = None;
-
-        const PDF_HEADER: &str = "%PDF-";
-        if fixture.starts_with(PDF_HEADER) {
-            let (meta, _) = fixture[PDF_HEADER.len()..].split_once('\n').unwrap();
-            version = Some(meta.to_owned());
-        }
 
         let default = if fixture.contains("//-") { None } else { Some("//- /main.pdf") };
 
         for (ix, line) in default.into_iter().chain(fixture.split_inclusive('\n')).enumerate() {
+            if line.contains("//-") {
+                assert!(
+                    line.starts_with("//-"),
+                    "Metadata line {ix} has invalid indentation. \
+                     All metadata lines need to have the same indentation.\n\
+                     The offending line: {line:?}"
+                );
+            }
+
             if let Some(line) = line.strip_prefix("//-") {
                 let meta = Self::parse_meta_line(line);
                 res.push(meta);
+            } else {
+                if matches!(line.strip_prefix("// "), Some(l) if l.trim().starts_with('/')) {
+                    panic!("looks like invalid metadata line: {line:?}");
+                }
+
+                if let Some(entry) = res.last_mut() {
+                    entry.text.push_str(line);
+                }
             }
         }
 
-        Self { fixture: res, version }
+        Self { fixture: res }
+    }
+
+    //- /main.pdf
+    fn parse_meta_line(meta: &str) -> Fixture {
+        let meta = meta.trim();
+        let mut edition = None;
+        let mut components = meta.split_ascii_whitespace();
+
+        let path = components.next().expect("fixture meta must start with a path").to_owned();
+        assert!(path.starts_with('/'), "fixture path does not start with `/`: {path:?}");
+
+        for component in components {
+            let (key, _value) = component.split_once(':').unwrap_or_else(|| panic!("invalid meta line: {meta:?}"));
+
+            match key {
+                _ => panic!("bad component: {component:?}"),
+            }
+        }
+
+        const PDF_HEADER: &str = "%PDF-";
+        if meta.starts_with(PDF_HEADER) {
+            let (meta, _) = meta[PDF_HEADER.len()..].split_once('\n').unwrap();
+            edition = Some(meta.to_owned());
+        }
+
+        Fixture {
+            path,
+            text: String::new(),
+            edition,
+        }
     }
 }

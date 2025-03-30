@@ -28,6 +28,10 @@ pub struct SourceRoot {
 }
 
 impl SourceRoot {
+    pub fn new_local(file_set: FileSet) -> SourceRoot {
+        SourceRoot { file_set }
+    }
+
     pub fn path_for_file(&self, file: &FileId) -> Option<&VfsPath> {
         self.file_set.path_for_file(file)
     }

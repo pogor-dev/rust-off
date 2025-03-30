@@ -17,6 +17,7 @@ tracing.workspace = true
 la-arena.workspace = true
 rustc-hash.workspace = true
 semver.workspace = true
+dashmap.workspace = true
 
 # Local deps
 vfs.workspace = true

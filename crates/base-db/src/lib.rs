@@ -3,17 +3,108 @@
 mod change;
 mod input;
 
+use std::hash::BuildHasherDefault;
+
 pub use crate::{
     change::FileChange,
     input::{SourceRoot, SourceRootId},
 };
+use dashmap::{mapref::entry::Entry, DashMap};
+use rustc_hash::FxHasher;
 pub use semver::Version;
 
 use pdfc_syntax::{ast, Parse, SyntaxError};
 pub use query_group::{self};
-use salsa::Durability;
+use salsa::{Durability, Setter};
 use triomphe::Arc;
-use vfs::{AnchoredPath, FileId};
+pub use vfs::{file_set::FileSet, AnchoredPath, AnchoredPathBuf, FileId, VfsPath};
+
+pub trait Upcast<T: ?Sized> {
+    fn upcast(&self) -> &T;
+}
+
+#[derive(Debug, Default)]
+pub struct Files {
+    files: Arc<DashMap<vfs::FileId, FileText, BuildHasherDefault<FxHasher>>>,
+    source_roots: Arc<DashMap<SourceRootId, SourceRootInput, BuildHasherDefault<FxHasher>>>,
+    file_source_roots: Arc<DashMap<vfs::FileId, FileSourceRootInput, BuildHasherDefault<FxHasher>>>,
+}
+
+impl Files {
+    pub fn file_text(&self, file_id: vfs::FileId) -> FileText {
+        *self.files.get(&file_id).expect("Unable to fetch file; this is a bug")
+    }
+
+    pub fn set_file_text(&self, db: &mut dyn SourceDatabase, file_id: vfs::FileId, text: &[u8]) {
+        let files = Arc::clone(&self.files);
+        match files.entry(file_id) {
+            Entry::Occupied(mut occupied) => {
+                occupied.get_mut().set_text(db).to(Arc::from(text.to_vec()));
+            }
+            Entry::Vacant(vacant) => {
+                let text = FileText::new(db, Arc::from(text.to_vec()), file_id);
+                vacant.insert(text);
+            }
+        };
+    }
+
+    pub fn set_file_text_with_durability(&self, db: &mut dyn SourceDatabase, file_id: vfs::FileId, text: &[u8], durability: Durability) {
+        let files = Arc::clone(&self.files);
+        match files.entry(file_id) {
+            Entry::Occupied(mut occupied) => {
+                occupied.get_mut().set_text(db).with_durability(durability).to(Arc::from(text.to_vec()));
+            }
+            Entry::Vacant(vacant) => {
+                let text = FileText::builder(Arc::from(text.to_vec()), file_id).durability(durability).new(db);
+                vacant.insert(text);
+            }
+        };
+    }
+
+    /// Source root of the file.
+    pub fn source_root(&self, source_root_id: SourceRootId) -> SourceRootInput {
+        let source_root = self.source_roots.get(&source_root_id).expect("Unable to fetch source root id; this is a bug");
+        *source_root
+    }
+
+    pub fn set_source_root_with_durability(
+        &self,
+        db: &mut dyn SourceDatabase,
+        source_root_id: SourceRootId,
+        source_root: Arc<SourceRoot>,
+        durability: Durability,
+    ) {
+        let source_roots = Arc::clone(&self.source_roots);
+        match source_roots.entry(source_root_id) {
+            Entry::Occupied(mut occupied) => {
+                occupied.get_mut().set_source_root(db).with_durability(durability).to(source_root);
+            }
+            Entry::Vacant(vacant) => {
+                let source_root = SourceRootInput::builder(source_root).durability(durability).new(db);
+                vacant.insert(source_root);
+            }
+        };
+    }
+
+    pub fn file_source_root(&self, id: vfs::FileId) -> FileSourceRootInput {
+        let file_source_root = self.file_source_roots.get(&id).expect("Unable to fetch FileSourceRootInput; this is a bug");
+        *file_source_root
+    }
+
+    pub fn set_file_source_root_with_durability(&self, db: &mut dyn SourceDatabase, id: vfs::FileId, source_root_id: SourceRootId, durability: Durability) {
+        let file_source_roots = Arc::clone(&self.file_source_roots);
+        // let db = self;
+        match file_source_roots.entry(id) {
+            Entry::Occupied(mut occupied) => {
+                occupied.get_mut().set_source_root_id(db).with_durability(durability).to(source_root_id);
+            }
+            Entry::Vacant(vacant) => {
+                let file_source_root = FileSourceRootInput::builder(source_root_id).durability(durability).new(db);
+                vacant.insert(file_source_root);
+            }
+        };
+    }
+}
 
 #[salsa::interned(no_lifetime)]
 pub struct EditionedFileId {
@@ -66,9 +157,9 @@ pub trait SourceDatabase: salsa::Database {
     /// Text of the file.
     fn file_text(&self, file_id: vfs::FileId) -> FileText;
 
-    fn set_file_text(&mut self, file_id: vfs::FileId, text: &str);
+    fn set_file_text(&mut self, file_id: vfs::FileId, text: &[u8]);
 
-    fn set_file_text_with_durability(&mut self, file_id: vfs::FileId, text: &str, durability: Durability);
+    fn set_file_text_with_durability(&mut self, file_id: vfs::FileId, text: &[u8], durability: Durability);
 
     /// Contents of the source root.
     fn source_root(&self, id: SourceRootId) -> SourceRootInput;
