@@ -13,7 +13,7 @@ use crate::{RootQueryDb, SourceRoot, SourceRootId};
 #[derive(Default)]
 pub struct FileChange {
     pub roots: Option<Vec<SourceRoot>>,
-    pub files_changed: Vec<(FileId, Option<String>)>,
+    pub files_changed: Vec<(FileId, Option<Vec<u8>>)>,
 }
 
 impl fmt::Debug for FileChange {
@@ -38,7 +38,7 @@ impl FileChange {
         self.roots = Some(roots);
     }
 
-    pub fn change_file(&mut self, file_id: FileId, new_text: Option<String>) {
+    pub fn change_file(&mut self, file_id: FileId, new_text: Option<Vec<u8>>) {
         self.files_changed.push((file_id, new_text))
     }
 
