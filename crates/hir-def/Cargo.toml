@@ -13,11 +13,17 @@ repository.workspace = true
 # Non-local deps
 rustc_apfloat = "0.2.2"
 la-arena.workspace = true
+salsa.workspace = true
+smallvec.workspace = true
+
 
 # Local deps
 intern.workspace = true
 pdfc-syntax.workspace = true
 pdfc-lexer.workspace = true
+span.workspace = true
+stdx.workspace = true
+base-db.workspace = true
 
 [dev-dependencies]
 # Non-local deps

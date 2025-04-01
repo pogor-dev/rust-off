@@ -1,3 +1,7 @@
+//! Missing batteries for standard libraries.
+
+mod macros;
+
 pub mod assert;
 pub mod panic_context;
 pub use itertools;

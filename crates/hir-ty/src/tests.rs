@@ -53,46 +53,7 @@ fn infer_with_mismatches(content: &str, include_mismatches: bool) -> String {
 
     let mut buf = String::new();
 
-    let mut infer_def = |inference_result: Arc<InferenceResult>, body: Arc<Body>, body_source_map: Arc<BodySourceMap>| {};
-
-    let module = db.module_for_file(file_id);
-    let def_map = module.def_map(&db);
-
-    let mut defs: Vec<(DefWithBodyId, Crate)> = Vec::new();
-    visit_module(&db, &def_map, module.local_id, &mut |it| {
-        let def = match it {
-            ModuleDefId::FunctionId(it) => it.into(),
-            ModuleDefId::EnumVariantId(it) => it.into(),
-            ModuleDefId::ConstId(it) => it.into(),
-            ModuleDefId::StaticId(it) => it.into(),
-            _ => return,
-        };
-        defs.push((def, module.krate()))
-    });
-    defs.sort_by_key(|(def, _)| match def {
-        DefWithBodyId::FunctionId(it) => {
-            let loc = it.lookup(&db);
-            loc.source(&db).value.syntax().text_range().start()
-        }
-        DefWithBodyId::ConstId(it) => {
-            let loc = it.lookup(&db);
-            loc.source(&db).value.syntax().text_range().start()
-        }
-        DefWithBodyId::StaticId(it) => {
-            let loc = it.lookup(&db);
-            loc.source(&db).value.syntax().text_range().start()
-        }
-        DefWithBodyId::VariantId(it) => {
-            let loc = it.lookup(&db);
-            loc.source(&db).value.syntax().text_range().start()
-        }
-        DefWithBodyId::InTypeConstId(it) => it.source(&db).syntax().text_range().start(),
-    });
-    for (def, krate) in defs {
-        let (body, source_map) = db.body_with_source_map(def);
-        let infer = db.infer(def);
-        infer_def(infer, body, source_map, krate);
-    }
+    let mut defs: Vec<DefWithBodyId> = Vec::new();
 
     buf.truncate(buf.trim_end().len());
     buf

@@ -19,6 +19,23 @@ use salsa::{Durability, Setter};
 use triomphe::Arc;
 pub use vfs::{file_set::FileSet, AnchoredPath, AnchoredPathBuf, FileId, VfsPath};
 
+#[macro_export]
+macro_rules! impl_intern_key {
+    ($id:ident, $loc:ident) => {
+        #[salsa::interned(no_debug, no_lifetime)]
+        pub struct $id {
+            pub loc: $loc,
+        }
+
+        // If we derive this salsa prints the values recursively, and this causes us to blow.
+        impl ::std::fmt::Debug for $id {
+            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.debug_tuple(stringify!($id)).field(&format_args!("{:04x}", self.0.as_u32())).finish()
+            }
+        }
+    };
+}
+
 pub trait Upcast<T: ?Sized> {
     fn upcast(&self) -> &T;
 }

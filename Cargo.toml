@@ -84,6 +84,11 @@ dashmap = { version = "=5.5.3", features = ["raw-api"] }
 hashbrown = { version = "=0.14.5", features = [
   "inline-more",
 ], default-features = false }
+smallvec = { version = "1.14.0", features = [
+  "const_new",
+  "union",
+  "const_generics",
+] }
 
 [workspace.lints.rust]
 # remember to update RUSTFLAGS in ci.yml if you add something here

@@ -276,11 +276,16 @@ version = "0.0.0"
 name = "hir-def"
 version = "0.0.0"
 dependencies = [
+ "base-db",
  "intern",
  "la-arena",
  "pdfc-lexer",
  "pdfc-syntax",
  "rustc_apfloat",
+ "salsa",
+ "smallvec",
+ "span",
+ "stdx",
 ]
 
 [[package]]
