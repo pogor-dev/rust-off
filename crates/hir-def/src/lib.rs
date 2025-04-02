@@ -32,7 +32,7 @@ use std::{
 use crate::{
     db::DefDatabase,
     hir_expand::{Intern, Lookup},
-    item_tree::{ItemTreeId, ItemTreeNode, Object},
+    item_tree::{IndirectObject, ItemTreeId, ItemTreeNode},
 };
 
 #[derive(Debug)]
@@ -90,10 +90,8 @@ impl<N: ItemTreeNode> Hash for AssocItemLoc<N> {
 }
 
 pub trait ItemTreeLoc {
-    type Container;
     type Id;
     fn item_tree_id(&self) -> ItemTreeId<Self::Id>;
-    fn container(&self) -> Self::Container;
 }
 
 macro_rules! impl_intern {
@@ -114,50 +112,14 @@ macro_rules! impl_loc {
     };
 }
 
-type ObjectLoc = AssocItemLoc<Object>;
-impl_intern!(ObjectId, ObjectLoc, intern_object, lookup_intern_object);
-impl_loc!(ObjectLoc, id: Object);
+type IndirectObjectLoc = AssocItemLoc<IndirectObject>;
+impl_intern!(IndirectObjectId, IndirectObjectLoc, intern_indirect_object, lookup_intern_indirect_object);
+impl_loc!(IndirectObjectLoc, id: IndirectObject);
 
 /// The defs which have a body.
 #[derive(Debug, PartialOrd, Ord, Clone, Copy, PartialEq, Eq, Hash, salsa::Supertype)]
 pub enum DefWithBodyId {
-    ObjectId(ObjectId),
+    IndirectObjectId(IndirectObjectId),
     // StreamId(StreamId),
 }
-impl_from!(ObjectId for DefWithBodyId);
-
-/// The item tree of a source file.
-#[derive(Debug, Default, Eq, PartialEq)]
-pub struct ItemTree {
-    data: Option<Box<ItemTreeData>>,
-}
-
-macro_rules! mod_items {
-    ( $( $typ:ident in $fld:ident -> $ast:ty ),+ $(,)? ) => {
-        $(
-            impl ItemTreeNode for $typ {
-                type Source = $ast;
-
-                fn ast_id(&self) -> FileAstId<Self::Source> {
-                    self.ast_id
-                }
-
-                fn lookup(tree: &ItemTree, index: Idx<Self>) -> &Self {
-                    &tree.data().$fld[index]
-                }
-            }
-
-            impl Index<Idx<$typ>> for ItemTree {
-                type Output = $typ;
-
-                fn index(&self, index: Idx<$typ>) -> &Self::Output {
-                    &self.data().$fld[index]
-                }
-            }
-        )+
-    };
-}
-
-mod_items! {
-    Object in objects -> ast::IndirectObjectExpr,
-}
+impl_from!(IndirectObjectId for DefWithBodyId);

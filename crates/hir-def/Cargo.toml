@@ -15,7 +15,7 @@ rustc_apfloat = "0.2.2"
 la-arena.workspace = true
 salsa.workspace = true
 smallvec.workspace = true
-
+triomphe.workspace = true
 
 # Local deps
 intern.workspace = true

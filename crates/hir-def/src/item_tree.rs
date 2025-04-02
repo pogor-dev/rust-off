@@ -30,8 +30,17 @@
 //! In general, any item in the `ItemTree` stores its `AstId`, which allows mapping it back to its
 //! surface syntax.
 
-use la_arena::Idx;
-use span::{AstIdNode, FileAstId};
+use std::{
+    fmt::{self, Debug},
+    hash::{Hash, Hasher},
+    ops::{Index, Range},
+    sync::OnceLock,
+};
+
+use la_arena::{Arena, Idx, RawIdx};
+use pdfc_syntax::{ast, match_ast, SyntaxKind};
+use span::{AstIdNode, FileAstId, HirFileId};
+use triomphe::Arc;
 
 /// The item tree of a source file.
 #[derive(Debug, Default, Eq, PartialEq)]
@@ -39,8 +48,16 @@ pub struct ItemTree {
     data: Option<Box<ItemTreeData>>,
 }
 
+impl ItemTree {
+    fn data(&self) -> &ItemTreeData {
+        self.data.as_ref().expect("attempted to access data of empty ItemTree")
+    }
+}
+
 #[derive(Default, Debug, Eq, PartialEq)]
-struct ItemTreeData {}
+struct ItemTreeData {
+    indirect_objects: Arena<IndirectObject>,
+}
 
 /// Trait implemented by all nodes in the item tree.
 pub trait ItemTreeNode: Clone {
@@ -50,6 +67,65 @@ pub trait ItemTreeNode: Clone {
 
     /// Looks up an instance of `Self` in an item tree.
     fn lookup(tree: &ItemTree, index: Idx<Self>) -> &Self;
+}
+
+pub struct FileItemTreeId<N>(Idx<N>);
+
+impl<N> FileItemTreeId<N> {
+    pub fn range_iter(range: Range<Self>) -> impl Iterator<Item = Self> + Clone {
+        (range.start.index().into_raw().into_u32()..range.end.index().into_raw().into_u32())
+            .map(RawIdx::from_u32)
+            .map(Idx::from_raw)
+            .map(Self)
+    }
+}
+
+impl<N> FileItemTreeId<N> {
+    pub fn index(&self) -> Idx<N> {
+        self.0
+    }
+}
+
+impl<N> Clone for FileItemTreeId<N> {
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+impl<N> Copy for FileItemTreeId<N> {}
+
+impl<N> PartialEq for FileItemTreeId<N> {
+    fn eq(&self, other: &FileItemTreeId<N>) -> bool {
+        self.0 == other.0
+    }
+}
+impl<N> Eq for FileItemTreeId<N> {}
+
+impl<N> Hash for FileItemTreeId<N> {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.0.hash(state)
+    }
+}
+
+impl<N> fmt::Debug for FileItemTreeId<N> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.0.fmt(f)
+    }
+}
+
+/// Identifies a particular [`ItemTree`].
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
+pub struct TreeId {
+    file: HirFileId,
+}
+
+impl TreeId {
+    pub(crate) fn new(file: HirFileId) -> Self {
+        Self { file }
+    }
+
+    pub fn file_id(self) -> HirFileId {
+        self.file
+    }
 }
 
 #[derive(Debug)]
@@ -87,4 +163,36 @@ impl<N> Hash for ItemTreeId<N> {
 }
 
 #[derive(Debug, Clone, Eq, PartialEq)]
-pub struct Object {}
+pub struct IndirectObject {
+    pub ast_id: FileAstId<ast::IndirectObjectExpr>,
+}
+
+macro_rules! mod_items {
+    ( $( $typ:ident in $fld:ident -> $ast:ty ),+ $(,)? ) => {
+        $(
+            impl ItemTreeNode for $typ {
+                type Source = $ast;
+
+                fn ast_id(&self) -> FileAstId<Self::Source> {
+                    self.ast_id
+                }
+
+                fn lookup(tree: &ItemTree, index: Idx<Self>) -> &Self {
+                    &tree.data().$fld[index]
+                }
+            }
+
+            impl Index<Idx<$typ>> for ItemTree {
+                type Output = $typ;
+
+                fn index(&self, index: Idx<$typ>) -> &Self::Output {
+                    &self.data().$fld[index]
+                }
+            }
+        )+
+    };
+}
+
+mod_items! {
+    IndirectObject in indirect_objects -> ast::IndirectObjectExpr,
+}

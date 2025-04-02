@@ -286,6 +286,7 @@ dependencies = [
  "smallvec",
  "span",
  "stdx",
+ "triomphe",
 ]
 
 [[package]]
