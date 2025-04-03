@@ -210,6 +210,3 @@ fn parse_errors(db: &dyn RootQueryDb, file_id: EditionedFileId) -> Option<Arc<[S
         [..] => Some(errors.into()),
     }
 }
-
-#[query_group::query_group]
-pub trait ExpandDatabase: RootQueryDb {}

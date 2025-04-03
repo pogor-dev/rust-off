@@ -16,18 +16,9 @@ pub mod item_tree;
 mod hir_expand;
 
 use base_db::impl_intern_key;
-use la_arena::{Arena, Idx, RawIdx};
-use pdfc_syntax::{ast, match_ast, SyntaxKind};
-use smallvec::SmallVec;
-use span::{AstIdNode, Edition, FileAstId, SyntaxContext};
 use stdx::impl_from;
 
-use std::{
-    fmt::{self, Debug},
-    hash::{Hash, Hasher},
-    ops::{Index, Range},
-    sync::OnceLock,
-};
+use std::hash::{Hash, Hasher};
 
 use crate::{
     db::DefDatabase,

@@ -2,7 +2,10 @@ use std::sync::Arc;
 
 use crate::{test_db::TestDB, InferenceResult};
 use expect_test::Expect;
-use hir_def::expr_store::{Body, BodySourceMap};
+use hir_def::{
+    expr_store::{Body, BodySourceMap},
+    DefWithBodyId,
+};
 use std::env;
 use std::sync::LazyLock;
 use test_fixture::WithFixture;
@@ -54,6 +57,12 @@ fn infer_with_mismatches(content: &str, include_mismatches: bool) -> String {
     let mut buf = String::new();
 
     let mut defs: Vec<DefWithBodyId> = Vec::new();
+
+    for def in defs {
+        // let (body, source_map) = db.body_with_source_map(def);
+        let infer = db.infer(def);
+        // infer_def(infer, body, source_map, krate);
+    }
 
     buf.truncate(buf.trim_end().len());
     buf

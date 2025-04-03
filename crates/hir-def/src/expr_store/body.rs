@@ -3,9 +3,13 @@
 
 use std::ops;
 
+use triomphe::Arc;
+
 use crate::{
+    db::DefDatabase,
     expr_store::{ExpressionStore, ExpressionStoreSourceMap},
     hir::ExprId,
+    DefWithBodyId,
 };
 
 /// The body of an item (function, const etc.).
@@ -14,6 +18,16 @@ pub struct Body {
     pub store: ExpressionStore,
     /// The `ExprId` of the actual body expression.
     pub body_expr: ExprId,
+}
+
+impl Body {
+    pub(crate) fn body_with_source_map_query(db: &dyn DefDatabase, def: DefWithBodyId) -> (Arc<Body>, Arc<BodySourceMap>) {
+        let _p = tracing::info_span!("body_with_source_map_query").entered();
+    }
+
+    pub(crate) fn body_query(db: &dyn DefDatabase, def: DefWithBodyId) -> Arc<Body> {
+        db.body_with_source_map(def).0
+    }
 }
 
 impl ops::Deref for Body {

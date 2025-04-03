@@ -16,6 +16,7 @@ la-arena.workspace = true
 salsa.workspace = true
 smallvec.workspace = true
 triomphe.workspace = true
+tracing.workspace = true
 
 # Local deps
 intern.workspace = true

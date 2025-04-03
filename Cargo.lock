@@ -286,6 +286,7 @@ dependencies = [
  "smallvec",
  "span",
  "stdx",
+ "tracing",
  "triomphe",
 ]
 
@@ -296,6 +297,7 @@ dependencies = [
  "base-db",
  "expect-test",
  "hir-def",
+ "query-group-macro",
  "salsa",
  "test-fixture",
  "tracing",

@@ -18,6 +18,7 @@ triomphe.workspace = true
 # Local deps
 hir-def.workspace = true
 base-db.workspace = true
+query-group.workspace = true
 
 [dev-dependencies]
 # Non-local deps

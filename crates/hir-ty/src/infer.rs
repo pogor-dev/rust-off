@@ -13,6 +13,40 @@
 //! to certain types. To record this, we use the union-find implementation from
 //! the `ena` crate, which is extracted from rustc.
 
+use crate::db::HirDatabase;
+use hir_def::{expr_store::Body, DefWithBodyId};
+use triomphe::Arc;
+
+/// The entry point of type inference.
+pub(crate) fn infer_query(db: &dyn HirDatabase, def: DefWithBodyId) -> Arc<InferenceResult> {
+    let _p = tracing::info_span!("infer_query").entered();
+    let body = db.body(def);
+    let mut ctx = InferenceContext::new(db, def, &body);
+
+    match def {
+        DefWithBodyId::IndirectObjectId(f) => {
+            ctx.collect_indirect_object(f);
+        }
+    }
+
+    ctx.infer_body();
+    Arc::new(ctx.resolve_all())
+}
+
+/// The inference context contains all information needed during type inference.
+#[derive(Clone, Debug)]
+pub(crate) struct InferenceContext<'a> {
+    pub(crate) db: &'a dyn HirDatabase,
+    pub(crate) owner: DefWithBodyId,
+    pub(crate) body: &'a Body,
+}
+
+impl<'a> InferenceContext<'a> {
+    fn new(db: &'a dyn HirDatabase, owner: DefWithBodyId, body: &'a Body) -> Self {
+        InferenceContext { db, owner, body }
+    }
+}
+
 /// The result of type inference: A mapping from expressions and patterns to types.
 ///
 /// When you add a field that stores types (including `Substitution` and the like), don't forget
