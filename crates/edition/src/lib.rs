@@ -20,6 +20,35 @@ pub enum Edition {
 impl Edition {
     pub const CURRENT: Edition = Edition::Pdf20;
     pub const LATEST: Edition = Edition::Pdf20;
+
+    pub fn from_u32(u32: u32) -> Edition {
+        match u32 {
+            0 => Edition::Pdf10,
+            1 => Edition::Pdf11,
+            2 => Edition::Pdf12,
+            3 => Edition::Pdf13,
+            4 => Edition::Pdf14,
+            5 => Edition::Pdf15,
+            6 => Edition::Pdf16,
+            7 => Edition::Pdf17,
+            10 => Edition::Pdf20,
+            _ => panic!("invalid edition"),
+        }
+    }
+
+    pub fn number(&self) -> usize {
+        match self {
+            Edition::Pdf10 => 10,
+            Edition::Pdf11 => 11,
+            Edition::Pdf12 => 12,
+            Edition::Pdf13 => 13,
+            Edition::Pdf14 => 14,
+            Edition::Pdf15 => 15,
+            Edition::Pdf16 => 16,
+            Edition::Pdf17 => 17,
+            Edition::Pdf20 => 20,
+        }
+    }
 }
 
 #[derive(Debug)]

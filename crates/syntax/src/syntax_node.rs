@@ -1,4 +1,4 @@
-//! This module defines Concrete Syntax Tree (CST), used by rust-analyzer.
+//! This module defines Concrete Syntax Tree (CST), used by pdf-analyzer.
 //!
 //! The CST includes comments and whitespace, provides a single node type,
 //! `SyntaxNode`, and a basic traversal API (parent, children, siblings).

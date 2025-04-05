@@ -21,3 +21,6 @@ stdx.workspace = true
 
 [dev-dependencies]
 # Add any development dependencies here
+
+[lints]
+workspace = true

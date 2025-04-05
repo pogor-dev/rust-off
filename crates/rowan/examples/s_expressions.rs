@@ -7,7 +7,7 @@
 //!
 //! It's suggested to read the conceptual overview of the design
 //! alongside this tutorial:
-//! https://rust-analyzer.github.io/book/contributing/syntax.html
+//! https://pdf-analyzer.github.io/book/contributing/syntax.html
 
 /// Let's start with defining all kinds of tokens and
 /// composite nodes.
