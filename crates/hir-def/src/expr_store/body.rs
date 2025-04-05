@@ -3,12 +3,15 @@
 
 use std::ops;
 
+use pdfc_syntax::ast;
 use triomphe::Arc;
 
 use crate::{
     db::DefDatabase,
     expr_store::{ExpressionStore, ExpressionStoreSourceMap},
+    files::InFile,
     hir::ExprId,
+    hir_expand::Lookup,
     DefWithBodyId,
 };
 
@@ -23,6 +26,20 @@ pub struct Body {
 impl Body {
     pub(crate) fn body_with_source_map_query(db: &dyn DefDatabase, def: DefWithBodyId) -> (Arc<Body>, Arc<BodySourceMap>) {
         let _p = tracing::info_span!("body_with_source_map_query").entered();
+
+        let InFile { file_id, value: body } = {
+            match def {
+                DefWithBodyId::IndirectObjectId(o) => {
+                    let o = o.lookup(db);
+                    let src = o.source(db);
+                    src.map(|it| it.body().map(ast::Expr::from))
+                }
+            }
+        };
+
+        let expander = Expander::new(db, file_id, module);
+        let (body, mut source_map) = lower::lower_body(db, def, expander, body);
+        (Arc::new(body), Arc::new(source_map))
     }
 
     pub(crate) fn body_query(db: &dyn DefDatabase, def: DefWithBodyId) -> Arc<Body> {

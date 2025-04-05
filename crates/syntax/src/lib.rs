@@ -29,12 +29,14 @@ extern crate pdfc_lexer;
 
 pub mod ast;
 mod parsing;
+mod ptr;
 mod syntax_error;
 mod syntax_node;
 mod validation;
 
 pub use crate::{
     ast::{AstNode, AstToken},
+    ptr::{AstPtr, SyntaxNodePtr},
     syntax_error::SyntaxError,
     syntax_node::{SyntaxNode, SyntaxNodeChildren, SyntaxToken, SyntaxTreeBuilder},
 };

@@ -38,9 +38,11 @@ use std::{
 };
 
 use la_arena::{Arena, Idx, RawIdx};
-use pdfc_syntax::{ast, match_ast, SyntaxKind};
+use pdfc_syntax::ast;
 use span::{AstIdNode, FileAstId, HirFileId};
 use triomphe::Arc;
+
+use crate::db::DefDatabase;
 
 /// The item tree of a source file.
 #[derive(Debug, Default, Eq, PartialEq)]
@@ -49,6 +51,15 @@ pub struct ItemTree {
 }
 
 impl ItemTree {
+    pub(crate) fn file_item_tree_query(db: &dyn DefDatabase, file_id: HirFileId) -> Arc<ItemTree> {
+        db.file_item_tree_with_source_map(file_id).0
+    }
+
+    pub(crate) fn file_item_tree_with_source_map_query(db: &dyn DefDatabase, file_id: HirFileId) -> (Arc<ItemTree>, Arc<ItemTreeSourceMaps>) {
+        let _p = tracing::info_span!("file_item_tree_query", ?file_id).entered();
+        static EMPTY: OnceLock<(Arc<ItemTree>, Arc<ItemTreeSourceMaps>)> = OnceLock::new();
+    }
+
     fn data(&self) -> &ItemTreeData {
         self.data.as_ref().expect("attempted to access data of empty ItemTree")
     }
@@ -123,6 +134,10 @@ impl TreeId {
         Self { file }
     }
 
+    pub fn item_tree(&self, db: &dyn DefDatabase) -> Arc<ItemTree> {
+        db.file_item_tree(self.file)
+    }
+
     pub fn file_id(self) -> HirFileId {
         self.file
     }
@@ -137,6 +152,18 @@ pub struct ItemTreeId<N> {
 impl<N> ItemTreeId<N> {
     pub fn new(tree: TreeId, idx: FileItemTreeId<N>) -> Self {
         Self { tree, value: idx }
+    }
+
+    pub fn file_id(self) -> HirFileId {
+        self.tree.file
+    }
+
+    pub fn tree_id(self) -> TreeId {
+        self.tree
+    }
+
+    pub fn item_tree(self, db: &dyn DefDatabase) -> Arc<ItemTree> {
+        self.tree.item_tree(db)
     }
 }
 
@@ -166,6 +193,9 @@ impl<N> Hash for ItemTreeId<N> {
 pub struct IndirectObject {
     pub ast_id: FileAstId<ast::IndirectObjectExpr>,
 }
+
+#[derive(Default, Debug, Eq, PartialEq)]
+pub struct ItemTreeSourceMaps {}
 
 macro_rules! mod_items {
     ( $( $typ:ident in $fld:ident -> $ast:ty ),+ $(,)? ) => {

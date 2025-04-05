@@ -10,8 +10,10 @@
 pub mod builtin_type;
 pub mod db;
 pub mod expr_store;
+pub mod files;
 pub mod hir;
 pub mod item_tree;
+pub mod src;
 
 mod hir_expand;
 
