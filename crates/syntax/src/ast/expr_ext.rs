@@ -3,10 +3,12 @@
 //! These methods should only do simple, shallow tasks related to the syntax of the node itself.
 
 use crate::{
+    SyntaxToken, T,
     ast::{self},
     ast::{AstNode, AstToken},
-    SyntaxToken, T,
 };
+
+use super::{Expr, IndirectObjectExpr, support};
 
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum LiteralKind {
@@ -53,5 +55,11 @@ impl ast::Literal {
             T![null] => LiteralKind::Null,
             _ => unreachable!(),
         }
+    }
+}
+
+impl IndirectObjectExpr {
+    pub fn body(&self) -> Option<Expr> {
+        support::child(&self.syntax)
     }
 }

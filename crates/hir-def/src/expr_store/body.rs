@@ -7,12 +7,13 @@ use pdfc_syntax::ast;
 use triomphe::Arc;
 
 use crate::{
+    DefWithBodyId,
     db::DefDatabase,
-    expr_store::{ExpressionStore, ExpressionStoreSourceMap},
+    expr_store::{ExpressionStore, ExpressionStoreSourceMap, lower},
     files::InFile,
     hir::ExprId,
     hir_expand::Lookup,
-    DefWithBodyId,
+    src::HasSource,
 };
 
 /// The body of an item (function, const etc.).
@@ -37,8 +38,7 @@ impl Body {
             }
         };
 
-        let expander = Expander::new(db, file_id, module);
-        let (body, mut source_map) = lower::lower_body(db, def, expander, body);
+        let (body, mut source_map) = lower::lower_body(db, def, body);
         (Arc::new(body), Arc::new(source_map))
     }
 

@@ -2,6 +2,7 @@
 //! consts.
 
 mod body;
+mod lower;
 
 pub use self::body::{Body, BodySourceMap};
 
