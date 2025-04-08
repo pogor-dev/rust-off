@@ -7,13 +7,14 @@ use salsa::Durability;
 use triomphe::Arc;
 use vfs::FileId;
 
-use crate::{RootQueryDb, SourceRoot, SourceRootId};
+use crate::{CrateGraphBuilder, CratesIdMap, RootQueryDb, SourceRoot, SourceRootId};
 
 /// Encapsulate a bunch of raw `.set` calls on the database.
 #[derive(Default)]
 pub struct FileChange {
     pub roots: Option<Vec<SourceRoot>>,
-    pub files_changed: Vec<(FileId, Option<Vec<u8>>)>,
+    pub files_changed: Vec<(FileId, Option<String>)>,
+    pub crate_graph: Option<CrateGraphBuilder>,
 }
 
 impl fmt::Debug for FileChange {
@@ -24,6 +25,9 @@ impl fmt::Debug for FileChange {
         }
         if !self.files_changed.is_empty() {
             d.field("files_changed", &self.files_changed.len());
+        }
+        if self.crate_graph.is_some() {
+            d.field("crate_graph", &self.crate_graph);
         }
         d.finish()
     }
@@ -38,11 +42,15 @@ impl FileChange {
         self.roots = Some(roots);
     }
 
-    pub fn change_file(&mut self, file_id: FileId, new_text: Option<Vec<u8>>) {
+    pub fn change_file(&mut self, file_id: FileId, new_text: Option<String>) {
         self.files_changed.push((file_id, new_text))
     }
 
-    pub fn apply(self, db: &mut dyn RootQueryDb) {
+    pub fn set_crate_graph(&mut self, graph: CrateGraphBuilder) {
+        self.crate_graph = Some(graph);
+    }
+
+    pub fn apply(self, db: &mut dyn RootQueryDb) -> Option<CratesIdMap> {
         let _p = tracing::info_span!("FileChange::apply").entered();
         if let Some(roots) = self.roots {
             for (idx, root) in roots.into_iter().enumerate() {
@@ -65,15 +73,18 @@ impl FileChange {
             let text = text.unwrap_or_default();
             db.set_file_text_with_durability(file_id, &text, durability)
         }
+
+        if let Some(crate_graph) = self.crate_graph {
+            return Some(crate_graph.set_in_db(db));
+        }
+        None
     }
 }
 
-fn source_root_durability(_source_root: &SourceRoot) -> Durability {
-    // Potentially could be used for external files referenced in PDF stream
-    Durability::LOW
+fn source_root_durability(source_root: &SourceRoot) -> Durability {
+    if source_root.is_library { Durability::MEDIUM } else { Durability::LOW }
 }
 
-fn file_text_durability(_source_root: &SourceRoot) -> Durability {
-    // Potentially could be used for external files referenced in PDF stream
-    Durability::LOW
+fn file_text_durability(source_root: &SourceRoot) -> Durability {
+    if source_root.is_library { Durability::HIGH } else { Durability::LOW }
 }

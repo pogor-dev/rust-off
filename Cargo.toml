@@ -48,12 +48,15 @@ pdfc-syntax = { path = "./crates/syntax", version = "0.0.0" }
 hir = { path = "./crates/hir", version = "0.0.0" }
 hir-def = { path = "./crates/hir-def", version = "0.0.0" }
 hir-ty = { path = "./crates/hir-ty", version = "0.0.0" }
+hir-expand = { path = "./crates/hir-expand", version = "0.0.0" }
 intern = { path = "./crates/intern", version = "0.0.0" }
 test-fixture = { path = "./crates/test-fixture", version = "0.0.0" }
 test-utils = { path = "./crates/test-utils", version = "0.0.0" }
 
 # non-local crates
+arrayvec = "0.7.6"
 anyhow = "1.0.97"
+bitflags = "2.9.0"
 xshell = "0.2.7"
 itertools = "0.14.0"
 either = "1.15.0"
