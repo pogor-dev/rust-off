@@ -6,7 +6,7 @@ mod hygiene;
 mod map;
 
 pub use self::{
-    ast_id::{AstIdNode, ErasedFileAstId, FileAstId},
+    ast_id::{AstIdMap, AstIdNode, ErasedFileAstId, FileAstId},
     hygiene::{SyntaxContext, Transparency},
     map::{RealSpanMap, SpanMap},
 };

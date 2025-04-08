@@ -29,6 +29,7 @@
 //!
 //! In general, any item in the `ItemTree` stores its `AstId`, which allows mapping it back to its
 //! surface syntax.
+mod lower;
 
 use std::{
     fmt::{self, Debug},
@@ -58,6 +59,53 @@ impl ItemTree {
     pub(crate) fn file_item_tree_with_source_map_query(db: &dyn DefDatabase, file_id: HirFileId) -> (Arc<ItemTree>, Arc<ItemTreeSourceMaps>) {
         let _p = tracing::info_span!("file_item_tree_query", ?file_id).entered();
         static EMPTY: OnceLock<(Arc<ItemTree>, Arc<ItemTreeSourceMaps>)> = OnceLock::new();
+
+        let ctx = lower::Ctx::new(db, file_id);
+        let syntax = db.parse(file_id);
+        let mut top_attrs = None;
+        let (mut item_tree, source_maps) = match_ast! {
+            match syntax {
+                ast::SourceFile(file) => {
+                    top_attrs = Some(RawAttrs::new(db.upcast(), &file, ctx.span_map()));
+                    ctx.lower_module_items(&file)
+                },
+                ast::MacroItems(items) => {
+                    ctx.lower_module_items(&items)
+                },
+                ast::MacroStmts(stmts) => {
+                    // The produced statements can include items, which should be added as top-level
+                    // items.
+                    ctx.lower_macro_stmts(stmts)
+                },
+                _ => {
+                    if never!(syntax.kind() == SyntaxKind::ERROR, "{:?} from {:?} {}", file_id, syntax, syntax) {
+                        return Default::default();
+                    }
+                    panic!("cannot create item tree for file {file_id:?} from {syntax:?} {syntax}");
+                },
+            }
+        };
+
+        if let Some(attrs) = top_attrs {
+            item_tree.attrs.insert(AttrOwner::TopLevel, attrs);
+        }
+        if item_tree.data.is_none() && item_tree.top_level.is_empty() && item_tree.attrs.is_empty() {
+            EMPTY
+                .get_or_init(|| {
+                    (
+                        Arc::new(ItemTree {
+                            top_level: SmallVec::new_const(),
+                            attrs: FxHashMap::default(),
+                            data: None,
+                        }),
+                        Arc::default(),
+                    )
+                })
+                .clone()
+        } else {
+            item_tree.shrink_to_fit();
+            (Arc::new(item_tree), Arc::new(source_maps))
+        }
     }
 
     fn data(&self) -> &ItemTreeData {

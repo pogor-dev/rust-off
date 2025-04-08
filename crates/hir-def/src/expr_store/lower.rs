@@ -2,6 +2,7 @@
 //! representation.
 
 use pdfc_syntax::{AstPtr, ast};
+use span::AstIdMap;
 use triomphe::Arc;
 
 use crate::{
