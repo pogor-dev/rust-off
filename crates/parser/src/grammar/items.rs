@@ -117,7 +117,7 @@ fn stream_expr(p: &mut Parser<'_>) -> CompletedMarker {
 
 fn cross_reference_table(p: &mut Parser<'_>) -> Option<CompletedMarker> {
     // The cross-reference table consists of one or more cross-reference sections.
-    // Each cross-reference section starts with the xref keyword. See ISO 32000-1:2008, 7.5.4.
+    // Each cross-reference section starts with the xref keyword. See ISO 32000-2:2008, 7.5.4.
     if !p.at(T![xref]) {
         return None;
     }

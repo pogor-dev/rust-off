@@ -3,7 +3,7 @@
 #![allow(bad_style, missing_docs, unreachable_pub)]
 use crate::Edition;
 #[doc = r" The kind of syntax node, e.g. `IDENT`, `USE_KW`, or `STRUCT`."]
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Debug)]
 #[repr(u16)]
 pub enum SyntaxKind {
     #[doc(hidden)]
@@ -188,3 +188,24 @@ impl SyntaxKind {
 }
 #[macro_export]
 macro_rules ! T { ['['] => { $ crate :: SyntaxKind :: L_BRACK } ; [']'] => { $ crate :: SyntaxKind :: R_BRACK } ; [<<] => { $ crate :: SyntaxKind :: L_DICT } ; [>>] => { $ crate :: SyntaxKind :: R_DICT } ; [R] => { $ crate :: SyntaxKind :: R_KW } ; [endobj] => { $ crate :: SyntaxKind :: ENDOBJ_KW } ; [endstream] => { $ crate :: SyntaxKind :: ENDSTREAM_KW } ; [f] => { $ crate :: SyntaxKind :: F_KW } ; [false] => { $ crate :: SyntaxKind :: FALSE_KW } ; [n] => { $ crate :: SyntaxKind :: N_KW } ; [null] => { $ crate :: SyntaxKind :: NULL_KW } ; [obj] => { $ crate :: SyntaxKind :: OBJ_KW } ; [startxref] => { $ crate :: SyntaxKind :: STARTXREF_KW } ; [stream] => { $ crate :: SyntaxKind :: STREAM_KW } ; [trailer] => { $ crate :: SyntaxKind :: TRAILER_KW } ; [true] => { $ crate :: SyntaxKind :: TRUE_KW } ; [xref] => { $ crate :: SyntaxKind :: XREF_KW } ; [stream_data] => { $ crate :: SyntaxKind :: STREAM_DATA } ; }
+impl ::core::marker::Copy for SyntaxKind {}
+impl ::core::clone::Clone for SyntaxKind {
+    #[inline]
+    fn clone(&self) -> Self { *self }
+}
+impl ::core::cmp::PartialEq for SyntaxKind {
+    #[inline]
+    fn eq(&self, other: &Self) -> bool { (*self as u16) == (*other as u16) }
+}
+impl ::core::cmp::Eq for SyntaxKind {}
+impl ::core::cmp::PartialOrd for SyntaxKind {
+    #[inline]
+    fn partial_cmp(&self, other: &Self) -> core::option::Option<core::cmp::Ordering> { Some(self.cmp(other)) }
+}
+impl ::core::cmp::Ord for SyntaxKind {
+    #[inline]
+    fn cmp(&self, other: &Self) -> core::cmp::Ordering { (*self as u16).cmp(&(*other as u16)) }
+}
+impl ::core::hash::Hash for SyntaxKind {
+    fn hash<H: ::core::hash::Hasher>(&self, state: &mut H) { ::core::mem::discriminant(self).hash(state); }
+}

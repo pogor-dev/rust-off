@@ -6,8 +6,7 @@ use crate::{
     SyntaxKind::{self, *},
     SyntaxNode, SyntaxToken, T,
 };
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+use std::{fmt, hash};
 pub struct ArrayExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -19,8 +18,6 @@ impl ArrayExpr {
     #[inline]
     pub fn r_brack_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![']']) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Body {
     pub(crate) syntax: SyntaxNode,
 }
@@ -28,8 +25,6 @@ impl Body {
     #[inline]
     pub fn indirect_object_exprs(&self) -> AstChildren<IndirectObjectExpr> { support::children(&self.syntax) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DictionaryExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -41,8 +36,6 @@ impl DictionaryExpr {
     #[inline]
     pub fn r_dict_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![>>]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DictionaryItemExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -52,8 +45,6 @@ impl DictionaryItemExpr {
     #[inline]
     pub fn dictionary_item_value_expr(&self) -> Option<DictionaryItemValueExpr> { support::child(&self.syntax) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DictionaryItemKeyExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -61,8 +52,6 @@ impl DictionaryItemKeyExpr {
     #[inline]
     pub fn literal(&self) -> Option<Literal> { support::child(&self.syntax) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct DictionaryItemValueExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -70,8 +59,6 @@ impl DictionaryItemValueExpr {
     #[inline]
     pub fn expr(&self) -> Option<Expr> { support::child(&self.syntax) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct IndirectObjectExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -85,8 +72,6 @@ impl IndirectObjectExpr {
     #[inline]
     pub fn endobj_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![endobj]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct IndirectObjectId {
     pub(crate) syntax: SyntaxNode,
 }
@@ -98,8 +83,6 @@ impl IndirectObjectId {
     #[inline]
     pub fn obj_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![obj]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct IndirectReferenceExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -111,14 +94,10 @@ impl IndirectReferenceExpr {
     #[inline]
     pub fn R_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![R]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Literal {
     pub(crate) syntax: SyntaxNode,
 }
 impl Literal {}
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PdfDocument {
     pub(crate) syntax: SyntaxNode,
 }
@@ -128,8 +107,6 @@ impl PdfDocument {
     #[inline]
     pub fn trailer(&self) -> Option<Trailer> { support::child(&self.syntax) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct StreamExpr {
     pub(crate) syntax: SyntaxNode,
 }
@@ -143,8 +120,6 @@ impl StreamExpr {
     #[inline]
     pub fn stream_data_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![stream_data]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Trailer {
     pub(crate) syntax: SyntaxNode,
 }
@@ -158,8 +133,6 @@ impl Trailer {
     #[inline]
     pub fn trailer_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![trailer]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct XRefEntry {
     pub(crate) syntax: SyntaxNode,
 }
@@ -171,8 +144,6 @@ impl XRefEntry {
     #[inline]
     pub fn offset(&self) -> Option<Literal> { support::child(&self.syntax) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct XRefEntryType {
     pub(crate) syntax: SyntaxNode,
 }
@@ -182,8 +153,6 @@ impl XRefEntryType {
     #[inline]
     pub fn n_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![n]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct XRefSection {
     pub(crate) syntax: SyntaxNode,
 }
@@ -193,8 +162,6 @@ impl XRefSection {
     #[inline]
     pub fn xref_token(&self) -> Option<SyntaxToken> { support::token(&self.syntax, T![xref]) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct XRefSubsection {
     pub(crate) syntax: SyntaxNode,
 }
@@ -206,8 +173,6 @@ impl XRefSubsection {
     #[inline]
     pub fn x_ref_entrys(&self) -> AstChildren<XRefEntry> { support::children(&self.syntax) }
 }
-
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct XRefTable {
     pub(crate) syntax: SyntaxNode,
 }
@@ -244,6 +209,19 @@ impl AstNode for ArrayExpr {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for ArrayExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for ArrayExpr {}
+impl PartialEq for ArrayExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for ArrayExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for ArrayExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("ArrayExpr").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for Body {
     #[inline]
     fn kind() -> SyntaxKind
@@ -264,6 +242,19 @@ impl AstNode for Body {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for Body {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for Body {}
+impl PartialEq for Body {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for Body {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for Body {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("Body").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for DictionaryExpr {
     #[inline]
@@ -286,6 +277,19 @@ impl AstNode for DictionaryExpr {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for DictionaryExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for DictionaryExpr {}
+impl PartialEq for DictionaryExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for DictionaryExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for DictionaryExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("DictionaryExpr").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for DictionaryItemExpr {
     #[inline]
     fn kind() -> SyntaxKind
@@ -306,6 +310,19 @@ impl AstNode for DictionaryItemExpr {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for DictionaryItemExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for DictionaryItemExpr {}
+impl PartialEq for DictionaryItemExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for DictionaryItemExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for DictionaryItemExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("DictionaryItemExpr").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for DictionaryItemKeyExpr {
     #[inline]
@@ -328,6 +345,19 @@ impl AstNode for DictionaryItemKeyExpr {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for DictionaryItemKeyExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for DictionaryItemKeyExpr {}
+impl PartialEq for DictionaryItemKeyExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for DictionaryItemKeyExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for DictionaryItemKeyExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("DictionaryItemKeyExpr").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for DictionaryItemValueExpr {
     #[inline]
     fn kind() -> SyntaxKind
@@ -348,6 +378,19 @@ impl AstNode for DictionaryItemValueExpr {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for DictionaryItemValueExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for DictionaryItemValueExpr {}
+impl PartialEq for DictionaryItemValueExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for DictionaryItemValueExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for DictionaryItemValueExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("DictionaryItemValueExpr").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for IndirectObjectExpr {
     #[inline]
@@ -370,6 +413,19 @@ impl AstNode for IndirectObjectExpr {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for IndirectObjectExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for IndirectObjectExpr {}
+impl PartialEq for IndirectObjectExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for IndirectObjectExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for IndirectObjectExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("IndirectObjectExpr").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for IndirectObjectId {
     #[inline]
     fn kind() -> SyntaxKind
@@ -390,6 +446,19 @@ impl AstNode for IndirectObjectId {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for IndirectObjectId {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for IndirectObjectId {}
+impl PartialEq for IndirectObjectId {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for IndirectObjectId {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for IndirectObjectId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("IndirectObjectId").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for IndirectReferenceExpr {
     #[inline]
@@ -412,6 +481,19 @@ impl AstNode for IndirectReferenceExpr {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for IndirectReferenceExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for IndirectReferenceExpr {}
+impl PartialEq for IndirectReferenceExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for IndirectReferenceExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for IndirectReferenceExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("IndirectReferenceExpr").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for Literal {
     #[inline]
     fn kind() -> SyntaxKind
@@ -432,6 +514,19 @@ impl AstNode for Literal {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for Literal {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for Literal {}
+impl PartialEq for Literal {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for Literal {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for Literal {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("Literal").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for PdfDocument {
     #[inline]
@@ -454,6 +549,19 @@ impl AstNode for PdfDocument {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for PdfDocument {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for PdfDocument {}
+impl PartialEq for PdfDocument {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for PdfDocument {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for PdfDocument {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("PdfDocument").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for StreamExpr {
     #[inline]
     fn kind() -> SyntaxKind
@@ -474,6 +582,19 @@ impl AstNode for StreamExpr {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for StreamExpr {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for StreamExpr {}
+impl PartialEq for StreamExpr {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for StreamExpr {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for StreamExpr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("StreamExpr").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for Trailer {
     #[inline]
@@ -496,6 +617,19 @@ impl AstNode for Trailer {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for Trailer {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for Trailer {}
+impl PartialEq for Trailer {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for Trailer {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for Trailer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("Trailer").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for XRefEntry {
     #[inline]
     fn kind() -> SyntaxKind
@@ -516,6 +650,19 @@ impl AstNode for XRefEntry {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for XRefEntry {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for XRefEntry {}
+impl PartialEq for XRefEntry {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for XRefEntry {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for XRefEntry {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("XRefEntry").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for XRefEntryType {
     #[inline]
@@ -538,6 +685,19 @@ impl AstNode for XRefEntryType {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for XRefEntryType {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for XRefEntryType {}
+impl PartialEq for XRefEntryType {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for XRefEntryType {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for XRefEntryType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("XRefEntryType").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for XRefSection {
     #[inline]
     fn kind() -> SyntaxKind
@@ -558,6 +718,19 @@ impl AstNode for XRefSection {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for XRefSection {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for XRefSection {}
+impl PartialEq for XRefSection {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for XRefSection {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for XRefSection {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("XRefSection").field("syntax", &self.syntax).finish() }
 }
 impl AstNode for XRefSubsection {
     #[inline]
@@ -580,6 +753,19 @@ impl AstNode for XRefSubsection {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
+impl hash::Hash for XRefSubsection {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for XRefSubsection {}
+impl PartialEq for XRefSubsection {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for XRefSubsection {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for XRefSubsection {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("XRefSubsection").field("syntax", &self.syntax).finish() }
+}
 impl AstNode for XRefTable {
     #[inline]
     fn kind() -> SyntaxKind
@@ -600,6 +786,19 @@ impl AstNode for XRefTable {
     }
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
+}
+impl hash::Hash for XRefTable {
+    fn hash<H: hash::Hasher>(&self, state: &mut H) { self.syntax.hash(state); }
+}
+impl Eq for XRefTable {}
+impl PartialEq for XRefTable {
+    fn eq(&self, other: &Self) -> bool { self.syntax == other.syntax }
+}
+impl Clone for XRefTable {
+    fn clone(&self) -> Self { Self { syntax: self.syntax.clone() } }
+}
+impl fmt::Debug for XRefTable {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result { f.debug_struct("XRefTable").field("syntax", &self.syntax).finish() }
 }
 impl From<ArrayExpr> for Expr {
     #[inline]

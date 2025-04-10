@@ -1,0 +1,44 @@
+[package]
+name = "hir-expand"
+version = "0.0.0"
+repository.workspace = true
+description = "Macro expansion for rust-analyzer."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[lib]
+
+[dependencies]
+# Non-local deps
+cov-mark = "2.0.0"
+tracing.workspace = true
+either.workspace = true
+rustc-hash.workspace = true
+itertools.workspace = true
+smallvec.workspace = true
+triomphe.workspace = true
+query-group.workspace = true
+salsa.workspace = true
+
+# Local deps
+stdx.workspace = true
+intern.workspace = true
+base-db.workspace = true
+pdfc-syntax.workspace = true
+span.workspace = true
+pdfc-parser.workspace = true
+
+[dev-dependencies]
+# Non-local deps
+expect-test = "1.5.1"
+
+# Local deps
+
+[features]
+in-rust-tree = ["pdfc-syntax/in-rust-tree"]
+
+[lints]
+workspace = true

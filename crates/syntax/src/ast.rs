@@ -1,6 +1,8 @@
 //! Abstract Syntax Tree, layered on top of untyped `SyntaxNode`s
 
+mod expr_ext;
 mod generated;
+mod token_ext;
 
 use std::marker::PhantomData;
 
@@ -11,7 +13,10 @@ use crate::{
     SyntaxKind,
 };
 
-pub use self::generated::{nodes::*, tokens::*};
+pub use self::{
+    expr_ext::LiteralKind,
+    generated::{nodes::*, tokens::*},
+};
 
 /// The main trait to go from untyped `SyntaxNode` to a typed ast. The
 /// conversion itself has zero runtime cost: ast and syntax nodes have exactly
@@ -61,8 +66,9 @@ pub trait AstToken {
 
     fn syntax(&self) -> &SyntaxToken;
 
-    fn text(&self) -> &[u8] {
-        self.syntax().text()
+    fn text(&self) -> &str {
+        // TODO: check if error is needed
+        std::str::from_utf8(self.syntax().text()).expect("Invalid UTF-8 sequence")
     }
 }
 

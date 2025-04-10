@@ -1,0 +1,37 @@
+[package]
+name = "base-db"
+version = "0.0.0"
+description = "Basic database traits for pdf-analyzer. The concrete DB is defined by `ide` (aka `ra_ap_ide`)."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[lib]
+
+[dependencies]
+# Non-local deps
+la-arena.workspace = true
+dashmap.workspace = true
+salsa.workspace = true
+query-group.workspace = true
+rustc-hash.workspace = true
+triomphe.workspace = true
+semver.workspace = true
+tracing.workspace = true
+
+# Local deps
+pdfc-syntax.workspace = true
+vfs.workspace = true
+span.workspace = true
+intern.workspace = true
+
+[dev-dependencies]
+# Non-local deps
+
+# Local deps
+
+[lints]
+workspace = true

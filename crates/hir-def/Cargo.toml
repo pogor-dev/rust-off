@@ -1,0 +1,55 @@
+[package]
+name = "hir-def"
+version = "0.0.0"
+description = "RPC Api for the `proc-macro-srv` crate of rust-analyzer."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[lib]
+
+[dependencies]
+# Non-local deps
+arrayvec.workspace = true
+bitflags.workspace = true
+cov-mark = "2.0.0"
+drop_bomb = "0.1.5"
+either.workspace = true
+fst = { version = "0.4.7", default-features = false }
+indexmap.workspace = true
+itertools.workspace = true
+la-arena.workspace = true
+rustc-hash.workspace = true
+tracing.workspace = true
+smallvec.workspace = true
+triomphe.workspace = true
+rustc_apfloat = "0.2.2"
+text-size.workspace = true
+salsa.workspace = true
+query-group.workspace = true
+
+# Local deps
+stdx.workspace = true
+intern.workspace = true
+base-db.workspace = true
+pdfc-syntax.workspace = true
+hir-expand.workspace = true
+span.workspace = true
+thin-vec = "0.2.14"
+
+[dev-dependencies]
+# Non-local deps
+expect-test.workspace = true
+
+# Local deps
+test-utils.workspace = true
+test-fixture.workspace = true
+
+[features]
+in-rust-tree = ["hir-expand/in-rust-tree"]
+
+[lints]
+workspace = true

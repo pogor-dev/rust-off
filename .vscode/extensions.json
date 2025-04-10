@@ -10,5 +10,6 @@
         "amodio.tsl-problem-matcher",
         "ms-vscode.extension-test-runner",
         "EditorConfig.EditorConfig",
+        "aaron-bond.better-comments"
     ]
 }

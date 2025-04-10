@@ -24,3 +24,6 @@ m_lexer = "0.0.4"
 
 [features]
 serde1 = ["serde", "text-size/serde"]
+
+[lints]
+workspace = true

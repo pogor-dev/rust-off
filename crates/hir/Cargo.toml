@@ -1,0 +1,47 @@
+[package]
+name = "hir"
+version = "0.0.0"
+description = "A high-level object-oriented access to PDF code for pdf-analyzer."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[lib]
+
+[dependencies]
+# Non-local deps
+rustc-hash.workspace = true
+either.workspace = true
+arrayvec.workspace = true
+itertools.workspace = true
+smallvec.workspace = true
+tracing.workspace = true
+triomphe.workspace = true
+indexmap.workspace = true
+
+# Local deps
+base-db.workspace = true
+hir-def.workspace = true
+hir-expand.workspace = true
+hir-ty.workspace = true
+intern.workspace = true
+stdx.workspace = true
+pdfc-syntax.workspace = true
+span.workspace = true
+
+[dev-dependencies]
+# Non-local deps
+expect-test.workspace = true
+
+# Local deps
+test-utils.workspace = true
+test-fixture.workspace = true
+
+[features]
+in-rust-tree = ["hir-expand/in-rust-tree"]
+
+[lints]
+workspace = true

@@ -1,0 +1,26 @@
+[package]
+name = "test-fixture"
+version = "0.0.0"
+description = "Test fixtures for rust-analyzer."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Non-local deps
+
+# Local deps
+base-db.workspace = true
+span.workspace = true
+test-utils.workspace = true
+
+[dev-dependencies]
+# Non-local deps
+
+# Local deps
+
+[lints]
+workspace = true

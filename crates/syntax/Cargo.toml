@@ -1,6 +1,6 @@
 [package]
 name = "pdfc-syntax"
-version = "0.1.0"
+version = "0.0.0"
 
 authors.workspace = true
 edition.workspace = true
@@ -21,3 +21,6 @@ rowan.workspace = true
 
 [features]
 in-rust-tree = []
+
+[lints]
+workspace = true
