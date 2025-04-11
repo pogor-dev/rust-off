@@ -29,7 +29,6 @@ triomphe.workspace = true
 typed-arena = "2.0.2"
 indexmap.workspace = true
 rustc_apfloat = "0.2.2"
-query-group.workspace = true
 salsa.workspace = true
 
 # Local deps

@@ -43,7 +43,6 @@ dependencies = [
  "intern",
  "la-arena",
  "pdfc-syntax",
- "query-group-macro",
  "rustc-hash",
  "salsa",
  "semver",
@@ -333,7 +332,6 @@ dependencies = [
  "itertools",
  "la-arena",
  "pdfc-syntax",
- "query-group-macro",
  "rustc-hash",
  "rustc_apfloat",
  "salsa",
@@ -360,7 +358,6 @@ dependencies = [
  "itertools",
  "pdfc-parser",
  "pdfc-syntax",
- "query-group-macro",
  "rustc-hash",
  "salsa",
  "smallvec",
@@ -389,7 +386,6 @@ dependencies = [
  "la-arena",
  "oorandom",
  "pdfc-syntax",
- "query-group-macro",
  "rustc-hash",
  "rustc_apfloat",
  "salsa",
@@ -661,17 +657,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a31971752e70b8b2686d7e46ec17fb38dad4051d94024c88df49b667caea9c84"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "query-group-macro"
-version = "0.0.0"
-dependencies = [
- "expect-test",
- "proc-macro2",
- "quote",
- "salsa",
- "syn",
 ]
 
 [[package]]
