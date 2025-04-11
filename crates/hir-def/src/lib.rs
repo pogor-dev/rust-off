@@ -6,3 +6,6 @@
 //!
 //! Note that `hir_def` is a work in progress, so not all of the above is
 //! actually true.
+
+#[cfg(test)]
+mod test_db;
