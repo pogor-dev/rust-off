@@ -2,3 +2,8 @@
 //! information and various assists.
 
 pub mod db;
+
+#[cfg(test)]
+mod test_db;
+#[cfg(test)]
+mod tests;
