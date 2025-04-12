@@ -65,7 +65,7 @@ pub trait RootQueryDb: SourceDatabase + salsa::Database {
     fn parse_errors(&self, file_id: SalsaFileId) -> Option<&[SyntaxError]>;
 }
 
-#[salsa::tracked]
+#[salsa::tracked(lru = 128)]
 fn parse(db: &dyn RootQueryDb, file_id: SalsaFileId) -> Parse<ast::PdfDocument> {
     let _p = tracing::info_span!("parse", ?file_id).entered();
     let file_id = file_id.file_id(db);
