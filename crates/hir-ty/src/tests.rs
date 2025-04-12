@@ -25,17 +25,17 @@ fn setup_tracing() -> Option<tracing::subscriber::DefaultGuard> {
     Some(tracing::subscriber::set_default(subscriber))
 }
 
-fn check_infer(#[rust_analyzer::rust_fixture] ra_fixture: &[u8], expect: Expect) {
+fn check_infer(#[rust_analyzer::rust_fixture] ra_fixture: &str, expect: Expect) {
     let mut actual = infer(ra_fixture);
     actual.push('\n');
     expect.assert_eq(&actual);
 }
 
-fn infer(#[rust_analyzer::rust_fixture] ra_fixture: &[u8]) -> String {
+fn infer(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> String {
     infer_with_mismatches(ra_fixture, false)
 }
 
-fn infer_with_mismatches(content: &[u8], include_mismatches: bool) -> String {
+fn infer_with_mismatches(content: &str, include_mismatches: bool) -> String {
     let _tracing = setup_tracing();
     let (db, file_id) = TestDB::with_single_file(content);
     "".to_string()

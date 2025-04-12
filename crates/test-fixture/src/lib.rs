@@ -1,12 +1,12 @@
 use std::{mem, str::FromStr};
 
-use base_db::{FileChange, FileSet, SalsaFileId, SourceDatabase};
+use base_db::{FileChange, FileSet, SourceDatabase, SourceRoot};
 use span::{Edition, FileId};
 use test_utils::{CURSOR_MARKER, ESCAPED_CURSOR_MARKER, Fixture, FixtureWithProjectMeta, RangeOrOffset, extract_range_or_offset};
 
 pub trait WithFixture: Default + SourceDatabase + 'static {
     #[track_caller]
-    fn with_single_file(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> (Self, SalsaFileId) {
+    fn with_single_file(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> (Self, FileId) {
         let fixture = ChangeFixture::parse(ra_fixture);
         let mut db = Self::default();
         fixture.change.apply(&mut db);
@@ -15,7 +15,7 @@ pub trait WithFixture: Default + SourceDatabase + 'static {
     }
 }
 
-// impl<DB: SourceDatabase + Default + 'static> WithFixture for DB {}
+impl<DB: SourceDatabase + Default + 'static> WithFixture for DB {}
 
 pub struct ChangeFixture {
     pub file_position: Option<(FileId, RangeOrOffset)>,
@@ -28,7 +28,7 @@ const SOURCE_ROOT_PREFIX: &str = "/";
 impl ChangeFixture {
     pub fn parse(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> ChangeFixture {
         let FixtureWithProjectMeta { fixture } = FixtureWithProjectMeta::parse(ra_fixture);
-        let mut change = FileChange::new();
+        let mut change = FileChange::default();
         let files = Vec::new();
 
         let mut file_set = FileSet::default();
