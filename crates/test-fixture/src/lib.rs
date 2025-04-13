@@ -1,7 +1,7 @@
-use std::{mem, str::FromStr};
+use std::mem;
 
 use base_db::{FileChange, FileSet, SourceDatabase, SourceRoot};
-use span::{Edition, FileId};
+use span::FileId;
 use test_utils::{CURSOR_MARKER, ESCAPED_CURSOR_MARKER, Fixture, FixtureWithProjectMeta, RangeOrOffset, extract_range_or_offset};
 
 pub trait WithFixture: Default + SourceDatabase + 'static {
@@ -71,14 +71,10 @@ impl ChangeFixture {
 #[derive(Debug)]
 struct FileMeta {
     path: String,
-    edition: Edition,
 }
 
 impl FileMeta {
     fn from_fixture(f: Fixture) -> Self {
-        Self {
-            path: f.path,
-            edition: f.edition.map_or(Edition::CURRENT, |v| Edition::from_str(&v).unwrap()),
-        }
+        Self { path: f.path }
     }
 }

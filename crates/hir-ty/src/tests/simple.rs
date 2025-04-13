@@ -4,7 +4,7 @@ use expect_test::expect;
 #[test]
 fn infer_basics() {
     check_infer(
-        br#"
+        r#"
 fn test(a: u32, b: isize, c: !, d: &str) {
     a;
     b;

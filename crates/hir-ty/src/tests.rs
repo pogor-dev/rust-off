@@ -38,5 +38,17 @@ fn infer(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> String {
 fn infer_with_mismatches(content: &str, include_mismatches: bool) -> String {
     let _tracing = setup_tracing();
     let (db, file_id) = TestDB::with_single_file(content);
-    "".to_string()
+    let mut buf = String::new();
+
+    let mut defs: Vec<DefWithBodyId> = Vec::new();
+    visit_module(&db, &def_map, module.local_id, &mut |it| {
+        let def = match it {
+            ModuleDefId::IndirectObjectId(it) => it.into(),
+            _ => return,
+        };
+        defs.push((def, module.krate()))
+    });
+
+    buf.truncate(buf.trim_end().len());
+    buf
 }
