@@ -12,3 +12,8 @@ pub mod db;
 
 #[cfg(test)]
 mod test_db;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct ModuleId {
+    // block: Option<BlockId>,
+}
