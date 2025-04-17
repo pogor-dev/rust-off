@@ -6,10 +6,10 @@ mod input;
 use std::hash::BuildHasherDefault;
 
 use dashmap::{DashMap, mapref::entry::Entry};
-use pdfc_syntax::{Parse, SyntaxError, ast};
+use pdfc_syntax::{Parse, SyntaxError, SyntaxNode, ast};
 use rustc_hash::FxHasher;
 use salsa::{Durability, Setter};
-use span::Edition;
+use span::{AstIdMap, Edition};
 use triomphe::Arc;
 
 pub use vfs::{AnchoredPath, AnchoredPathBuf, FileId, VfsPath, file_set::FileSet};
@@ -18,6 +18,23 @@ pub use crate::{
     change::FileChange,
     input::{SourceRoot, SourceRootId},
 };
+
+#[macro_export]
+macro_rules! impl_intern_key {
+    ($id:ident, $loc:ident) => {
+        #[salsa::interned(no_debug, no_lifetime)]
+        pub struct $id {
+            pub loc: $loc,
+        }
+
+        // If we derive this salsa prints the values recursively, and this causes us to blow.
+        impl ::std::fmt::Debug for $id {
+            fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.debug_tuple(stringify!($id)).field(&format_args!("{:04x}", self.0.as_u32())).finish()
+            }
+        }
+    };
+}
 
 #[salsa::interned(no_lifetime)]
 pub struct SalsaFileId {
@@ -146,8 +163,15 @@ pub trait RootQueryDb: SourceDatabase + salsa::Database {
     /// Parses the file into the syntax tree.
     fn parse(&self, file_id: SalsaFileId) -> Parse<ast::PdfDocument>;
 
+    // TODO: this was from macro expand
+    // TODO: FileId vs SalsaFileId
+    fn parse_or_expand(&self, file_id: FileId) -> SyntaxNode;
+
     /// Returns the set of errors obtained from parsing the file including validation errors.
     fn parse_errors(&self, file_id: SalsaFileId) -> Option<&[SyntaxError]>;
+
+    // TODO: this was from macro expand
+    fn ast_id_map(&self, file_id: FileId) -> Arc<AstIdMap>;
 }
 
 #[salsa::tracked(lru = 128)]

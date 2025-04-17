@@ -3,7 +3,9 @@
 use std::{fmt, sync::Mutex};
 
 use base_db::{FileSourceRootInput, FileText, Files, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
+use hir_def::ModuleId;
 use salsa::Durability;
+use span::FileId;
 use triomphe::Arc;
 
 #[salsa::db]
@@ -12,6 +14,14 @@ pub struct TestDB {
     storage: salsa::Storage<Self>,
     files: Arc<Files>,
     events: Arc<Mutex<Option<Vec<salsa::Event>>>>,
+}
+
+impl TestDB {
+    pub(crate) fn module_for_file_opt(&self, file_id: impl Into<FileId>) -> Option<ModuleId> {}
+
+    pub(crate) fn module_for_file(&self, file_id: impl Into<FileId>) -> ModuleId {
+        self.module_for_file_opt(file_id.into()).unwrap()
+    }
 }
 
 #[salsa::db]
