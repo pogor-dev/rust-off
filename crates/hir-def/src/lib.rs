@@ -14,6 +14,7 @@ use pdfc_syntax::ast;
 
 pub mod builtin_type;
 pub mod db;
+pub mod nameres;
 
 #[cfg(test)]
 mod test_db;

@@ -1,23 +1,30 @@
 //! Defines database & queries for name resolution.
 
-use base_db::{RootQueryDb, SourceDatabase};
+use std::{default, sync::Mutex};
 
-use crate::{BlockId, BlockLoc};
+use base_db::{RootQueryDb, SourceDatabase};
+use span::FileId;
+use triomphe::Arc;
+
+use crate::{BlockId, BlockLoc, nameres::DefMap};
 
 #[salsa::db]
-pub trait InternDatabase: RootQueryDb + salsa::Database {
-    fn intern_block(&self, loc: BlockLoc) -> BlockId;
+pub trait InternDatabase: RootQueryDb + salsa::Database {}
+
+#[salsa::db]
+impl<DB> InternDatabase for DB where DB: RootQueryDb + salsa::Database {}
+
+#[salsa::db]
+pub trait DefDatabase: InternDatabase + SourceDatabase {
+    fn file_def_map(&self, file_id: FileId) -> Arc<DefMap>;
 }
 
-impl<Db> InternDatabase for Db
+#[salsa::db]
+impl<DB> DefDatabase for DB
 where
-    Db: RootQueryDb + salsa::Database,
+    DB: InternDatabase + SourceDatabase,
 {
-    fn intern_block(&self, loc: BlockLoc) -> BlockId {
-        let id = BlockId { loc };
-        self.intern_block(id)
+    fn file_def_map(&self, file_id: FileId) -> Arc<DefMap> {
+        Arc::new(DefMap {})
     }
 }
-
-#[salsa::db]
-pub trait DefDatabase: InternDatabase + SourceDatabase {}

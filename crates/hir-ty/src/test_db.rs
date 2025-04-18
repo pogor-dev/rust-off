@@ -3,7 +3,7 @@
 use std::{fmt, sync::Mutex};
 
 use base_db::{FileSourceRootInput, FileText, Files, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
-use hir_def::ModuleId;
+use hir_def::{ModuleId, db::DefDatabase};
 use salsa::Durability;
 use span::FileId;
 use triomphe::Arc;
@@ -14,25 +14,6 @@ pub struct TestDB {
     storage: salsa::Storage<Self>,
     files: Arc<Files>,
     events: Arc<Mutex<Option<Vec<salsa::Event>>>>,
-}
-
-impl TestDB {
-    pub(crate) fn module_for_file_opt(&self, file_id: impl Into<FileId>) -> Option<ModuleId> {}
-
-    pub(crate) fn module_for_file(&self, file_id: impl Into<FileId>) -> ModuleId {
-        self.module_for_file_opt(file_id.into()).unwrap()
-    }
-}
-
-#[salsa::db]
-impl salsa::Database for TestDB {
-    fn salsa_event(&self, event: &dyn std::ops::Fn() -> salsa::Event) {
-        let mut events = self.events.lock().unwrap();
-        if let Some(events) = &mut *events {
-            let event = event();
-            events.push(event);
-        }
-    }
 }
 
 impl fmt::Debug for TestDB {
@@ -74,5 +55,27 @@ impl SourceDatabase for TestDB {
     fn set_file_source_root_with_durability(&mut self, id: base_db::FileId, source_root_id: SourceRootId, durability: Durability) {
         let files = Arc::clone(&self.files);
         files.set_file_source_root_with_durability(self, id, source_root_id, durability);
+    }
+}
+
+#[salsa::db]
+impl salsa::Database for TestDB {
+    fn salsa_event(&self, event: &dyn std::ops::Fn() -> salsa::Event) {
+        let mut events = self.events.lock().unwrap();
+        if let Some(events) = &mut *events {
+            let event = event();
+            events.push(event);
+        }
+    }
+}
+
+impl TestDB {
+    pub(crate) fn module_for_file_opt(&self, file_id: impl Into<FileId>) -> Option<ModuleId> {
+        let file_id = file_id.into();
+        let crate_def_map = self.file_def_map(file_id)?;
+    }
+
+    pub(crate) fn module_for_file(&self, file_id: impl Into<FileId>) -> ModuleId {
+        self.module_for_file_opt(file_id.into()).unwrap()
     }
 }
