@@ -1,12 +1,10 @@
 //! Defines database & queries for name resolution.
 
-use std::{default, sync::Mutex};
-
 use base_db::{RootQueryDb, SourceDatabase};
 use span::FileId;
 use triomphe::Arc;
 
-use crate::{BlockId, BlockLoc, nameres::DefMap};
+use crate::nameres::DefMap;
 
 #[salsa::db]
 pub trait InternDatabase: RootQueryDb + salsa::Database {}
