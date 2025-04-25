@@ -6,12 +6,13 @@ mod input;
 use std::hash::BuildHasherDefault;
 
 use dashmap::{DashMap, mapref::entry::Entry};
-use pdfc_syntax::{Parse, SyntaxError, SyntaxNode, ast};
+use pdfc_syntax::{Parse, SyntaxNode, ast};
 use rustc_hash::FxHasher;
 use salsa::{Durability, Setter};
 use span::{AstIdMap, Edition};
 use triomphe::Arc;
 
+pub use salsa::{self};
 pub use vfs::{AnchoredPath, AnchoredPathBuf, FileId, VfsPath, file_set::FileSet};
 
 pub use crate::{
@@ -19,9 +20,39 @@ pub use crate::{
     input::{SourceRoot, SourceRootId},
 };
 
-#[salsa::interned(no_lifetime)]
-pub struct SalsaFileId {
-    pub file_id: vfs::FileId,
+#[salsa::interned(no_lifetime, constructor=from_span)]
+pub struct EditionedFileId {
+    pub editioned_file_id: span::EditionedFileId,
+}
+
+impl EditionedFileId {
+    // Salsa already uses the name `new`...
+    #[inline]
+    pub fn new(db: &dyn salsa::Database, file_id: FileId, edition: Edition) -> Self {
+        EditionedFileId::from_span(db, span::EditionedFileId::new(file_id, edition))
+    }
+
+    #[inline]
+    pub fn current_edition(db: &dyn salsa::Database, file_id: FileId) -> Self {
+        EditionedFileId::new(db, file_id, Edition::CURRENT)
+    }
+
+    #[inline]
+    pub fn file_id(self, db: &dyn salsa::Database) -> vfs::FileId {
+        let id = self.editioned_file_id(db);
+        id.file_id()
+    }
+
+    #[inline]
+    pub fn unpack(self, db: &dyn salsa::Database) -> (vfs::FileId, span::Edition) {
+        let id = self.editioned_file_id(db);
+        (id.file_id(), id.edition())
+    }
+
+    #[inline]
+    pub fn edition(self, db: &dyn SourceDatabase) -> Edition {
+        self.editioned_file_id(db).edition()
+    }
 }
 
 #[derive(Debug, Default)]
@@ -144,7 +175,7 @@ pub trait SourceDatabase: salsa::Database {
 #[salsa::db]
 pub trait RootQueryDb: SourceDatabase + salsa::Database {
     /// Parses the file into the syntax tree.
-    fn parse(&self, file_id: SalsaFileId) -> Parse<ast::PdfDocument>;
+    fn parse(&self, file_id: EditionedFileId) -> Parse<ast::PdfDocument>;
 
     // TODO: this was from macro expand
     // TODO: FileId vs SalsaFileId
@@ -159,9 +190,9 @@ impl<DB> RootQueryDb for DB
 where
     DB: SourceDatabase + salsa::Database,
 {
-    fn parse(&self, file_id: SalsaFileId) -> Parse<ast::PdfDocument> {
+    fn parse(&self, file_id: EditionedFileId) -> Parse<ast::PdfDocument> {
         let _p = tracing::info_span!("parse", ?file_id).entered();
-        let file_id = file_id.file_id(self);
+        let (file_id, edition) = file_id.unpack(self.as_dyn_database());
         let text = self.file_text(file_id).text(self);
         ast::PdfDocument::parse(&text, Edition::CURRENT) // TODO: we need to remove edition as is readed from pdf document
     }

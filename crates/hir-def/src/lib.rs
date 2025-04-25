@@ -13,6 +13,7 @@ use span::FileId;
 
 pub mod builtin_type;
 pub mod db;
+pub mod item_tree;
 pub mod nameres;
 
 #[cfg(test)]

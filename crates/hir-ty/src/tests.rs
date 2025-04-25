@@ -40,7 +40,7 @@ fn infer_with_mismatches(content: &str, include_mismatches: bool) -> String {
     let (db, file_id) = TestDB::with_single_file(content);
     let mut buf = String::new();
 
-    let module = db.document_for_file(file_id);
+    let module = db.document_for_file(file_id.editioned_file_id(&db));
 
     // let mut defs: Vec<DefWithBodyId> = Vec::new();
     // visit_module(&db, &def_map, module.local_id, &mut |it| {

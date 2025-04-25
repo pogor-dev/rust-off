@@ -47,10 +47,11 @@
 //! path and, upon success, we run macro expansion and "collect module" phase on
 //! the result.
 
-use span::FileId;
+use base_db::EditionedFileId;
 use triomphe::Arc;
+mod collector;
 
-use crate::db::DefDatabase;
+use crate::{db::DefDatabase, item_tree::TreeId};
 
 /// Contains the results of (early) name resolution.
 ///
@@ -65,7 +66,19 @@ use crate::db::DefDatabase;
 pub struct DefMap {}
 
 impl DefMap {
-    pub(crate) fn file_def_map_query(db: &dyn DefDatabase, file_id: FileId) -> Arc<DefMap> {
-        Arc::new(DefMap {})
+    pub fn empty(_file_id: span::EditionedFileId) -> Self {
+        DefMap {}
     }
+}
+
+#[salsa::tracked]
+pub fn pdf_document_def_map(db: &dyn DefDatabase, file_id: EditionedFileId) -> Arc<DefMap> {
+    let file_id = file_id.editioned_file_id(db);
+    let _p = tracing::info_span!("pdf_document_def_map", name = ?file_id).entered();
+
+    let def_map = DefMap::empty(file_id);
+
+    let def_map = collector::collect_defs(db, def_map, TreeId::new(file_id.into()));
+
+    Arc::new(def_map)
 }

@@ -1,14 +1,14 @@
 use std::mem;
 
-use base_db::{FileChange, FileSet, SourceDatabase, SourceRoot, VfsPath};
+use base_db::{EditionedFileId, FileChange, FileSet, SourceDatabase, SourceRoot, VfsPath, salsa};
 use span::FileId;
 use test_utils::{CURSOR_MARKER, ESCAPED_CURSOR_MARKER, Fixture, FixtureWithProjectMeta, RangeOrOffset, extract_range_or_offset};
 
 pub trait WithFixture: Default + SourceDatabase + 'static {
     #[track_caller]
-    fn with_single_file(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> (Self, FileId) {
-        let fixture = ChangeFixture::parse(ra_fixture);
+    fn with_single_file(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> (Self, EditionedFileId) {
         let mut db = Self::default();
+        let fixture = ChangeFixture::parse(&db, ra_fixture);
         fixture.source_change.apply(&mut db);
         assert_eq!(fixture.files.len(), 1, "Multiple file found in the fixture");
         (db, fixture.files[0])
@@ -19,14 +19,14 @@ impl<DB: SourceDatabase + Default + 'static> WithFixture for DB {}
 
 pub struct ChangeFixture {
     pub file_position: Option<(FileId, RangeOrOffset)>,
-    pub files: Vec<FileId>,
+    pub files: Vec<EditionedFileId>,
     pub source_change: FileChange,
 }
 
 const SOURCE_ROOT_PREFIX: &str = "/";
 
 impl ChangeFixture {
-    pub fn parse(#[rust_analyzer::rust_fixture] ra_fixture: &str) -> ChangeFixture {
+    pub fn parse(db: &dyn salsa::Database, #[rust_analyzer::rust_fixture] ra_fixture: &str) -> ChangeFixture {
         let FixtureWithProjectMeta { fixture } = FixtureWithProjectMeta::parse(ra_fixture);
         let mut source_change = FileChange::default();
         let mut files = Vec::new();
@@ -62,7 +62,7 @@ impl ChangeFixture {
             source_change.change_file(file_id, Some(text.as_bytes().to_vec()));
             let path = VfsPath::new_virtual_path(meta.path);
             file_set.insert(file_id, path);
-            files.push(file_id);
+            files.push(EditionedFileId::new(db, file_id, span::Edition::CURRENT));
             file_id = FileId::from_raw(file_id.index() + 1);
         }
 

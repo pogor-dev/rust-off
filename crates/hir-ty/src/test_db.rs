@@ -2,15 +2,15 @@
 
 use std::{fmt, sync::Mutex};
 
-use base_db::{FileSourceRootInput, FileText, Files, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
-use hir_def::{PdfDocumentId, db::DefDatabase};
+use base_db::{EditionedFileId, FileSourceRootInput, FileText, Files, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
+use hir_def::{PdfDocumentId, nameres::pdf_document_def_map};
 use salsa::Durability;
-use span::FileId;
+use span::{Edition, FileId};
 use triomphe::Arc;
 
 #[salsa::db]
 #[derive(Default, Clone)]
-pub struct TestDB {
+pub(crate) struct TestDB {
     storage: salsa::Storage<Self>,
     files: Arc<Files>,
     events: Arc<Mutex<Option<Vec<salsa::Event>>>>,
@@ -72,7 +72,8 @@ impl salsa::Database for TestDB {
 impl TestDB {
     pub(crate) fn document_for_file_opt(&self, file_id: impl Into<FileId>) -> Option<PdfDocumentId> {
         let file_id = file_id.into();
-        let def_map = self.pdf_document_def_map(file_id);
+        let def_map = pdf_document_def_map(self, EditionedFileId::new(self, file_id, Edition::CURRENT));
+        None
     }
 
     pub(crate) fn document_for_file(&self, file_id: impl Into<FileId>) -> PdfDocumentId {
