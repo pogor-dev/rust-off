@@ -17,12 +17,12 @@
 //!
 //! [`Parser`]: crate::parser::Parser
 
-#![cfg_attr(feature = "in-rust-tree", feature(pdfc_private))]
+#![cfg_attr(feature = "in-rust-tree", feature(private))]
 
 #[cfg(not(feature = "in-rust-tree"))]
-extern crate pdfc_lexer;
+extern crate lexer;
 #[cfg(feature = "in-rust-tree")]
-extern crate pdfc_lexer;
+extern crate lexer;
 
 mod event;
 mod grammar;

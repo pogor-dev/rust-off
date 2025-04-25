@@ -1,5 +1,5 @@
 [package]
-name = "pdfc-lexer"
+name = "lexer"
 description = "PDF content lexer."
 
 authors.workspace = true
@@ -14,7 +14,9 @@ repository.workspace = true
 workspace = true
 
 [dev-dependencies]
-csv = "1.3.1"
-serde = { version = "1.0.219", features = ["derive"] }
+# non-local crates
+serde.workspace = true
+expect-test.workspace = true
+
+# local crates
 stdx.workspace = true
-expect-test = "1.5.1"

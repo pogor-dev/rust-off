@@ -1,5 +1,5 @@
 [package]
-name = "pdfc-parser"
+name = "parser"
 version = "0.0.0"
 
 authors.workspace = true
@@ -9,17 +9,21 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# Add any dependencies required for your project here
-edition.workspace = true
-pdfc-lexer.workspace = true
-limit.workspace = true
+# non-local crates
 tracing = { workspace = true, optional = true }
-drop_bomb = "0.1.5"
+drop_bomb.workspace = true
+
+# local crates
+edition.workspace = true
+lexer.workspace = true
+limit.workspace = true
 
 [dev-dependencies]
-# Add any development dependencies here
+# non-local crates
+expect-test.workspace = true
+
+# local crates
 stdx.workspace = true
-expect-test = "1.5.1"
 
 [features]
 default = ["tracing"]

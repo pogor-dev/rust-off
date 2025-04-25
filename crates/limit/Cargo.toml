@@ -10,10 +10,14 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# Add any dependencies required for your project here
+# non-local crates
+
+# local crates
 
 [dev-dependencies]
-# Add any development dependencies here
+# non-local crates
+
+# local crates
 
 [features]
 tracking = []

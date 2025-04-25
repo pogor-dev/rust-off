@@ -33,9 +33,9 @@ mod expressions;
 mod items;
 
 use crate::{
-    parser::{CompletedMarker, Marker, Parser},
     SyntaxKind::*,
-    TokenSet, T,
+    T, TokenSet,
+    parser::{CompletedMarker, Marker, Parser},
 };
 
 pub(crate) mod entry {

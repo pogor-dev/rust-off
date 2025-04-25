@@ -55,10 +55,9 @@ impl<T> Arc<T> {
     pub(crate) unsafe fn from_raw(ptr: *const T) -> Self {
         // To find the corresponding pointer to the `ArcInner` we need
         // to subtract the offset of the `data` field from the pointer.
-        let ptr = unsafe { (ptr as *const u8).sub(offset_of!(ArcInner<T>, data)) };
-        Arc {
-            p: unsafe { ptr::NonNull::new_unchecked(ptr as *mut ArcInner<T>) },
-            phantom: PhantomData,
+        unsafe {
+            let ptr = (ptr as *const u8).sub(offset_of!(ArcInner<T>, data));
+            Arc { p: ptr::NonNull::new_unchecked(ptr as *mut ArcInner<T>), phantom: PhantomData }
         }
     }
 }
@@ -66,6 +65,7 @@ impl<T> Arc<T> {
 impl<T: ?Sized> Arc<T> {
     #[inline]
     fn inner(&self) -> &ArcInner<T> {
+        // SAFETY:
         // This unsafety is ok because while this arc is alive we're guaranteed
         // that the inner pointer is valid. Furthermore, we know that the
         // `ArcInner` structure itself is `Sync` because the inner data is
@@ -77,7 +77,9 @@ impl<T: ?Sized> Arc<T> {
     // Non-inlined part of `drop`. Just invokes the destructor.
     #[inline(never)]
     unsafe fn drop_slow(&mut self) {
-        let _ = unsafe { Box::from_raw(self.ptr()) };
+        unsafe {
+            let _ = Box::from_raw(self.ptr());
+        }
     }
 
     /// Test pointer equality between the two Arcs, i.e. they must be the _same_
@@ -198,10 +200,6 @@ impl<T: ?Sized + PartialEq> PartialEq for Arc<T> {
     fn eq(&self, other: &Arc<T>) -> bool {
         Self::ptr_eq(self, other) || *(*self) == *(*other)
     }
-
-    fn ne(&self, other: &Arc<T>) -> bool {
-        !Self::ptr_eq(self, other) && *(*self) != *(*other)
-    }
 }
 
 impl<T: ?Sized + PartialOrd> PartialOrd for Arc<T> {
@@ -315,10 +313,7 @@ impl<H, T> ThinArc<H, T> {
         };
 
         // Expose the transient Arc to the callback, which may clone it if it wants.
-        let result = f(&transient);
-
-        // Forward the result.
-        result
+        f(&transient)
     }
 
     /// Creates a `ThinArc` for a HeaderSlice using the given header struct and

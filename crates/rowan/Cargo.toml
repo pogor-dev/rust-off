@@ -10,17 +10,20 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-rustc-hash = "2.1.1"
-hashbrown = { version = "0.14.3", features = [
-    "inline-more",
-], default-features = false }
-text-size = "1.1.0"
-countme = "3.0.0"
+# local crates
 
-serde = { version = "1.0.219", optional = true, default-features = false }
+# non-local crates
+rustc-hash.workspace = true
+hashbrown.workspace = true
+text-size.workspace = true
+countme.workspace = true
+serde = {workspace = true, optional = true}
 
 [dev-dependencies]
-m_lexer = "0.0.4"
+# local crates
+
+# non-local crates
+m_lexer.workspace = true
 
 [features]
 serde1 = ["serde", "text-size/serde"]

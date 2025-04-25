@@ -6,11 +6,11 @@ use drop_bomb::DropBomb;
 use limit::Limit;
 
 use crate::{
+    Edition,
+    SyntaxKind::{self, EOF, ERROR, TOMBSTONE},
     event::Event,
     input::Input,
     token_set::TokenSet,
-    Edition,
-    SyntaxKind::{self, EOF, ERROR, TOMBSTONE},
 };
 
 /// `Parser` struct provides the low-level API for

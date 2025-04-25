@@ -191,11 +191,7 @@ pub fn tokenize(input: &[u8]) -> impl Iterator<Item = Token> + '_ {
     let mut cursor = Cursor::new(input);
     std::iter::from_fn(move || {
         let token = cursor.advance_token();
-        if token.kind != TokenKind::Eof {
-            Some(token)
-        } else {
-            None
-        }
+        if token.kind != TokenKind::Eof { Some(token) } else { None }
     })
 }
 

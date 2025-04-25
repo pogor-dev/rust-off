@@ -53,7 +53,7 @@ impl ToOwned for GreenTokenData {
 impl Borrow<GreenTokenData> for GreenToken {
     #[inline]
     fn borrow(&self) -> &GreenTokenData {
-        &*self
+        self
     }
 }
 
@@ -68,14 +68,14 @@ impl fmt::Debug for GreenTokenData {
 
 impl fmt::Debug for GreenToken {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let data: &GreenTokenData = &*self;
+        let data: &GreenTokenData = self;
         fmt::Debug::fmt(data, f)
     }
 }
 
 impl fmt::Display for GreenToken {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let data: &GreenTokenData = &*self;
+        let data: &GreenTokenData = self;
         fmt::Display::fmt(data, f)
     }
 }
@@ -117,17 +117,26 @@ impl GreenToken {
     #[inline]
     pub(crate) fn into_raw(this: GreenToken) -> ptr::NonNull<GreenTokenData> {
         let green = ManuallyDrop::new(this);
-        let green: &GreenTokenData = &*green;
-        ptr::NonNull::from(&*green)
+        let green: &GreenTokenData = &green;
+        ptr::NonNull::from(green)
     }
 
+    /// # Safety
+    ///
+    /// This function uses `unsafe` code to create an `Arc` from a raw pointer and then transmutes it into a `ThinArc`.
+    ///
+    /// - The raw pointer must be valid and correctly aligned for the type `ReprThin`.
+    /// - The lifetime of the raw pointer must outlive the lifetime of the `Arc` created from it.
+    /// - The transmute operation must be safe, meaning that the memory layout of `Arc<ReprThin>` must be compatible with `ThinArc<GreenTokenHead, u8>`.
+    ///
+    /// Failure to uphold these invariants can lead to undefined behavior.
     #[inline]
     pub(crate) unsafe fn from_raw(ptr: ptr::NonNull<GreenTokenData>) -> GreenToken {
-        unsafe {
+        let arc = unsafe {
             let arc = Arc::from_raw(&ptr.as_ref().data as *const ReprThin);
-            let arc = mem::transmute::<Arc<ReprThin>, ThinArc<GreenTokenHead, u8>>(arc);
-            GreenToken { ptr: arc }
-        }
+            mem::transmute::<Arc<ReprThin>, ThinArc<GreenTokenHead, u8>>(arc)
+        };
+        GreenToken { ptr: arc }
     }
 }
 

@@ -1,8 +1,8 @@
 use std::fmt;
 
 use crate::{
-    cursor::{SyntaxNode, SyntaxToken},
     TextRange, TextSize,
+    cursor::{SyntaxNode, SyntaxToken},
 };
 
 #[derive(Clone)]
@@ -272,7 +272,7 @@ mod private {
 
 #[cfg(test)]
 mod tests {
-    use crate::{green::SyntaxKind, GreenNodeBuilder};
+    use crate::{GreenNodeBuilder, green::SyntaxKind};
 
     use super::*;
 

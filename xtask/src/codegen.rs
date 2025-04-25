@@ -1,6 +1,6 @@
 use std::{fs, path::Path};
 
-use xshell::{cmd, Shell};
+use xshell::{Shell, cmd};
 
 use crate::{
     flags::{self, CodegenType},

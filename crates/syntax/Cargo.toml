@@ -1,5 +1,5 @@
 [package]
-name = "pdfc-syntax"
+name = "syntax"
 version = "0.1.0"
 
 authors.workspace = true
@@ -9,15 +9,19 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# Add any dependencies required for your project here
-pdfc-lexer.workspace = true
+# local crates
+lexer.workspace = true
 tracing.workspace = true
-pdfc-parser.workspace = true
-either.workspace = true
+parser.workspace = true
 rowan.workspace = true
 
+# non-local crates
+either.workspace = true
+
 [dev-dependencies]
-# Add any development dependencies here
+# local crates
+
+# non-local crates
 
 [features]
 in-rust-tree = []

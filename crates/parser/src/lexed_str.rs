@@ -34,7 +34,7 @@ impl<'a> LexedStr<'a> {
     pub fn new(edition: Edition, text: &'a [u8]) -> LexedStr<'a> {
         let _p = tracing::info_span!("LexedStr::new").entered();
         let mut conv = Converter::new(edition, text);
-        let mut tokenized = pdfc_lexer::tokenize(text);
+        let mut tokenized = lexer::tokenize(text);
 
         while let Some(token) = tokenized.next() {
             let token_text = &text[conv.offset..][..token.len as usize];
@@ -49,7 +49,7 @@ impl<'a> LexedStr<'a> {
             return None;
         }
 
-        let token = pdfc_lexer::tokenize(text).next()?;
+        let token = lexer::tokenize(text).next()?;
         if token.len as usize != text.len() {
             return None;
         }
@@ -159,7 +159,7 @@ impl<'a> Converter<'a> {
         }
     }
 
-    fn extend_token(&mut self, kind: &pdfc_lexer::TokenKind, token_text: &[u8]) {
+    fn extend_token(&mut self, kind: &lexer::TokenKind, token_text: &[u8]) {
         // A note on an intended tradeoff:
         // We drop some useful information here, namely the exact text of the token.
         // Storing that info in `SyntaxKind` is not possible due to its layout requirements of
@@ -168,11 +168,11 @@ impl<'a> Converter<'a> {
 
         let syntax_kind = {
             match kind {
-                pdfc_lexer::TokenKind::Unknown => ERROR,
-                pdfc_lexer::TokenKind::Eol => NEWLINE,
-                pdfc_lexer::TokenKind::Whitespace => WHITESPACE,
-                pdfc_lexer::TokenKind::Comment => COMMENT,
-                pdfc_lexer::TokenKind::Ident => {
+                lexer::TokenKind::Unknown => ERROR,
+                lexer::TokenKind::Eol => NEWLINE,
+                lexer::TokenKind::Whitespace => WHITESPACE,
+                lexer::TokenKind::Comment => COMMENT,
+                lexer::TokenKind::Ident => {
                     let token_text_str: String = token_text
                         .iter()
                         .map(|&c| if c.is_ascii() { (c as char).to_string() } else { format!("\\x{:02x}", c) })
@@ -180,16 +180,16 @@ impl<'a> Converter<'a> {
 
                     SyntaxKind::from_keyword(token_text_str.as_str(), self.edition).unwrap_or(ERROR)
                 }
-                pdfc_lexer::TokenKind::Literal { kind, .. } => {
+                lexer::TokenKind::Literal { kind, .. } => {
                     self.extend_literal(token_text.len(), kind);
                     return;
                 }
-                pdfc_lexer::TokenKind::OpenBracket => T!['['],
-                pdfc_lexer::TokenKind::CloseBracket => T![']'],
-                pdfc_lexer::TokenKind::OpenDict => T![<<],
-                pdfc_lexer::TokenKind::CloseDict => T![>>],
-                pdfc_lexer::TokenKind::RawStreamData => RAW_STREAM,
-                pdfc_lexer::TokenKind::Eof => EOF,
+                lexer::TokenKind::OpenBracket => T!['['],
+                lexer::TokenKind::CloseBracket => T![']'],
+                lexer::TokenKind::OpenDict => T![<<],
+                lexer::TokenKind::CloseDict => T![>>],
+                lexer::TokenKind::RawStreamData => RAW_STREAM,
+                lexer::TokenKind::Eof => EOF,
             }
         };
 
@@ -197,15 +197,15 @@ impl<'a> Converter<'a> {
         self.push(syntax_kind, token_text.len(), err);
     }
 
-    fn extend_literal(&mut self, len: usize, kind: &pdfc_lexer::LiteralKind) {
+    fn extend_literal(&mut self, len: usize, kind: &lexer::LiteralKind) {
         let err = "";
 
         let syntax_kind = match *kind {
-            pdfc_lexer::LiteralKind::Int => INT_NUMBER,
-            pdfc_lexer::LiteralKind::Real => REAL_NUMBER,
-            pdfc_lexer::LiteralKind::Name => NAME,
-            pdfc_lexer::LiteralKind::LiteralString => LITERAL_STRING,
-            pdfc_lexer::LiteralKind::HexString => HEX_STRING,
+            lexer::LiteralKind::Int => INT_NUMBER,
+            lexer::LiteralKind::Real => REAL_NUMBER,
+            lexer::LiteralKind::Name => NAME,
+            lexer::LiteralKind::LiteralString => LITERAL_STRING,
+            lexer::LiteralKind::HexString => HEX_STRING,
         };
 
         let err = if err.is_empty() { None } else { Some(err) };

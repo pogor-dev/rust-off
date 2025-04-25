@@ -256,11 +256,7 @@ macro_rules! ast_node {
         impl $ast {
             #[allow(unused)]
             fn cast(node: SyntaxNode) -> Option<Self> {
-                if node.kind() == $kind {
-                    Some(Self(node))
-                } else {
-                    None
-                }
+                if node.kind() == $kind { Some(Self(node)) } else { None }
             }
         }
     };

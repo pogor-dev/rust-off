@@ -20,12 +20,12 @@
 //! [Rust]: <https://github.com/rust-lang/rfcs/pull/2256>
 //! [Swift]: <https://github.com/apple/swift/blob/13d593df6f359d0cb2fc81cfaac273297c539455/lib/Syntax/README.md>
 
-#![cfg_attr(feature = "in-rust-tree", feature(pdfc_private))]
+#![cfg_attr(feature = "in-rust-tree", feature(private))]
 
 #[cfg(not(feature = "in-rust-tree"))]
-extern crate pdfc_lexer;
+extern crate lexer;
 #[cfg(feature = "in-rust-tree")]
-extern crate pdfc_lexer;
+extern crate lexer;
 
 mod parsing;
 mod syntax_error;
@@ -40,7 +40,7 @@ pub use crate::{
     syntax_node::{SyntaxNode, SyntaxNodeChildren, SyntaxToken, SyntaxTreeBuilder},
 };
 
-pub use pdfc_parser::{Edition, SyntaxKind, T};
+pub use parser::{Edition, SyntaxKind, T};
 pub use rowan::{GreenNode, TextRange, TextSize};
 use std::{marker::PhantomData, sync::Arc};
 
