@@ -95,11 +95,11 @@ use std::{
 use countme::Count;
 
 use crate::{
+    Direction, GreenNode, GreenToken, NodeOrToken, SyntaxText, TextRange, TextSize, TokenAtOffset,
+    WalkEvent,
     green::{GreenChild, GreenElementRef, GreenNodeData, GreenTokenData, SyntaxKind},
     sll,
     utility_types::Delta,
-    Direction, GreenNode, GreenToken, NodeOrToken, SyntaxText, TextRange, TextSize, TokenAtOffset,
-    WalkEvent,
 };
 
 enum Green {
@@ -189,31 +189,33 @@ impl Drop for SyntaxToken {
 #[inline(never)]
 unsafe fn free(mut data: ptr::NonNull<NodeData>) {
     loop {
-        debug_assert_eq!(data.as_ref().rc.get(), 0);
-        debug_assert!(data.as_ref().first.get().is_null());
-        let node = Box::from_raw(data.as_ptr());
-        match node.parent.take() {
-            Some(parent) => {
-                debug_assert!(parent.as_ref().rc.get() > 0);
-                if node.mutable {
-                    sll::unlink(&parent.as_ref().first, &*node)
+        unsafe {
+            debug_assert_eq!(data.as_ref().rc.get(), 0);
+            debug_assert!(data.as_ref().first.get().is_null());
+            let node = Box::from_raw(data.as_ptr());
+            match node.parent.take() {
+                Some(parent) => {
+                    debug_assert!(parent.as_ref().rc.get() > 0);
+                    if node.mutable {
+                        sll::unlink(&parent.as_ref().first, &*node)
+                    }
+                    if parent.as_ref().dec_rc() {
+                        data = parent;
+                    } else {
+                        break;
+                    }
                 }
-                if parent.as_ref().dec_rc() {
-                    data = parent;
-                } else {
+                None => {
+                    match &node.green {
+                        Green::Node { ptr } => {
+                            let _ = GreenNode::from_raw(ptr.get());
+                        }
+                        Green::Token { ptr } => {
+                            let _ = GreenToken::from_raw(*ptr);
+                        }
+                    }
                     break;
                 }
-            }
-            None => {
-                match &node.green {
-                    Green::Node { ptr } => {
-                        let _ = GreenNode::from_raw(ptr.get());
-                    }
-                    Green::Token { ptr } => {
-                        let _ = GreenToken::from_raw(*ptr);
-                    }
-                }
-                break;
             }
         }
     }
@@ -342,11 +344,7 @@ impl NodeData {
 
     #[inline]
     fn offset(&self) -> TextSize {
-        if self.mutable {
-            self.offset_mut()
-        } else {
-            self.offset
-        }
+        if self.mutable { self.offset_mut() } else { self.offset }
     }
 
     #[cold]
@@ -541,7 +539,7 @@ impl NodeData {
                 },
                 None => {
                     mem::forget(new_green);
-                    let _ = GreenNode::from_raw(old_green);
+                    let _ = unsafe { GreenNode::from_raw(old_green) };
                     break;
                 }
             }

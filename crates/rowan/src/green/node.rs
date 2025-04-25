@@ -9,10 +9,10 @@ use std::{
 use countme::Count;
 
 use crate::{
+    GreenToken, NodeOrToken, TextRange, TextSize,
     arc::{Arc, HeaderSlice, ThinArc},
     green::{GreenElement, GreenElementRef, SyntaxKind},
     utility_types::static_assert,
-    GreenToken, NodeOrToken, TextRange, TextSize,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -159,11 +159,7 @@ impl GreenNodeData {
     pub fn replace_child(&self, index: usize, new_child: GreenElement) -> GreenNode {
         let mut replacement = Some(new_child);
         let children = self.children().enumerate().map(|(i, child)| {
-            if i == index {
-                replacement.take().unwrap()
-            } else {
-                child.to_owned()
-            }
+            if i == index { replacement.take().unwrap() } else { child.to_owned() }
         });
         GreenNode::new(self.kind(), children)
     }
@@ -244,9 +240,11 @@ impl GreenNode {
 
     #[inline]
     pub(crate) unsafe fn from_raw(ptr: ptr::NonNull<GreenNodeData>) -> GreenNode {
-        let arc = Arc::from_raw(&ptr.as_ref().data as *const ReprThin);
-        let arc = mem::transmute::<Arc<ReprThin>, ThinArc<GreenNodeHead, GreenChild>>(arc);
-        GreenNode { ptr: arc }
+        unsafe {
+            let arc = Arc::from_raw(&ptr.as_ref().data as *const ReprThin);
+            let arc = mem::transmute::<Arc<ReprThin>, ThinArc<GreenNodeHead, GreenChild>>(arc);
+            GreenNode { ptr: arc }
+        }
     }
 }
 

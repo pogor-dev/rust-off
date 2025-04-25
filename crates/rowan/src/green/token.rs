@@ -8,9 +8,9 @@ use std::{
 use countme::Count;
 
 use crate::{
+    TextSize,
     arc::{Arc, HeaderSlice, ThinArc},
     green::SyntaxKind,
-    TextSize,
 };
 
 #[derive(PartialEq, Eq, Hash)]
@@ -123,9 +123,11 @@ impl GreenToken {
 
     #[inline]
     pub(crate) unsafe fn from_raw(ptr: ptr::NonNull<GreenTokenData>) -> GreenToken {
-        let arc = Arc::from_raw(&ptr.as_ref().data as *const ReprThin);
-        let arc = mem::transmute::<Arc<ReprThin>, ThinArc<GreenTokenHead, u8>>(arc);
-        GreenToken { ptr: arc }
+        unsafe {
+            let arc = Arc::from_raw(&ptr.as_ref().data as *const ReprThin);
+            let arc = mem::transmute::<Arc<ReprThin>, ThinArc<GreenTokenHead, u8>>(arc);
+            GreenToken { ptr: arc }
+        }
     }
 }
 
