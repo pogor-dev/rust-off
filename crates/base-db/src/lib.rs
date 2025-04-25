@@ -6,10 +6,10 @@ mod input;
 use std::hash::BuildHasherDefault;
 
 use dashmap::{DashMap, mapref::entry::Entry};
-use pdfc_syntax::{Parse, SyntaxError, SyntaxNode, ast};
+use pdfc_syntax::{Parse, ast};
 use rustc_hash::FxHasher;
 use salsa::{Durability, Setter};
-use span::{AstIdMap, Edition};
+use span::Edition;
 use triomphe::Arc;
 
 pub use vfs::{AnchoredPath, AnchoredPathBuf, FileId, VfsPath, file_set::FileSet};
@@ -145,31 +145,17 @@ pub trait SourceDatabase: salsa::Database {
 pub trait RootQueryDb: SourceDatabase + salsa::Database {
     /// Parses the file into the syntax tree.
     fn parse(&self, file_id: SalsaFileId) -> Parse<ast::PdfDocument>;
-
-    // TODO: this was from macro expand
-    // TODO: FileId vs SalsaFileId
-    fn parse_or_expand(&self, file_id: FileId) -> SyntaxNode;
-
-    /// Returns the set of errors obtained from parsing the file including validation errors.
-    fn parse_errors(&self, file_id: SalsaFileId) -> Option<&[SyntaxError]>;
-
-    // TODO: this was from macro expand
-    fn ast_id_map(&self, file_id: FileId) -> Arc<AstIdMap>;
 }
 
-#[salsa::tracked(lru = 128)]
-fn parse(db: &dyn RootQueryDb, file_id: SalsaFileId) -> Parse<ast::PdfDocument> {
-    let _p = tracing::info_span!("parse", ?file_id).entered();
-    let file_id = file_id.file_id(db);
-    let text = db.file_text(file_id).text(db);
-    ast::PdfDocument::parse(&text, Edition::CURRENT) // TODO: we need to remove edition as is readed from pdf document
-}
-
-#[salsa::tracked(return_ref)]
-fn parse_errors(db: &dyn RootQueryDb, file_id: SalsaFileId) -> Option<Box<[SyntaxError]>> {
-    let errors = db.parse(file_id).errors();
-    match &*errors {
-        [] => None,
-        [..] => Some(errors.into()),
+#[salsa::db]
+impl<DB> RootQueryDb for DB
+where
+    DB: SourceDatabase + salsa::Database,
+{
+    fn parse(&self, file_id: SalsaFileId) -> Parse<ast::PdfDocument> {
+        let _p = tracing::info_span!("parse", ?file_id).entered();
+        let file_id = file_id.file_id(self);
+        let text = self.file_text(file_id).text(self);
+        ast::PdfDocument::parse(&text, Edition::CURRENT) // TODO: we need to remove edition as is readed from pdf document
     }
 }

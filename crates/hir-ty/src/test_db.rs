@@ -2,8 +2,8 @@
 
 use std::{fmt, sync::Mutex};
 
-use base_db::{FileSourceRootInput, FileText, Files, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
-use hir_def::{PdfDocumentId, db::DefDatabase};
+use base_db::{FileSourceRootInput, FileText, Files, RootQueryDb, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
+use hir_def::{PdfDocumentId, db::DefDatabase, db::InternDatabase};
 use salsa::Durability;
 use span::FileId;
 use triomphe::Arc;
@@ -72,7 +72,7 @@ impl salsa::Database for TestDB {
 impl TestDB {
     pub(crate) fn document_for_file_opt(&self, file_id: impl Into<FileId>) -> Option<PdfDocumentId> {
         let file_id = file_id.into();
-        let crate_def_map = self.file_def_map(file_id)?;
+        let def_map = self.pdf_document_def_map(file_id);
     }
 
     pub(crate) fn document_for_file(&self, file_id: impl Into<FileId>) -> PdfDocumentId {
