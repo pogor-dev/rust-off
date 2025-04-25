@@ -2,8 +2,8 @@
 
 use std::{fmt, sync::Mutex};
 
-use base_db::{FileSourceRootInput, FileText, Files, RootQueryDb, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
-use hir_def::{PdfDocumentId, db::DefDatabase, db::InternDatabase};
+use base_db::{FileSourceRootInput, FileText, Files, SourceDatabase, SourceRoot, SourceRootId, SourceRootInput};
+use hir_def::{PdfDocumentId, db::DefDatabase};
 use salsa::Durability;
 use span::FileId;
 use triomphe::Arc;

@@ -6,10 +6,10 @@ mod input;
 use std::hash::BuildHasherDefault;
 
 use dashmap::{DashMap, mapref::entry::Entry};
-use pdfc_syntax::{Parse, ast};
+use pdfc_syntax::{Parse, SyntaxError, SyntaxNode, ast};
 use rustc_hash::FxHasher;
 use salsa::{Durability, Setter};
-use span::Edition;
+use span::{AstIdMap, Edition};
 use triomphe::Arc;
 
 pub use vfs::{AnchoredPath, AnchoredPathBuf, FileId, VfsPath, file_set::FileSet};
@@ -145,6 +145,13 @@ pub trait SourceDatabase: salsa::Database {
 pub trait RootQueryDb: SourceDatabase + salsa::Database {
     /// Parses the file into the syntax tree.
     fn parse(&self, file_id: SalsaFileId) -> Parse<ast::PdfDocument>;
+
+    // TODO: this was from macro expand
+    // TODO: FileId vs SalsaFileId
+    fn parse_or_expand(&self, file_id: FileId) -> SyntaxNode;
+
+    // TODO: this was from macro expand
+    fn ast_id_map(&self, file_id: FileId) -> Arc<AstIdMap>;
 }
 
 #[salsa::db]
@@ -157,5 +164,15 @@ where
         let file_id = file_id.file_id(self);
         let text = self.file_text(file_id).text(self);
         ast::PdfDocument::parse(&text, Edition::CURRENT) // TODO: we need to remove edition as is readed from pdf document
+    }
+
+    fn parse_or_expand(&self, file_id: FileId) -> SyntaxNode {
+        // Implement the logic for parse_or_expand here
+        unimplemented!("parse_or_expand is not yet implemented")
+    }
+
+    fn ast_id_map(&self, file_id: FileId) -> Arc<AstIdMap> {
+        // Implement the logic for ast_id_map here
+        unimplemented!("ast_id_map is not yet implemented")
     }
 }

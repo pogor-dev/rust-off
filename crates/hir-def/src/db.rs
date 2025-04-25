@@ -1,5 +1,7 @@
 //! Defines database & queries for name resolution.
 
+use std::sync::Mutex;
+
 use base_db::{RootQueryDb, SourceDatabase};
 use span::FileId;
 use triomphe::Arc;
@@ -7,13 +9,14 @@ use triomphe::Arc;
 use crate::nameres::DefMap;
 
 #[salsa::db]
+#[derive(Clone)]
 pub(crate) struct InternDatabaseStorage {
     storage: salsa::Storage<Self>,
     events: Arc<Mutex<Option<Vec<salsa::Event>>>>,
 }
 
 #[salsa::db]
-impl salsa::Database for TestDB {
+impl salsa::Database for InternDatabaseStorage {
     fn salsa_event(&self, event: &dyn std::ops::Fn() -> salsa::Event) {
         let mut events = self.events.lock().unwrap();
         if let Some(events) = &mut *events {
