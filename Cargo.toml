@@ -36,6 +36,7 @@ limit = { path = "./crates/limit", version = "0.0.0" }
 parser = { path = "./crates/parser", version = "0.0.0" }
 paths = { path = "./crates/paths", version = "0.0.0" }
 rowan = { path = "./crates/rowan", version = "0.16.1" }
+semantic = { path = "./crates/semantic", version = "0.0.0" }
 stdx = { path = "./crates/stdx", version = "0.0.0" }
 vfs = { path = "./crates/vfs", version = "0.0.0" }
 
