@@ -49,7 +49,7 @@ pub enum SyntaxKind {
     INDIRECT_OBJECT_ID,
     INDIRECT_REFERENCE_EXPR,
     LITERAL,
-    PDF_DOCUMENT,
+    SOURCE_FILE,
     STREAM_EXPR,
     TRAILER,
     X_REF_ENTRY,
@@ -84,7 +84,7 @@ impl SyntaxKind {
             | INDIRECT_OBJECT_ID
             | INDIRECT_REFERENCE_EXPR
             | LITERAL
-            | PDF_DOCUMENT
+            | SOURCE_FILE
             | STREAM_EXPR
             | TRAILER
             | X_REF_ENTRY

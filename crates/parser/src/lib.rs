@@ -60,7 +60,7 @@ pub use crate::{
 ///   * the result is a valid tree (there's one root node)
 #[derive(Debug)]
 pub enum TopEntryPoint {
-    PdfDocument,
+    SourceFile,
     // StreamStmts,
     // Pattern,
     // Type,
@@ -71,7 +71,7 @@ impl TopEntryPoint {
     pub fn parse(&self, input: &Input, edition: Edition) -> Output {
         let _p = tracing::info_span!("TopEntryPoint::parse", ?self).entered();
         let entry_point: fn(&'_ mut parser::Parser<'_>) = match self {
-            TopEntryPoint::PdfDocument => grammar::entry::top::pdf_document,
+            TopEntryPoint::SourceFile => grammar::entry::top::SOURCE_FILE,
             // TopEntryPoint::StreamStmts => grammar::entry::top::macro_stmts,
             // TopEntryPoint::Pattern => grammar::entry::top::pattern,
             // TopEntryPoint::Type => grammar::entry::top::type_,

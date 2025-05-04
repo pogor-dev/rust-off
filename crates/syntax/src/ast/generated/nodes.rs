@@ -119,10 +119,10 @@ pub struct Literal {
 impl Literal {}
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct PdfDocument {
+pub struct SourceFile {
     pub(crate) syntax: SyntaxNode,
 }
-impl PdfDocument {
+impl SourceFile {
     #[inline]
     pub fn body(&self) -> Option<Body> { support::child(&self.syntax) }
     #[inline]
@@ -433,16 +433,16 @@ impl AstNode for Literal {
     #[inline]
     fn syntax(&self) -> &SyntaxNode { &self.syntax }
 }
-impl AstNode for PdfDocument {
+impl AstNode for SourceFile {
     #[inline]
     fn kind() -> SyntaxKind
     where
         Self: Sized,
     {
-        PDF_DOCUMENT
+        SOURCE_FILE
     }
     #[inline]
-    fn can_cast(kind: SyntaxKind) -> bool { kind == PDF_DOCUMENT }
+    fn can_cast(kind: SyntaxKind) -> bool { kind == SOURCE_FILE }
     #[inline]
     fn cast(syntax: SyntaxNode) -> Option<Self> {
         if Self::can_cast(syntax.kind()) {
@@ -674,7 +674,7 @@ impl std::fmt::Display for IndirectReferenceExpr {
 impl std::fmt::Display for Literal {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
-impl std::fmt::Display for PdfDocument {
+impl std::fmt::Display for SourceFile {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for StreamExpr {

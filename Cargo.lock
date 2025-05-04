@@ -555,6 +555,7 @@ dependencies = [
  "salsa",
  "salsa-macros",
  "syntax",
+ "tracing",
  "triomphe",
  "vfs",
 ]

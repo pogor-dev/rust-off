@@ -1,4 +1,4 @@
-PDF_DOCUMENT
+SOURCE_FILE
   COMMENT "% This is a comment"
   NEWLINE "\n"
   COMMENT "% This is a comment\\n"

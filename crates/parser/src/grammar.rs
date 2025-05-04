@@ -44,10 +44,10 @@ pub(crate) mod entry {
     pub(crate) mod top {
         use super::*;
 
-        pub(crate) fn pdf_document(p: &mut Parser<'_>) {
+        pub(crate) fn SOURCE_FILE(p: &mut Parser<'_>) {
             let m = p.start();
             items::pdf_body(p);
-            m.complete(p, PDF_DOCUMENT);
+            m.complete(p, SOURCE_FILE);
         }
 
         pub(crate) fn expr(p: &mut Parser<'_>) {
