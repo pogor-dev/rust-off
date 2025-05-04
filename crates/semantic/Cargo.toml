@@ -11,8 +11,15 @@ repository.workspace = true
 
 [dependencies]
 # non-local crates
+dashmap.workspace = true
+rustc-hash.workspace = true
+salsa.workspace = true
+salsa-macros.workspace = true
+triomphe.workspace = true
 
 # local crates
+syntax.workspace = true
+vfs.workspace = true
 
 [dev-dependencies]
 # non-local crates
