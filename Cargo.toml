@@ -35,13 +35,15 @@ base-db = { path = "./crates/base-db", version = "0.0.0" }
 hir = { path = "./crates/hir", version = "0.0.0" }
 hir-def = { path = "./crates/hir-def", version = "0.0.0" }
 hir-ty = { path = "./crates/hir-ty", version = "0.0.0" }
+intern = { path = "./crates/intern", version = "0.0.0" }
 lexer = { path = "./crates/lexer", version = "0.0.0" }
 limit = { path = "./crates/limit", version = "0.0.0" }
 parser = { path = "./crates/parser", version = "0.0.0" }
 paths = { path = "./crates/paths", version = "0.0.0" }
 rowan = { path = "./crates/rowan", version = "0.16.1" }
-syntax = { path = "./crates/syntax", version = "0.0.0" }
+span = { path = "./crates/span", version = "0.0.0" }
 stdx = { path = "./crates/stdx", version = "0.0.0" }
+syntax = { path = "./crates/syntax", version = "0.0.0" }
 vfs = { path = "./crates/vfs", version = "0.0.0" }
 
 # non-local crates
@@ -56,12 +58,18 @@ expect-test = "1.5.1"
 hashbrown = { version = "0.15.3", features = ["inline-more", "raw-entry"], default-features = false }
 indexmap = { version = "2.8.0", features = ["serde"] }
 itertools = "0.14.0"
+la-arena = { version = "0.3.1" }
 m_lexer = "0.0.4"
 proc-macro2 = "1.0.95"
 rustc-hash = "2.1.1"
 salsa = { version = "0.21.1", default-features = false, features = ["rayon","salsa_unstable"] }
 salsa-macros = "0.21.1"
 serde = { version = "1.0.219", features = ["derive"] }
+smallvec = { version = "1.15.0", features = [
+  "const_new",
+  "union",
+  "const_generics",
+] }
 triomphe = { version = "0.1.14", default-features = false, features = ["std"] }
 quote = "1.0.40"
 text-size = "1.1.1"

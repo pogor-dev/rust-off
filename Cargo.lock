@@ -223,6 +223,11 @@ version = "0.0.0"
 [[package]]
 name = "hir-def"
 version = "0.0.0"
+dependencies = [
+ "la-arena",
+ "smallvec",
+ "syntax",
+]
 
 [[package]]
 name = "hir-ty"
@@ -240,6 +245,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "intern"
+version = "0.0.0"
+
+[[package]]
 name = "itertools"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -247,6 +256,12 @@ checksum = "2b192c782037fadd9cfa75548310488aabdbf3d2da73885b31bd0abd03351285"
 dependencies = [
  "either",
 ]
+
+[[package]]
+name = "la-arena"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3752f229dcc5a481d60f385fa479ff46818033d881d2d801aa27dffcfb5e8306"
 
 [[package]]
 name = "lazy_static"
@@ -606,6 +621,10 @@ name = "smallvec"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8917285742e9f3e1683f0a9c4e6b57960b7314d0b08d30d1ecd426713ee2eee9"
+
+[[package]]
+name = "span"
+version = "0.0.0"
 
 [[package]]
 name = "stdx"
