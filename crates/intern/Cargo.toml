@@ -11,6 +11,10 @@ repository.workspace = true
 
 [dependencies]
 # non-local crates
+dashmap.workspace = true
+hashbrown.workspace = true
+rustc-hash.workspace = true
+triomphe.workspace = true
 
 # local crates
 
