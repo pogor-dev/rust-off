@@ -44,7 +44,7 @@ pub(crate) mod entry {
     pub(crate) mod top {
         use super::*;
 
-        pub(crate) fn SOURCE_FILE(p: &mut Parser<'_>) {
+        pub(crate) fn source_file(p: &mut Parser<'_>) {
             let m = p.start();
             items::pdf_body(p);
             m.complete(p, SOURCE_FILE);

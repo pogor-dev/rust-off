@@ -1,6 +1,6 @@
 [package]
-name = "semantic"
-description = "Semantic analysis for pdf-analyzer."
+name = "base-db"
+description = "Base database for the PDF analyzer"
 version = "0.0.0"
 
 authors.workspace = true
@@ -15,6 +15,7 @@ dashmap.workspace = true
 rustc-hash.workspace = true
 salsa.workspace = true
 salsa-macros.workspace = true
+tracing.workspace = true
 triomphe.workspace = true
 
 # local crates

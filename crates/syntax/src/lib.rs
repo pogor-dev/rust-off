@@ -129,6 +129,20 @@ impl Parse<SyntaxNode> {
     }
 }
 
+/// `SourceFile` represents a parse tree for a single Rust file.
+pub use crate::ast::SourceFile;
+
+impl SourceFile {
+    pub fn parse(text: &[u8]) -> Parse<SourceFile> {
+        let _p = tracing::info_span!("SourceFile::parse").entered();
+        let (green, errors) = parsing::parse_text(text, Edition::CURRENT); // TODO: remove edition
+        let root = SyntaxNode::new_root(green.clone());
+
+        assert_eq!(root.kind(), SyntaxKind::SOURCE_FILE);
+        Parse::new(green, errors)
+    }
+}
+
 /// Matches a `SyntaxNode` against an `ast` type.
 ///
 /// # Example:
