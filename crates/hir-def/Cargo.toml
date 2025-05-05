@@ -16,6 +16,7 @@ smallvec.workspace = true
 
 # local crates
 intern.workspace = true
+span.workspace = true
 syntax.workspace = true
 
 [dev-dependencies]

@@ -11,8 +11,13 @@ repository.workspace = true
 
 [dependencies]
 # non-local crates
+hashbrown.workspace = true
+la-arena.workspace = true
+rustc-hash.workspace = true
 
 # local crates
+syntax.workspace = true
+
 
 [dev-dependencies]
 # non-local crates

@@ -28,6 +28,7 @@ extern crate lexer;
 extern crate lexer;
 
 mod parsing;
+mod ptr;
 mod syntax_error;
 mod syntax_node;
 mod validation;
@@ -36,12 +37,13 @@ pub mod ast;
 
 pub use crate::{
     ast::{AstNode, AstToken},
+    ptr::{AstPtr, SyntaxNodePtr},
     syntax_error::SyntaxError,
     syntax_node::{SyntaxNode, SyntaxNodeChildren, SyntaxToken, SyntaxTreeBuilder},
 };
 
 pub use parser::{Edition, SyntaxKind, T};
-pub use rowan::{GreenNode, TextRange, TextSize};
+pub use rowan::{GreenNode, TextRange, TextSize, WalkEvent};
 use std::{marker::PhantomData, sync::Arc};
 
 /// `Parse` is the result of the parsing: a syntax tree and a collection of
