@@ -223,6 +223,13 @@ pub enum Expr {
     IndirectReferenceExpr(IndirectReferenceExpr),
     Literal(Literal),
 }
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum Item {
+    IndirectObjectExpr(IndirectObjectExpr),
+    Trailer(Trailer),
+    XRefTable(XRefTable),
+}
 impl AstNode for ArrayExpr {
     #[inline]
     fn kind() -> SyntaxKind
@@ -641,7 +648,44 @@ impl AstNode for Expr {
         }
     }
 }
+impl From<IndirectObjectExpr> for Item {
+    #[inline]
+    fn from(node: IndirectObjectExpr) -> Item { Item::IndirectObjectExpr(node) }
+}
+impl From<Trailer> for Item {
+    #[inline]
+    fn from(node: Trailer) -> Item { Item::Trailer(node) }
+}
+impl From<XRefTable> for Item {
+    #[inline]
+    fn from(node: XRefTable) -> Item { Item::XRefTable(node) }
+}
+impl AstNode for Item {
+    #[inline]
+    fn can_cast(kind: SyntaxKind) -> bool { matches!(kind, INDIRECT_OBJECT_EXPR | TRAILER | X_REF_TABLE) }
+    #[inline]
+    fn cast(syntax: SyntaxNode) -> Option<Self> {
+        let res = match syntax.kind() {
+            INDIRECT_OBJECT_EXPR => Item::IndirectObjectExpr(IndirectObjectExpr { syntax }),
+            TRAILER => Item::Trailer(Trailer { syntax }),
+            X_REF_TABLE => Item::XRefTable(XRefTable { syntax }),
+            _ => return None,
+        };
+        Some(res)
+    }
+    #[inline]
+    fn syntax(&self) -> &SyntaxNode {
+        match self {
+            Item::IndirectObjectExpr(it) => &it.syntax,
+            Item::Trailer(it) => &it.syntax,
+            Item::XRefTable(it) => &it.syntax,
+        }
+    }
+}
 impl std::fmt::Display for Expr {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
+}
+impl std::fmt::Display for Item {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { std::fmt::Display::fmt(self.syntax(), f) }
 }
 impl std::fmt::Display for ArrayExpr {

@@ -81,6 +81,11 @@ Trailer =
   'trailer' DictionaryExpr
   'startxref' Literal
 
+Item =
+  IndirectObjectExpr
+  | XRefTable
+  | Trailer
+
 //*************************//
 //         Streams         //
 //*************************//

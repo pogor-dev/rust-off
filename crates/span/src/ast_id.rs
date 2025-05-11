@@ -103,8 +103,7 @@ macro_rules! register_ast_id_node {
     };
 }
 register_ast_id_node! {
-    impl AstIdNode for
-    IndirectObjectExpr
+    impl AstIdNode for Item, IndirectObjectExpr
 }
 
 /// Maps items' `SyntaxNode`s to `ErasedFileAstId`s and back.
